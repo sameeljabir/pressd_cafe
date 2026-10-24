@@ -4,6 +4,7 @@
 
 import { parseAllowlist } from "./core/permissions.ts";
 import { parseSiteUrl } from "./core/url.ts";
+import { mongoUriProblem } from "./db/mongo.ts";
 
 export const CRAWLER_USER_AGENT = "Mozilla/5.0 (compatible; PRESSD-SEO-Audit/1.0; +https://www.pressdcafe.ae/)";
 
@@ -46,11 +47,18 @@ export function configStatus(): ConfigCheck[] {
     siteNote = e instanceof Error ? e.message : "invalid";
   }
   checks.push({ name: "SEO_SITE_URL", required: false, ok: siteOk, note: siteNote });
+  const mongo = mongoUriProblem(process.env.MONGODB_URI);
   checks.push({
-    name: "DATABASE_URL",
+    name: "MONGODB_URI",
     required: true,
-    ok: !!process.env.DATABASE_URL,
-    note: process.env.DATABASE_URL ? "set" : process.env.NODE_ENV === "production" ? "missing — drafts and publishing are unavailable" : "missing — using local development database (.data/)",
+    ok: !mongo,
+    note: !mongo
+      ? "set"
+      : mongo !== "not set"
+        ? `${mongo} — drafts and publishing are unavailable`
+        : process.env.NODE_ENV === "production"
+          ? "missing — drafts and publishing are unavailable"
+          : "missing — using the local development database (.data/seo-mongo)",
   });
   const al = allowlist();
   const withPw = [...al.users.keys()].filter((e) => al.hashes.has(e)).length;

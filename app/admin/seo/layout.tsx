@@ -6,7 +6,7 @@ import Nav from "@/components/seo/Nav";
 import { currentViewer } from "@/lib/seo/auth/guard";
 import { can } from "@/lib/seo/core/permissions";
 import { siteUrl } from "@/lib/seo/env";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { lastPublished, pendingChanges } from "@/lib/seo/services/docs";
 import { PUBLIC_PAGES } from "@/lib/seo/services/metadata";
 import { getSettings } from "@/lib/seo/services/settings";

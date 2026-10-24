@@ -6,7 +6,7 @@ import { api, fmtDate } from "./client";
 import { checkLive, type ExpectedLive } from "./liveCheck";
 
 export interface HistoryRow {
-  id: number;
+  id: string;
   at: string;
   actor: string;
   action: string;
@@ -31,7 +31,7 @@ export default function HistoryPanel({ rows, canPublish, title = "Publish histor
     if (!target) return;
     dlg.current?.close();
     setNotice({ text: "Restoring…", kind: "info" });
-    const r = await api<{ change: { id: number; version: number }; expected: ExpectedLive }>("POST", "/api/admin/seo/restore", { changeId: target.row.id, which: target.which });
+    const r = await api<{ change: { id: string; version: number }; expected: ExpectedLive }>("POST", "/api/admin/seo/restore", { changeId: target.row.id, which: target.which });
     setTarget(null);
     if (!r.ok || !r.data) return setNotice({ text: `Not restored — the website is unchanged. ${r.error ?? ""}`, kind: "error" });
     setNotice({ text: `Restored and published as version ${r.data.change.version}. Checking the live page…`, kind: "info" });

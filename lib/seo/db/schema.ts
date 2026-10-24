@@ -1,5 +1,6 @@
-// SEO dashboard tables (Postgres via Drizzle). Kept separate from the public
-// site, which has no database. Secrets are only ever stored encrypted.
+// LEGACY Postgres schema (Drizzle) of the former dashboard modules, kept only
+// for their dormant code and tests — see lib/seo/db/client.ts. SEO Studio's
+// live data is in MongoDB: lib/seo/db/mongo.ts.
 
 import { sql } from "drizzle-orm";
 import { boolean, date, index, integer, jsonb, pgTable, serial, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";

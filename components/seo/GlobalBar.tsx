@@ -35,7 +35,7 @@ export default function GlobalBar({ pendingCount, lastPublished, canPublish }: {
   async function publish() {
     dlg.current?.close();
     setBusy(true);
-    const r = await api<{ changes: { key: string; id: number; version: number }[]; expected: ExpectedLive }>("POST", "/api/admin/seo/publish");
+    const r = await api<{ changes: { key: string; id: string; version: number }[]; expected: ExpectedLive }>("POST", "/api/admin/seo/publish");
     if (!r.ok || !r.data) {
       setBusy(false);
       return setNotice({ text: `Not published — the website is unchanged. ${r.error ?? ""}`, kind: "error" });

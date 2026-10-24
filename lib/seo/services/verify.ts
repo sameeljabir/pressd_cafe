@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { defaultsFrom, effectiveMeta, type EffectiveMeta, type MetaOverride } from "../core/metadata.ts";
 import { siteMetadata } from "../../siteMetadata.ts";
 import { siteUrl } from "../env.ts";
-import type { Db } from "../db/client.ts";
+import type { Db } from "../db/mongo.ts";
 import { getOverride } from "./metadata.ts";
 import { effectiveAlts } from "../core/images.ts";
 import { buildJsonLd, type BusinessInfo } from "../core/business.ts";

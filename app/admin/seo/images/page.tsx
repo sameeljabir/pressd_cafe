@@ -6,7 +6,7 @@ import PageHead from "@/components/seo/PageHead";
 import { requirePage } from "@/lib/seo/auth/guard";
 import { altSummary } from "@/lib/seo/core/images";
 import { can } from "@/lib/seo/core/permissions";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { historyRows } from "@/lib/seo/services/docs";
 import { getDraft, getOverride } from "@/lib/seo/services/metadata";
 import { codeDefaults } from "@/lib/seo/services/verify";

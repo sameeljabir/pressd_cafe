@@ -1,29 +1,21 @@
 import "server-only";
 // The only SEO-dashboard code the public site runs: reading published
-// metadata overrides for generateMetadata (and the sitemap).
+// documents (tags, alt text, business info) for the page, generateMetadata
+// and the sitemap. Drafts are never read here.
 //
 // Failure policy — published metadata must never silently revert:
-//  - No database configured → code defaults (nothing was ever published).
+//  - No database configured (no MONGODB_URI) → code defaults (nothing was ever published).
 //  - Database configured but unreadable/slow:
 //      during `next build` → code defaults, logged (the build must not fail);
 //      at runtime (ISR regeneration) → throw, so Next keeps serving the last
 //      successfully generated page — with the published metadata — and
 //      retries on a later request.
 
-import { existsSync } from "node:fs";
-import path from "node:path";
-import { eq } from "drizzle-orm";
-import { getDb } from "./db/client.ts";
-import { metadataOverrides } from "./db/schema.ts";
+import { databaseConfigured, getDb } from "./db/mongo.ts";
 import type { MetaOverride } from "./core/metadata.ts";
 
-export const READ_TIMEOUT_MS = 2000;
-
-function databaseConfigured(): boolean {
-  if (process.env.DATABASE_URL) return true;
-  // local development: only if the dashboard has already created its database
-  return process.env.NODE_ENV !== "production" && existsSync(path.join(process.cwd(), ".data", "seo-pglite"));
-}
+// Includes connecting on a cold start (DNS + TLS to Atlas).
+export const READ_TIMEOUT_MS = 5000;
 
 export class MetadataUnavailableError extends Error {
   constructor(cause: unknown) {
@@ -65,7 +57,7 @@ export async function publishedDoc<T = Record<string, unknown>>(key: string): Pr
   return readOverrideResilient(
     async () => {
       const db = await getDb();
-      const [row] = await db.select({ fields: metadataOverrides.fields }).from(metadataOverrides).where(eq(metadataOverrides.path, key));
+      const row = await db.overrides.findOne({ _id: key }, { projection: { fields: 1 } });
       return (row?.fields as MetaOverride | undefined) ?? null;
     },
     { isBuild: process.env.NEXT_PHASE === "phase-production-build" },

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { desc } from "drizzle-orm";
 import DbMissing from "@/components/seo/DbMissing";
 import PageHead from "@/components/seo/PageHead";
 import SettingsForm from "@/components/seo/SettingsForm";
@@ -12,9 +11,8 @@ const ROLE_TEXT: Record<string, string> = {
   publisher: "Editor + Confirm & Publish and restore",
   admin: "Publisher + settings and the activity log",
 };
-import { adminLog } from "@/lib/seo/db/schema";
 import { allowlist, configStatus } from "@/lib/seo/env";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { getSettings } from "@/lib/seo/services/settings";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -25,7 +23,7 @@ export default async function SettingsPage() {
   const checks = configStatus();
   const db = await dbOrNull();
   const settings = db ? await getSettings(db) : null;
-  const log = db && isAdmin ? await db.select().from(adminLog).orderBy(desc(adminLog.at)).limit(40) : [];
+  const log = db && isAdmin ? await db.log.find({}, { sort: { at: -1 }, limit: 40 }).toArray() : [];
   const al = allowlist();
 
   return (
@@ -69,7 +67,7 @@ export default async function SettingsPage() {
             <div className="table-wrap"><table className="data stack">
               <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
               <tbody>{log.map((e) => (
-                <tr key={e.id}><td data-label="When" className="small">{e.at.toLocaleString("en-GB", { timeZone: "Asia/Dubai" })}</td><td data-label="Who" className="small">{e.actor}</td><td data-label="Action">{e.action.replace(/_/g, " ")}</td><td data-label="Target" className="small wrap-anywhere">{e.target ?? "—"}</td></tr>
+                <tr key={String(e._id)}><td data-label="When" className="small">{e.at.toLocaleString("en-GB", { timeZone: "Asia/Dubai" })}</td><td data-label="Who" className="small">{e.actor}</td><td data-label="Action">{e.action.replace(/_/g, " ")}</td><td data-label="Target" className="small wrap-anywhere">{e.target ?? "—"}</td></tr>
               ))}</tbody>
             </table></div>
           )}

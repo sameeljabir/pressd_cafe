@@ -27,16 +27,37 @@ Keyword research, Search Console, rankings and content strategy are handled sepa
 - **Pages:** the site has one public URL, `/`. About, Menu, Visit, etc. are views of it (switched by `#hash`) and share its tags, so they appear as tabs of Home. Menu item photos use the product name as alt text and are edited in the menu data.
 - **Adding an editable photo:** add an entry to `SITE_IMAGES` in `lib/siteImages.ts` (its `alt` is the default) and render it with `useAlt()("<key>")` or `<SiteImg k="<key>">`.
 
-## 1. Database
+## 1. Database (MongoDB Atlas)
 
-1. Create a Neon Postgres database (Vercel → Storage → Neon). **Use a separate database (or Neon branch) for Preview deployments** — never point Preview at the production database.
-2. Apply the migrations (creates only `seo_*` tables; additive, no DROP/TRUNCATE/DELETE):
+SEO Studio stores its data in MongoDB; the public site only reads published values.
+
+| Collection | Holds |
+| --- | --- |
+| `seo_metadata_drafts` | Saved, unpublished changes — one document per screen (`_id`: `/`, `@images`, `@business`). Never read by the public site. |
+| `seo_metadata_overrides` | What is live — same keys, with `version`, `publishedBy`, `publishedAt`. Only values that differ from the code defaults are stored. |
+| `seo_metadata_changes` | Publish history: full before/after snapshot per publish or restore. Unique index on (`key`, `version`). |
+| `seo_admin_log` | Sign-ins, failed sign-ins, lockouts and admin actions (used for the lockout; never contains passwords). |
+| `seo_settings` | One document (`_id: "default"`): the title/description length guidance. |
+
+Indexes are created automatically on first connection.
+
+**Publishing safety.** Confirm & Publish validates every draft first, then publishes all of them in one multi-document transaction (every Atlas cluster, including the free M0 tier, supports transactions) — either everything goes live or nothing does. Two people publishing the same screen at the same moment cannot both win: the unique (`key`, `version`) history index rejects the second ("someone else published… try again"). Restore publishes the chosen snapshot as a new version; history is never rewritten. On a MongoDB without transactions (a single local server), each screen is published atomically in turn and an interrupted publish is hidden from history and skipped.
+
+**Setting up Atlas**
+
+1. In Atlas, use the existing cluster (`cluster0.y8avod9.mongodb.net`) or create one.
+2. *Database Access* → add a database user with **readWrite on `pressd_seo`** only (and a separate user with readWrite on `pressd_seo_preview` for Preview). Use generated passwords.
+3. *Network Access* → Vercel functions do not have fixed IP addresses, so allow `0.0.0.0/0` (access still requires the username and password), or use Vercel's Secure Compute / Atlas private networking if your plan has it.
+4. Build the connection string from the template in `.env.example`: replace `<db_username>` and `<db_password>` (URL-encode special characters), keep `/pressd_seo` (Production) or use `/pressd_seo_preview` (Preview).
+5. Check it from your machine without printing it:
    ```bash
-   DATABASE_URL="postgres://…" npm run db:migrate
+   MONGODB_URI="mongodb+srv://…" npm run seo:db-check
    ```
-   The script prints the target host, runs pending migrations in one transaction and skips ones already applied (safe to re-run).
+   It prints the host, database, server version, whether transactions are available and document counts, and creates missing indexes. It changes no data.
 
-Local development needs no database: without `DATABASE_URL` an embedded Postgres is created in `.data/` (git-ignored). Production refuses to run without `DATABASE_URL`.
+**Local development needs no Atlas:** without `MONGODB_URI`, `next dev` starts a local MongoDB whose data lives in `.data/seo-mongo` (git-ignored; the MongoDB binary is downloaded once on first use). Production refuses to run without `MONGODB_URI` — there is no in-memory fallback.
+
+**Earlier Postgres data:** no Postgres database was ever configured for this app (no `DATABASE_URL` locally; the deployed app showed "Setup required"), and the local development database held no drafts, published values, history or settings. There is nothing to migrate.
 
 ## 2. Users and passwords
 
@@ -67,8 +88,18 @@ openssl rand -base64 48   # → SEO_SESSION_SECRET (use a different value per en
 
 ## 4. Deploy (Preview first)
 
-Set `DATABASE_URL`, `SEO_ADMIN_USERS` and `SEO_SESSION_SECRET` for the **Preview** environment in Vercel, deploy a preview, open `/admin/seo`, and check Settings → Configuration. Then save a test change, use Confirm & Publish, confirm "live check passed", and restore it from that screen's publish history.
+In Vercel → Project → Settings → Environment Variables, set per environment:
+
+| Variable | Preview | Production |
+| --- | --- | --- |
+| `MONGODB_URI` | Preview user, database `pressd_seo_preview` | Production user, database `pressd_seo` |
+| `SEO_ADMIN_USERS` | test accounts (own hashes) | real accounts |
+| `SEO_SESSION_SECRET` | its own random value | a different random value |
+| `SEO_SITE_URL` | `https://www.pressdcafe.ae` (canonical and share URLs always point at the real domain; leave unset for the same result) | `https://www.pressdcafe.ae` or unset |
+| `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | optional | optional — live Google rating on the About section; without them a fixed 4.9 / 75 is shown |
+
+Never reuse Production credentials in Preview. Deploy a preview, open `/admin/seo` and check Settings → Configuration. Then save a test change, use Confirm & Publish, confirm "live check passed", and restore it from that screen's publish history.
 
 ## Previous dashboard modules
 
-Earlier versions included a crawler, Search Console, PageSpeed and task modules. They have been removed from the dashboard and its API. Their library code and tests remain in `lib/seo/` and `tests/seo/`, and their database tables (`seo_audit_*`, `seo_issues*`, `seo_google_connections`, `seo_gsc_cache`, `seo_performance_runs`, `seo_tasks*`) are left in place unused. They can be deleted in a later, reviewed change.
+Earlier versions included a crawler, Search Console, PageSpeed and task modules. They have been removed from the dashboard and its API. Their library code and tests remain in `lib/seo/` and `tests/seo/` on their original Postgres (Drizzle) schema — `lib/seo/db/client.ts`, `lib/seo/db/schema.ts`, `drizzle/`, `lib/seo/page-data.ts` and `lib/seo/services/{audits,gsc,gsc-report,performance,tasks}.ts` — which is why `drizzle-orm` and `@electric-sql/pglite` remain as **dev** dependencies (used only by those modules' tests). Nothing at runtime imports them. They can be deleted, with those two packages, in a later reviewed change.

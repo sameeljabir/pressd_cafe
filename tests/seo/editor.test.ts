@@ -8,10 +8,10 @@ import {
   type RenderedMeta,
 } from "../../lib/seo/core/metadata.ts";
 import { parseSiteUrl } from "../../lib/seo/core/url.ts";
-import { openPglite, type Db } from "../../lib/seo/db/client.ts";
-import { adminLog } from "../../lib/seo/db/schema.ts";
+import type { Db } from "../../lib/seo/db/mongo.ts";
+import { replicaSetDb, standaloneDb } from "./mongo-helper.ts";
 import { attemptLogin, MAX_FAILS_PER_EMAIL } from "../../lib/seo/services/login.ts";
-import { getDraft, getOverride, publishOverride, saveDraft } from "../../lib/seo/services/metadata.ts";
+import { changeHistory, getDraft, getOverride, publishOverride, saveDraft } from "../../lib/seo/services/metadata.ts";
 import { readOverrideResilient, MetadataUnavailableError } from "../../lib/seo/public.ts";
 
 const site = parseSiteUrl("https://www.pressdcafe.ae");
@@ -45,11 +45,11 @@ describe("passwords", () => {
   });
 });
 
-describe("sign-in with lockout (PGlite)", () => {
+describe("sign-in with lockout (local MongoDB)", () => {
   let db: Db;
   let allow: ReturnType<typeof parseAllowlist>;
   before(async () => {
-    db = await openPglite(null);
+    db = await replicaSetDb();
     allow = parseAllowlist(`pub@test.ae:publisher:${await hashPassword("publisher password 1")}`);
   });
   test("correct password signs in with the configured role", async () => {
@@ -66,7 +66,7 @@ describe("sign-in with lockout (PGlite)", () => {
     assert.equal((await attemptLogin(db, { email: "pub@test.ae", password: "publisher password 1", ip: "3.3.3.3" }, allow, later)).ok, true, "lock expires");
   });
   test("passwords are never written to the log", async () => {
-    const rows = await db.select().from(adminLog);
+    const rows = await db.log.find().toArray();
     assert.ok(rows.length > 0);
     assert.ok(!JSON.stringify(rows).includes("password 1") && !JSON.stringify(rows).includes("bad 0"));
   });
@@ -184,32 +184,32 @@ describe("published metadata survives database problems", () => {
   });
 });
 
-describe("drafts and publishing (PGlite)", () => {
-  let db: Db;
-  before(async () => {
-    db = await openPglite(null);
+for (const [mode, open] of [["replica set, transactions", replicaSetDb], ["standalone, no transactions", standaloneDb]] as const) {
+  describe(`drafts and publishing (local MongoDB, ${mode})`, () => {
+    let db: Db;
+    before(async () => {
+      db = await open();
+    });
+    test("saving a draft does not change what is published", async () => {
+      await publishOverride(db, "/", { title: "Live v1" }, "pub@test.ae");
+      await saveDraft(db, "/", { title: "Draft title" }, "ed@test.ae");
+      assert.equal((await getOverride(db, "/"))!.fields.title, "Live v1");
+      assert.equal((await getDraft(db, "/"))!.fields.title, "Draft title");
+    });
+    test("publishing replaces the live values and records before/after", async () => {
+      const change = await publishOverride(db, "/", { title: "Live v2" }, "pub@test.ae");
+      assert.equal(change.version, 2);
+      assert.deepEqual(change.before, { title: "Live v1" });
+      assert.equal((await getOverride(db, "/"))!.fields.title, "Live v2");
+      assert.ok(await getDraft(db, "/"), "a single-document publish (restore) keeps the saved draft; Confirm & Publish clears it");
+    });
+    test("a failed publish leaves the previous published values and history in place", async () => {
+      const fail = () => Promise.reject(new Error("database write failed"));
+      const broken: Db = { ...db, overrides: new Proxy(db.overrides, { get: (t, p, r) => (["replaceOne", "insertOne", "deleteOne"].includes(String(p)) ? fail : Reflect.get(t, p, r)) }) };
+      const before = await changeHistory(db, "/");
+      await assert.rejects(publishOverride(broken, "/", { title: "Should not go live" }, "pub@test.ae"), /database write failed/);
+      assert.equal((await getOverride(db, "/"))!.fields.title, "Live v2");
+      assert.equal((await changeHistory(db, "/")).length, before.length, "no history entry for a publish that did not happen");
+    });
   });
-  test("saving a draft does not change what is published", async () => {
-    await publishOverride(db, "/", { title: "Live v1" }, "pub@test.ae");
-    await saveDraft(db, "/", { title: "Draft title" }, "ed@test.ae");
-    assert.equal((await getOverride(db, "/"))!.fields.title, "Live v1");
-    assert.equal((await getDraft(db, "/"))!.fields.title, "Draft title");
-  });
-  test("publishing replaces the live values and clears the draft", async () => {
-    const change = await publishOverride(db, "/", { title: "Live v2" }, "pub@test.ae");
-    assert.equal(change.version, 2);
-    assert.deepEqual(change.before, { title: "Live v1" });
-    assert.equal((await getOverride(db, "/"))!.fields.title, "Live v2");
-    assert.equal(await getDraft(db, "/"), null);
-  });
-  test("a failed publish leaves the previous published values in place", async () => {
-    const broken = new Proxy(db, {
-      get(target, prop, recv) {
-        if (prop === "insert" || prop === "update" || prop === "delete") return () => { throw new Error("database write failed"); };
-        return Reflect.get(target, prop, recv);
-      },
-    }) as Db;
-    await assert.rejects(publishOverride(broken, "/", { title: "Should not go live" }, "pub@test.ae"), /database write failed/);
-    assert.equal((await getOverride(db, "/"))!.fields.title, "Live v2");
-  });
-});
+}

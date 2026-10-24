@@ -9,7 +9,7 @@ import SeoEditor from "@/components/seo/SeoEditor";
 import { requirePage } from "@/lib/seo/auth/guard";
 import { can } from "@/lib/seo/core/permissions";
 import { siteUrl } from "@/lib/seo/env";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { historyRows } from "@/lib/seo/services/docs";
 import { getDraft, getOverride, PUBLIC_PAGES } from "@/lib/seo/services/metadata";
 import { getSettings } from "@/lib/seo/services/settings";

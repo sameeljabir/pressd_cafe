@@ -8,7 +8,7 @@ import { businessWarnings, effectiveBusiness, type BusinessInfo } from "@/lib/se
 import { altStatus, altSummary, effectiveAlts } from "@/lib/seo/core/images";
 import { effectiveMeta, lengthStatus, overrideWarnings, type MetaOverride } from "@/lib/seo/core/metadata";
 import { siteUrl } from "@/lib/seo/env";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { getOverride, PUBLIC_PAGES } from "@/lib/seo/services/metadata";
 import { pendingChanges } from "@/lib/seo/services/docs";
 import { getSettings } from "@/lib/seo/services/settings";

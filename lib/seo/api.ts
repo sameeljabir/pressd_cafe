@@ -5,13 +5,9 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { Permission } from "./core/permissions.ts";
 import { jsonError, requireApi, type Viewer } from "./auth/guard.ts";
-import { DatabaseUnavailableError } from "./db/client.ts";
-import { NotConfiguredError } from "./server.ts";
-import { AuditBusyError, AuditStateError } from "./services/audits.ts";
-import { GscError } from "./services/gsc.ts";
-import { PerfLimitError } from "./services/performance.ts";
-import { TaskValidationError } from "./services/tasks.ts";
+import { DatabaseUnavailableError } from "./db/mongo.ts";
 import { MetadataValidationError } from "./core/metadata.ts";
+import { ConcurrentPublishError } from "./services/metadata.ts";
 import { SettingsValidationError } from "./services/settings.ts";
 import { NothingToPublishError } from "./services/docs.ts";
 
@@ -43,16 +39,13 @@ export function handle<C = unknown>(permission: Permission, fn: (req: Request, v
     try {
       return await fn(req, viewer, ctx);
     } catch (e) {
-      if (e instanceof BadRequest || e instanceof TaskValidationError || e instanceof SettingsValidationError) return jsonError(400, "invalid", e.message);
+      if (e instanceof BadRequest || e instanceof SettingsValidationError) return jsonError(400, "invalid", e.message);
       if (e instanceof MetadataValidationError) return NextResponse.json({ error: { code: "invalid", message: e.message, field: e.field } }, { status: 400 });
       if (e instanceof NothingToPublishError) return jsonError(409, "nothing_to_publish", e.message);
-      if (e instanceof AuditBusyError) return NextResponse.json({ error: { code: "busy", message: e.message, runId: e.runId } }, { status: 409 });
-      if (e instanceof AuditStateError) return jsonError(409, "state", e.message);
-      if (e instanceof PerfLimitError) return NextResponse.json({ error: { code: "rate_limited", message: e.message } }, { status: 429, headers: { "retry-after": String(e.retryAfterS) } });
-      if (e instanceof GscError) return jsonError(e.status, e.code, e.message);
-      if (e instanceof NotConfiguredError) return jsonError(503, "not_configured", e.message);
-      if (e instanceof DatabaseUnavailableError) return jsonError(503, "database_unavailable", "The dashboard database is not configured (DATABASE_URL).");
-      console.error("[seo] unhandled API error", req.method, new URL(req.url).pathname, e instanceof Error ? e.message : e);
+      if (e instanceof ConcurrentPublishError) return jsonError(409, "conflict", e.message);
+      if (e instanceof DatabaseUnavailableError) return jsonError(503, "database_unavailable", "The dashboard database is not configured (MONGODB_URI).");
+      // Name only: driver messages can include host names; the client gets a generic message.
+      console.error("[seo] unhandled API error", req.method, new URL(req.url).pathname, e instanceof Error ? e.name : typeof e);
       return jsonError(500, "internal", "Something went wrong. The error was logged.");
     }
   };
