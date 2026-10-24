@@ -24,7 +24,7 @@ export default function Footer() {
           <a href="#visit" onClick={handleLink("#visit")}>
             Visit
           </a>
-          <a href="mailto:hello@pressd.cafe">Contact</a>
+          <a href="mailto:pressd.dxb@gmail.com">Contact</a>
         </div>
       </div>
       <div className="footer-statement">COFFEE. FOOD. PEOPLE.</div>

@@ -239,15 +239,15 @@ export default function VisitSection() {
 
             <div className="visit-contact-entry">
               <span className="visit-entry-label">PHONE</span>
-              <a href="tel:+971501234567" className="visit-entry-link">
-                +971 50 123 4567
+              <a href="tel:+971556838426" className="visit-entry-link">
+                +971 55 683 8426
               </a>
             </div>
 
             <div className="visit-contact-entry">
               <span className="visit-entry-label">EMAIL</span>
-              <a href="mailto:hello@pressd.cafe" className="visit-entry-link">
-                hello@pressd.cafe
+              <a href="mailto:pressd.dxb@gmail.com" className="visit-entry-link">
+                pressd.dxb@gmail.com
               </a>
             </div>
 
