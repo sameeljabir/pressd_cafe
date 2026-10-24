@@ -1,19 +1,21 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useAlt } from "@/components/AltTextContext";
 
 const IMAGES = [
-  { src: "/assets/coffee-matcha.webp", alt: "Coffee and matcha" },
-  { src: "/assets/power-bowl.webp", alt: "Colourful bowl" },
-  { src: "/assets/smoothies.webp", alt: "Fresh smoothies" },
-  { src: "/assets/avocado-toast.webp", alt: "Avocado toast" },
+  { key: "gallery.coffee", src: "/assets/coffee-matcha.webp" },
+  { key: "gallery.bowl", src: "/assets/power-bowl.webp" },
+  { key: "gallery.smoothies", src: "/assets/smoothies.webp" },
+  { key: "gallery.toast", src: "/assets/avocado-toast.webp" },
 ];
 
 export default function GallerySection() {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [active, setActive] = useState<{ src: string; alt: string } | null>(null);
+  const [active, setActive] = useState<{ key: string; src: string } | null>(null);
+  const alt = useAlt();
 
-  const open = (image: { src: string; alt: string }) => {
+  const open = (image: { key: string; src: string }) => {
     setActive(image);
     dialogRef.current?.showModal();
   };
@@ -39,7 +41,7 @@ export default function GallerySection() {
         <div className="gallery-grid">
           {IMAGES.map((image) => (
             <button key={image.src} onClick={() => open(image)}>
-              <img src={image.src} alt={image.alt} loading="lazy" />
+              <img src={image.src} alt={alt(image.key)} loading="lazy" />
             </button>
           ))}
         </div>
@@ -54,7 +56,7 @@ export default function GallerySection() {
         <button className="dialog-close" aria-label="Close" onClick={() => dialogRef.current?.close()}>
           ×
         </button>
-        {active && <img src={active.src} alt={active.alt} />}
+        {active && <img src={active.src} alt={alt(active.key)} />}
       </dialog>
     </>
   );

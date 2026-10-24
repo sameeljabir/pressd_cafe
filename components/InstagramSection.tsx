@@ -1,10 +1,12 @@
+import { SiteImg } from "@/components/AltTextContext";
+
 const IMAGES = [
-  { src: "/assets/coffee-matcha.webp", alt: "PRESS'D coffee" },
-  { src: "/assets/pet-friendly-cafe.webp", alt: "Pet-friendly café life" },
-  { src: "/assets/power-bowl.webp", alt: "PRESS'D power bowl" },
-  { src: "/assets/work-ambience-cafe.webp", alt: "Working from PRESS'D" },
-  { src: "/assets/smoothies.webp", alt: "Fresh smoothies" },
-  { src: "/assets/avocado-toast.webp", alt: "Avocado breakfast" },
+  { key: "instagram.coffee", src: "/assets/coffee-matcha.webp" },
+  { key: "instagram.pets", src: "/assets/pet-friendly-cafe.webp" },
+  { key: "instagram.bowl", src: "/assets/power-bowl.webp" },
+  { key: "instagram.work", src: "/assets/work-ambience-cafe.webp" },
+  { key: "instagram.smoothies", src: "/assets/smoothies.webp" },
+  { key: "instagram.toast", src: "/assets/avocado-toast.webp" },
 ];
 
 export default function InstagramSection() {
@@ -23,7 +25,7 @@ export default function InstagramSection() {
       </div>
       <div className="instagram-track">
         {IMAGES.map((image) => (
-          <img key={image.src} src={image.src} alt={image.alt} />
+          <SiteImg key={image.src} k={image.key} src={image.src} />
         ))}
       </div>
       <a

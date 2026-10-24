@@ -1,5 +1,6 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useState } from "react";
 import SectionHomeButton from "@/components/SectionHomeButton";
 import AboutReviews from "@/components/AboutReviews";
@@ -7,61 +8,62 @@ import type { GoogleReviewsData } from "@/lib/googleReviews";
 
 const TOP_CAROUSEL_IMAGES = [
   {
+    key: "about.top.space",
     src: "/assets/visit-main-interior.webp",
-    alt: "Sunlit interior at PRESS'D Wellness Café with palm trees and modern lounge seating",
     label: "THE SPACE",
   },
   {
+    key: "about.top.espresso",
     src: "/assets/visit-service-counter.webp",
-    alt: "Barista preparing specialty brew at the espresso bar",
     label: "ESPRESSO BAR",
   },
   {
+    key: "about.top.lounge",
     src: "/assets/visit-lifestyle-sofa.webp",
-    alt: "Guest enjoying iced matcha and dessert on lounge sofa",
     label: "LOUNGE RETREAT",
   },
   {
+    key: "about.top.sanctuary",
     src: "/assets/cafe-interior-cover.webp",
-    alt: "Atmospheric interior architecture and warm lighting",
     label: "SANCTUARY",
   },
   {
+    key: "about.top.pour",
     src: "/assets/visit-coffee-detail.webp",
-    alt: "Signature latte art served on handcrafted wood tray",
     label: "POUR & CRAFT",
   },
 ];
 
 const STORY_CAROUSEL_IMAGES = [
   {
+    key: "about.story.community",
     src: "/assets/work-ambience-cafe.webp",
-    alt: "Community members working and connecting at PRESS'D",
     label: "COMMUNITY",
   },
   {
+    key: "about.story.pets",
     src: "/assets/pet-friendly-cafe.webp",
-    alt: "PRESS'D team member greeting a curly-haired dog at the café counter",
     label: "PET FRIENDLY",
   },
   {
+    key: "about.story.roasts",
     src: "/assets/our-cafe-cover.webp",
-    alt: "Artisanal flat white coffee on a dark table",
     label: "ROASTS",
   },
   {
+    key: "about.story.rituals",
     src: "/assets/visit-guest-reading.webp",
-    alt: "Guest reading in the peaceful sunlit atmosphere",
     label: "RITUALS",
   },
   {
+    key: "about.story.nourishment",
     src: "/assets/power-bowl.webp",
-    alt: "Nutrient-dense wholesome wellness bowl",
     label: "NOURISHMENT",
   },
 ];
 
 export default function IntroSection({ googleReviews }: { googleReviews: GoogleReviewsData | null }) {
+  const alt = useAlt();
   const [topIndex, setTopIndex] = useState(0);
   const [storyIndex, setStoryIndex] = useState(0);
 
@@ -107,7 +109,7 @@ export default function IntroSection({ googleReviews }: { googleReviews: GoogleR
                 className={`about-carousel-slide ${idx === topIndex ? "is-active" : ""}`}
                 aria-hidden={idx !== topIndex}
               >
-                <img src={item.src} alt={item.alt} loading="lazy" />
+                <img src={item.src} alt={alt(item.key)} loading="lazy" />
               </figure>
             ))}
           </div>
@@ -152,7 +154,7 @@ export default function IntroSection({ googleReviews }: { googleReviews: GoogleR
                 className={`about-carousel-slide ${idx === storyIndex ? "is-active" : ""}`}
                 aria-hidden={idx !== storyIndex}
               >
-                <img src={item.src} alt={item.alt} loading="lazy" />
+                <img src={item.src} alt={alt(item.key)} loading="lazy" />
               </figure>
             ))}
           </div>

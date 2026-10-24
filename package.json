@@ -10,7 +10,8 @@
     "validate:locales": "node scripts/validate-locales.mjs",
     "test": "node --conditions=react-server --test \"tests/**/*.test.ts\"",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "node scripts/db-migrate.mts"
+    "db:migrate": "node scripts/db-migrate.mts",
+    "seo:hash-password": "node scripts/seo-hash-password.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",

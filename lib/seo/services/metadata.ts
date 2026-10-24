@@ -2,7 +2,7 @@
 
 import { desc, eq } from "drizzle-orm";
 import type { Db } from "../db/client.ts";
-import { metadataChanges, metadataOverrides } from "../db/schema.ts";
+import { metadataChanges, metadataDrafts, metadataOverrides } from "../db/schema.ts";
 import type { MetaOverride } from "../core/metadata.ts";
 import type { PageFacts } from "../core/html.ts";
 
@@ -10,10 +10,11 @@ import type { PageFacts } from "../core/html.ts";
 export const PUBLIC_PAGES = [
   {
     path: "/",
+    label: "Home",
     type: "Home — single-page site",
     source: "app/(site)/layout.tsx (metadata) · app/(site)/page.tsx",
     editable: true,
-    note: "About, Menu, Visit and the other sections are #anchors on this one URL, so they share this page's metadata. Giving them their own titles and descriptions would require turning them into separate routes.",
+    note: "This is the only public URL. About, Menu, Visit and the other sections are parts of this page (#anchors), so they share its tags.",
   },
 ] as const;
 
@@ -26,6 +27,36 @@ export async function getOverride(db: Db, path: string): Promise<{ fields: MetaO
   return row ? { fields: row.fields as MetaOverride, version: row.version, publishedBy: row.publishedBy, publishedAt: row.publishedAt } : null;
 }
 
+export interface Draft {
+  fields: MetaOverride;
+  savedBy: string;
+  savedAt: Date;
+}
+
+export async function getDraft(db: Db, path: string): Promise<Draft | null> {
+  const [row] = await db.select().from(metadataDrafts).where(eq(metadataDrafts.path, path));
+  return row ? { fields: row.fields as MetaOverride, savedBy: row.savedBy, savedAt: row.savedAt } : null;
+}
+
+/** Saves edits without touching the published metadata (the public site never reads drafts). */
+export async function saveDraft(db: Db, path: string, fields: MetaOverride, actor: string): Promise<Draft> {
+  const now = new Date();
+  await db
+    .insert(metadataDrafts)
+    .values({ path, fields, savedBy: actor, savedAt: now })
+    .onConflictDoUpdate({ target: metadataDrafts.path, set: { fields, savedBy: actor, savedAt: now } });
+  return { fields, savedBy: actor, savedAt: now };
+}
+
+export async function discardDraft(db: Db, path: string) {
+  await db.delete(metadataDrafts).where(eq(metadataDrafts.path, path));
+}
+
+/**
+ * Publishes in one statement (the override row is replaced atomically, so a
+ * failure leaves the previous published metadata in place), then records
+ * history. The draft is cleared only after a successful publish.
+ */
 export async function publishOverride(db: Db, path: string, fields: MetaOverride, actor: string, action: "publish" | "restore" | "reset" = "publish") {
   const cur = await getOverride(db, path);
   const version = (cur?.version ?? 0) + 1;
@@ -40,6 +71,7 @@ export async function publishOverride(db: Db, path: string, fields: MetaOverride
     .insert(metadataChanges)
     .values({ path, actor, action: empty && action === "publish" ? "reset" : action, before: cur?.fields ?? {}, after: fields, version })
     .returning();
+  if (action === "publish") await discardDraft(db, path).catch(() => {});
   return change;
 }
 

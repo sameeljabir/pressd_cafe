@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import { siteMetadata } from "@/lib/siteMetadata";
 import { applyOverride } from "@/lib/seo/core/metadata";
-import { publishedOverride } from "@/lib/seo/public";
+import { publishedDoc, publishedOverride } from "@/lib/seo/public";
+import { jsonLdScript, type BusinessInfo } from "@/lib/seo/core/business";
 
 // Phase 1: loaded exactly as the original site did (same Google Fonts URL,
 // same weights/styles), so text renders identically. Switching this to
@@ -24,6 +25,8 @@ const NOTO_FALLBACK_FONTS_HREF =
 // Defaults live in lib/siteMetadata.ts; metadata published from the SEO
 // dashboard (/admin/seo/pages) is layered on top. With nothing published the
 // output is identical to the defaults.
+// Structured data: lib/seo/core/business.ts holds the defaults; Business Info
+// published from the SEO dashboard is layered on top.
 export async function generateMetadata(): Promise<Metadata> {
   return applyOverride(siteMetadata, await publishedOverride("/"));
 }
@@ -32,22 +35,8 @@ export const viewport: Viewport = {
   themeColor: "#fbb019",
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "CafeOrCoffeeShop",
-  name: "PRESS'D Wellness Café",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Jumeirah Village Triangle",
-    addressRegion: "Dubai",
-    addressCountry: "AE",
-  },
-  servesCuisine: ["Healthy", "Breakfast", "Coffee"],
-  openingHours: ["Mo-Th 07:00-23:00", "Fr-Su 07:00-00:00"],
-  priceRange: "AED 18-65",
-};
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <head>
@@ -75,7 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(await publishedDoc<Partial<BusinessInfo>>("@business")) }}
         />
       </head>
       <body className="home-view">{children}</body>

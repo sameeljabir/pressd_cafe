@@ -1,8 +1,10 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useSectionLinkHandler, useSectionNav } from "@/components/navigation/SectionNavContext";
 
 export default function Footer() {
+  const alt = useAlt();
   const handleLink = useSectionLinkHandler();
   // Outside the Menu the footer is dark, so it uses the light-on-dark navbar
   // logo; the Menu keeps its approved gold footer and logo.
@@ -11,7 +13,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="footer-top">
-        <img className="footer-logo" src={logoSrc} alt="PRESS'D Wellness Café" />
+        <img className="footer-logo" src={logoSrc} alt={alt("chrome.footer.logo")} />
         <div className="footer-links">
           <a href="#menu" onClick={handleLink("#menu")}>
             Menu

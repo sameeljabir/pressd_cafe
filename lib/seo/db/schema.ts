@@ -192,10 +192,18 @@ export const taskEvents = pgTable(
 /** Published metadata overrides for public routes (read by the site's generateMetadata). */
 export const metadataOverrides = pgTable("seo_metadata_overrides", {
   path: text("path").primaryKey(),
-  fields: jsonb("fields").$type<Record<string, string>>().notNull(),
+  fields: jsonb("fields").$type<object>().notNull(),
   version: integer("version").notNull().default(1),
   publishedBy: text("published_by").notNull(),
   publishedAt: ts("published_at").notNull().defaultNow(),
+});
+
+/** Saved-but-unpublished edits (one draft per page). Never read by the public site. */
+export const metadataDrafts = pgTable("seo_metadata_drafts", {
+  path: text("path").primaryKey(),
+  fields: jsonb("fields").notNull(),
+  savedBy: text("saved_by").notNull(),
+  savedAt: ts("saved_at").notNull().defaultNow(),
 });
 
 export const metadataChanges = pgTable(

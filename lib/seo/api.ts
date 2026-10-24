@@ -13,6 +13,7 @@ import { PerfLimitError } from "./services/performance.ts";
 import { TaskValidationError } from "./services/tasks.ts";
 import { MetadataValidationError } from "./core/metadata.ts";
 import { SettingsValidationError } from "./services/settings.ts";
+import { NothingToPublishError } from "./services/docs.ts";
 
 export function ok(data: unknown, status = 200) {
   return NextResponse.json(data, { status, headers: { "cache-control": "no-store" } });
@@ -44,6 +45,7 @@ export function handle<C = unknown>(permission: Permission, fn: (req: Request, v
     } catch (e) {
       if (e instanceof BadRequest || e instanceof TaskValidationError || e instanceof SettingsValidationError) return jsonError(400, "invalid", e.message);
       if (e instanceof MetadataValidationError) return NextResponse.json({ error: { code: "invalid", message: e.message, field: e.field } }, { status: 400 });
+      if (e instanceof NothingToPublishError) return jsonError(409, "nothing_to_publish", e.message);
       if (e instanceof AuditBusyError) return NextResponse.json({ error: { code: "busy", message: e.message, runId: e.runId } }, { status: 409 });
       if (e instanceof AuditStateError) return jsonError(409, "state", e.message);
       if (e instanceof PerfLimitError) return NextResponse.json({ error: { code: "rate_limited", message: e.message } }, { status: 429, headers: { "retry-after": String(e.retryAfterS) } });
