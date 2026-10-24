@@ -1,5 +1,6 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useBooking } from "@/components/booking/BookingContext";
 import SectionHomeButton from "@/components/SectionHomeButton";
 
@@ -17,20 +18,20 @@ const SCHEDULE = [
 
 const GALLERY_IMAGES = [
   {
+    key: "visit.sofa",
     src: "/assets/visit-lifestyle-sofa.webp",
-    alt: "Guest relaxing on lounge sofa inside PRESS'D café",
   },
   {
+    key: "visit.dish",
     src: "/assets/sandwich-halloumi-pesto.webp",
-    alt: "Freshly prepared wholesome dish at PRESS'D",
   },
   {
+    key: "visit.counter",
     src: "/assets/visit-service-counter.webp",
-    alt: "Barista preparing specialty coffee at the espresso counter",
   },
   {
+    key: "visit.pour",
     src: "/assets/visit-coffee-detail.webp",
-    alt: "Craft coffee pour with signature latte art on handcrafted wood tray",
   },
 ];
 
@@ -99,6 +100,7 @@ function PetLoveArt() {
 }
 
 export default function VisitSection() {
+  const alt = useAlt();
   const { openBooking } = useBooking();
 
   return (
@@ -162,7 +164,7 @@ export default function VisitSection() {
         <div className="visit-gallery-grid" aria-label="Café gallery">
           {GALLERY_IMAGES.map((img, i) => (
             <figure key={i} className="visit-gallery-tile">
-              <img src={img.src} alt={img.alt} loading="lazy" />
+              <img src={img.src} alt={alt(img.key)} loading="lazy" />
             </figure>
           ))}
         </div>

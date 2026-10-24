@@ -19,6 +19,8 @@ import BookingDialog from "@/components/booking/BookingDialog";
 import RevealObserver from "@/components/RevealObserver";
 import ScrollInit from "@/components/ScrollInit";
 import { getGoogleReviews } from "@/lib/googleReviews";
+import { AltTextProvider } from "@/components/AltTextContext";
+import { publishedDoc } from "@/lib/seo/public";
 
 // Regenerate in the background at most every 6 hours so the About page's
 // Google rating/reviews stay current without calling Google per visit
@@ -27,31 +29,33 @@ import { getGoogleReviews } from "@/lib/googleReviews";
 export const revalidate = 21600;
 
 export default async function Home() {
-  const googleReviews = await getGoogleReviews();
+  const [googleReviews, altText] = await Promise.all([getGoogleReviews(), publishedDoc<Record<string, string>>("@images")]);
 
   return (
     <AppProviders>
-      <Loader />
-      <Navbar />
-      <main>
-        <Hero />
-        <IntroSection googleReviews={googleReviews} />
-        <MenuSection />
-        <SignatureSection />
-        <WorkSection />
-        <WhySection />
-        <HealthySection />
-        <GallerySection />
-        <InstagramSection />
-        <VisitSection />
-      </main>
-      <Footer />
-      <BackToTop />
-      <MobileDock />
-      <CartDrawer />
-      <BookingDialog />
-      <RevealObserver />
-      <ScrollInit />
+      <AltTextProvider overrides={altText}>
+        <Loader />
+        <Navbar />
+        <main>
+          <Hero />
+          <IntroSection googleReviews={googleReviews} />
+          <MenuSection />
+          <SignatureSection />
+          <WorkSection />
+          <WhySection />
+          <HealthySection />
+          <GallerySection />
+          <InstagramSection />
+          <VisitSection />
+        </main>
+        <Footer />
+        <BackToTop />
+        <MobileDock />
+        <CartDrawer />
+        <BookingDialog />
+        <RevealObserver />
+        <ScrollInit />
+      </AltTextProvider>
     </AppProviders>
   );
 }

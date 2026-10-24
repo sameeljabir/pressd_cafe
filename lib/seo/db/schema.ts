@@ -1,5 +1,6 @@
-// SEO dashboard tables (Postgres via Drizzle). Kept separate from the public
-// site, which has no database. Secrets are only ever stored encrypted.
+// LEGACY Postgres schema (Drizzle) of the former dashboard modules, kept only
+// for their dormant code and tests — see lib/seo/db/client.ts. SEO Studio's
+// live data is in MongoDB: lib/seo/db/mongo.ts.
 
 import { sql } from "drizzle-orm";
 import { boolean, date, index, integer, jsonb, pgTable, serial, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
@@ -192,10 +193,18 @@ export const taskEvents = pgTable(
 /** Published metadata overrides for public routes (read by the site's generateMetadata). */
 export const metadataOverrides = pgTable("seo_metadata_overrides", {
   path: text("path").primaryKey(),
-  fields: jsonb("fields").$type<Record<string, string>>().notNull(),
+  fields: jsonb("fields").$type<object>().notNull(),
   version: integer("version").notNull().default(1),
   publishedBy: text("published_by").notNull(),
   publishedAt: ts("published_at").notNull().defaultNow(),
+});
+
+/** Saved-but-unpublished edits (one draft per page). Never read by the public site. */
+export const metadataDrafts = pgTable("seo_metadata_drafts", {
+  path: text("path").primaryKey(),
+  fields: jsonb("fields").notNull(),
+  savedBy: text("saved_by").notNull(),
+  savedAt: ts("saved_at").notNull().defaultNow(),
 });
 
 export const metadataChanges = pgTable(

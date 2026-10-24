@@ -1,8 +1,6 @@
 // Admin-editable audit thresholds and crawl limits (validated, bounded).
 
-import { eq } from "drizzle-orm";
-import type { Db } from "../db/client.ts";
-import { seoSettings } from "../db/schema.ts";
+import type { Db } from "../db/mongo.ts";
 import { DEFAULT_THRESHOLDS, type AuditThresholds } from "../core/rules.ts";
 import { clampLimits, DEFAULT_LIMITS, type CrawlLimits } from "../core/crawler.ts";
 
@@ -14,7 +12,7 @@ export interface Settings {
 }
 
 export async function getSettings(db: Db): Promise<Settings> {
-  const [row] = await db.select().from(seoSettings).where(eq(seoSettings.id, "default"));
+  const row = await db.settings.findOne({ _id: "default" });
   return {
     thresholds: { ...DEFAULT_THRESHOLDS, ...((row?.thresholds as Partial<AuditThresholds>) ?? {}) },
     crawlLimits: clampLimits(row?.crawlLimits as Partial<CrawlLimits>),
@@ -52,10 +50,7 @@ export function validateSettings(input: { thresholds?: Record<string, unknown>; 
 
 export async function saveSettings(db: Db, input: { thresholds?: Record<string, unknown>; crawlLimits?: Record<string, unknown> }, actor: string) {
   const v = validateSettings(input);
-  await db
-    .insert(seoSettings)
-    .values({ id: "default", thresholds: v.thresholds, crawlLimits: v.crawlLimits, updatedBy: actor, updatedAt: new Date() })
-    .onConflictDoUpdate({ target: seoSettings.id, set: { thresholds: v.thresholds, crawlLimits: v.crawlLimits, updatedBy: actor, updatedAt: new Date() } });
+  await db.settings.replaceOne({ _id: "default" }, { thresholds: v.thresholds, crawlLimits: v.crawlLimits, updatedBy: actor, updatedAt: new Date() }, { upsert: true });
   return getSettings(db);
 }
 

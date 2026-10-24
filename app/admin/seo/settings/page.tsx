@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { desc } from "drizzle-orm";
 import DbMissing from "@/components/seo/DbMissing";
 import PageHead from "@/components/seo/PageHead";
 import SettingsForm from "@/components/seo/SettingsForm";
 import { requirePage } from "@/lib/seo/auth/guard";
-import { can, permissionsFor, ROLES } from "@/lib/seo/core/permissions";
-import { adminLog } from "@/lib/seo/db/schema";
+import { can, ROLES } from "@/lib/seo/core/permissions";
+
+const ROLE_TEXT: Record<string, string> = {
+  viewer: "View everything: tags, alt text, business info, history",
+  editor: "Viewer + Save changes (cannot publish)",
+  publisher: "Editor + Confirm & Publish and restore",
+  admin: "Publisher + settings and the activity log",
+};
 import { allowlist, configStatus } from "@/lib/seo/env";
-import { dbOrNull } from "@/lib/seo/page-data";
+import { dbOrNull } from "@/lib/seo/db/mongo";
 import { getSettings } from "@/lib/seo/services/settings";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -18,12 +23,12 @@ export default async function SettingsPage() {
   const checks = configStatus();
   const db = await dbOrNull();
   const settings = db ? await getSettings(db) : null;
-  const log = db && isAdmin ? await db.select().from(adminLog).orderBy(desc(adminLog.at)).limit(40) : [];
+  const log = db && isAdmin ? await db.log.find({}, { sort: { at: -1 }, limit: 40 }).toArray() : [];
   const al = allowlist();
 
   return (
     <>
-      <PageHead eyebrow="SEO Studio" title="Settings" lede="Integration status, audit configuration and access. Secrets are never displayed — only whether each one is set." />
+      <PageHead eyebrow="SEO Studio" title="Settings" lede="Configuration, length guidance and access. Secrets are never displayed — only whether each one is set." />
 
       <section className="section-block">
         <h2 className="section">Configuration</h2>
@@ -43,14 +48,14 @@ export default async function SettingsPage() {
       </section>
 
       <section className="section-block">
-        {!db || !settings ? <DbMissing /> : <SettingsForm thresholds={{ ...settings.thresholds }} limits={{ ...settings.crawlLimits }} canEdit={isAdmin} />}
+        {!db || !settings ? <DbMissing /> : <SettingsForm thresholds={{ ...settings.thresholds }} canEdit={isAdmin} />}
       </section>
 
       <section className="section-block">
         <h2 className="section">Roles</h2>
         <div className="table-wrap"><table className="data stack">
           <thead><tr><th scope="col">Role</th><th scope="col">Can</th></tr></thead>
-          <tbody>{ROLES.map((r) => <tr key={r}><td data-label="Role"><b>{r}</b>{r === viewer.role ? <span className="tag tag-amber" style={{ marginLeft: 8 }}>you</span> : null}</td><td data-label="Can" className="small">{permissionsFor(r).join(", ")}</td></tr>)}</tbody>
+          <tbody>{ROLES.map((r) => <tr key={r}><td data-label="Role"><b>{r}</b>{r === viewer.role ? <span className="tag tag-amber" style={{ marginLeft: 8 }}>you</span> : null}</td><td data-label="Can" className="small">{ROLE_TEXT[r]}</td></tr>)}</tbody>
         </table></div>
         {isAdmin ? <p className="small muted">{al.users.size} account(s) currently allowed: {[...al.users.entries()].map(([e, r]) => `${e} (${r})`).join(", ")}. Edit SEO_ADMIN_USERS and redeploy to change access.</p> : null}
       </section>
@@ -62,7 +67,7 @@ export default async function SettingsPage() {
             <div className="table-wrap"><table className="data stack">
               <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
               <tbody>{log.map((e) => (
-                <tr key={e.id}><td data-label="When" className="small">{e.at.toLocaleString("en-GB", { timeZone: "Asia/Dubai" })}</td><td data-label="Who" className="small">{e.actor}</td><td data-label="Action">{e.action.replace(/_/g, " ")}</td><td data-label="Target" className="small wrap-anywhere">{e.target ?? "—"}</td></tr>
+                <tr key={String(e._id)}><td data-label="When" className="small">{e.at.toLocaleString("en-GB", { timeZone: "Asia/Dubai" })}</td><td data-label="Who" className="small">{e.actor}</td><td data-label="Action">{e.action.replace(/_/g, " ")}</td><td data-label="Target" className="small wrap-anywhere">{e.target ?? "—"}</td></tr>
               ))}</tbody>
             </table></div>
           )}

@@ -1,89 +1,105 @@
 # PRESS'D SEO Studio — setup
 
-> **Before deploying:** at the time of writing, www.pressdcafe.ae is served by a different repository — the static site `pressd-newwww` (`index.html`, `style.css`, `script.js`) — not by this Next.js app. Deploying this app to the production domain replaces the whole public site, not just adds the dashboard. See the deployment checklist in the pre-deployment review.
+SEO Studio (`/admin/seo`) edits what Google and social apps read from the website. Section wording stays in the code.
 
-SEO Studio is the internal SEO dashboard at `/admin/seo`. It audits the live site, shows Google Search Console and PageSpeed data, manages page metadata and tracks SEO tasks. It never invents data: anything that isn't connected shows as "not connected" or "not measured".
+| Screen | What it edits |
+| --- | --- |
+| **Overview** | Read-only: pages, SEO issues on the live site, images missing good alt text, saved-but-unpublished changes |
+| **Home → Google & sharing** | Title, meta description, optional meta keywords, canonical URL, robots (index/follow), Open Graph / X card tags, validated custom `<meta name>` tags |
+| **Home → section tabs** (Top section, About, Visit…) | Alt text of that section's photos, beside a live phone/desktop preview of the section |
+| **Images & alt text** | All site photos in one list, filterable to "Missing or too short" |
+| **Business info** | The café's structured data (JSON-LD): name, website, phone, email, cuisine, price range, address, map coordinates, opening hours |
 
-All configuration is through environment variables (see `.env.example`). Every value is server-side only.
+Every screen saves a **draft** (Save). Nothing changes on the website until a publisher clicks **Confirm & Publish** in the top bar, which lists every saved change (live value → new value) and publishes them together. Each publish is recorded per screen and can be **restored**.
 
-## 1. Database (required)
+Keyword research, Search Console, rankings and content strategy are handled separately by the SEO specialist — the studio does not include them and needs no Google accounts or API keys.
 
-1. In Vercel, open the project and go to **Storage → Create → Neon (Postgres)**. Connect it to the project; this sets `DATABASE_URL`.
-2. Create the dashboard tables (only `seo_*` tables are created — no DROP/TRUNCATE/DELETE statements):
+> **Before deploying:** www.pressdcafe.ae is currently served by a different repository — the static site `pressd-newwww` — not by this Next.js app. Changes published here appear on whichever domain serves **this** app (e.g. pressd-nextjs.vercel.app or a preview). Replacing the static site is a separate decision.
+
+## How it works
+
+- **Defaults** live in code: tags in `lib/siteMetadata.ts`, alt text in `lib/siteImages.ts`, business details in `lib/seo/core/business.ts` (`BUSINESS_DEFAULTS`). With nothing published, the site renders exactly these.
+- **Storage:** each screen is one document in the existing tables, keyed by `path`: `/` (tags), `@images` (alt text), `@business` (business info). Drafts are in `seo_metadata_drafts`, published values in `seo_metadata_overrides`, history in `seo_metadata_changes`. Only values that differ from the defaults are stored.
+- **The public page** reads published values only: tags via `generateMetadata` in `app/(site)/layout.tsx`, business info as the JSON-LD script in the same layout, and alt text through `AltTextProvider` in `app/(site)/page.tsx` (components call `useAlt(key)` / `<SiteImg k=…>`). Drafts are never read by the public site.
+- **Confirm & Publish** re-validates every draft first — one invalid draft blocks the whole publish and nothing changes — then publishes each document atomically, records history, refreshes `/` and `/sitemap.xml`, and fetches the rendered page to check the tags, alt text and JSON-LD ("live check passed/failed").
+- **If the database fails** while the page regenerates, the error stops the regeneration and Next.js keeps serving the last generated page — published values are never silently replaced by defaults. Only when the database is not configured at all (or unreadable during `next build`) are the code defaults used.
+- **Sitemap / robots.txt:** `app/sitemap.ts` lists `/` unless it is published as `noindex`; `app/robots.ts` is fixed in code.
+- **Pages:** the site has one public URL, `/`. About, Menu, Visit, etc. are views of it (switched by `#hash`) and share its tags, so they appear as tabs of Home. Menu item photos use the product name as alt text and are edited in the menu data.
+- **Adding an editable photo:** add an entry to `SITE_IMAGES` in `lib/siteImages.ts` (its `alt` is the default) and render it with `useAlt()("<key>")` or `<SiteImg k="<key>">`.
+
+## 1. Database (MongoDB Atlas)
+
+SEO Studio stores its data in MongoDB; the public site only reads published values.
+
+| Collection | Holds |
+| --- | --- |
+| `seo_metadata_drafts` | Saved, unpublished changes — one document per screen (`_id`: `/`, `@images`, `@business`). Never read by the public site. |
+| `seo_metadata_overrides` | What is live — same keys, with `version`, `publishedBy`, `publishedAt`. Only values that differ from the code defaults are stored. |
+| `seo_metadata_changes` | Publish history: full before/after snapshot per publish or restore. Unique index on (`key`, `version`). |
+| `seo_admin_log` | Sign-ins, failed sign-ins, lockouts and admin actions (used for the lockout; never contains passwords). |
+| `seo_settings` | One document (`_id: "default"`): the title/description length guidance. |
+
+Indexes are created automatically on first connection.
+
+**Publishing safety.** Confirm & Publish validates every draft first, then publishes all of them in one multi-document transaction (every Atlas cluster, including the free M0 tier, supports transactions) — either everything goes live or nothing does. Two people publishing the same screen at the same moment cannot both win: the unique (`key`, `version`) history index rejects the second ("someone else published… try again"). Restore publishes the chosen snapshot as a new version; history is never rewritten. On a MongoDB without transactions (a single local server), each screen is published atomically in turn and an interrupted publish is hidden from history and skipped.
+
+**Setting up Atlas**
+
+1. In Atlas, use the existing cluster (`cluster0.y8avod9.mongodb.net`) or create one.
+2. *Database Access* → add a database user with **readWrite on `pressd_seo`** only (and a separate user with readWrite on `pressd_seo_preview` for Preview). Use generated passwords.
+3. *Network Access* → Vercel functions do not have fixed IP addresses, so allow `0.0.0.0/0` (access still requires the username and password), or use Vercel's Secure Compute / Atlas private networking if your plan has it.
+4. Build the connection string from the template in `.env.example`: replace `<db_username>` and `<db_password>` (URL-encode special characters), keep `/pressd_seo` (Production) or use `/pressd_seo_preview` (Preview).
+5. Check it from your machine without printing it:
    ```bash
-   DATABASE_URL="postgres://…" npm run db:migrate
+   MONGODB_URI="mongodb+srv://…" npm run seo:db-check
    ```
-   Use the **pooled or direct** Neon connection string. The script prints the target host, runs every pending migration in **one transaction** (a failure applies nothing) and skips migrations already applied, so re-running is safe.
-3. Run the same command after any future schema change (`npm run db:generate` creates the migration file). Review the generated SQL before applying it.
+   It prints the host, database, server version, whether transactions are available and document counts, and creates missing indexes. It changes no data.
 
-Local development needs no database: when `DATABASE_URL` is unset outside production, an embedded Postgres (PGlite) is created in `.data/` (git-ignored). Production refuses to run without `DATABASE_URL`.
+**Local development needs no Atlas:** without `MONGODB_URI`, `next dev` starts a local MongoDB whose data lives in `.data/seo-mongo` (git-ignored; the MongoDB binary is downloaded once on first use). Production refuses to run without `MONGODB_URI` — there is no in-memory fallback.
 
-## 2. Google Cloud project and OAuth client (required for sign-in and Search Console)
+**Earlier Postgres data:** no Postgres database was ever configured for this app (no `DATABASE_URL` locally; the deployed app showed "Setup required"), and the local development database held no drafts, published values, history or settings. There is nothing to migrate.
 
-1. In [Google Cloud Console](https://console.cloud.google.com/), create a project (e.g. "PRESS'D SEO Studio").
-2. **APIs & Services → Library**: enable **Google Search Console API** and **PageSpeed Insights API**.
-3. **APIs & Services → OAuth consent screen**:
-   - User type: *External* (or *Internal* if PRESS'D uses Google Workspace and all users are in it).
-   - App name "PRESS'D SEO Studio"; support and developer email: the owner's address.
-   - Scopes: `openid`, `email`, `profile`, and `https://www.googleapis.com/auth/webmasters.readonly`.
-   - While in *Testing* mode, add each person who will sign in as a **test user**. Read-only Search Console is a "sensitive" scope; publishing the app for wider use requires Google's verification. Testing mode is fine for a small internal team, but **refresh tokens in Testing mode expire after 7 days**, so Search Console must then be reconnected weekly until the app is published.
-4. **APIs & Services → Credentials → Create credentials → OAuth client ID**:
-   - Application type: *Web application*.
-   - Authorised JavaScript origin: `https://www.pressdcafe.ae`.
-   - Authorised redirect URI: `https://www.pressdcafe.ae/api/admin/auth/google/callback` (for local testing also add `http://localhost:3000/api/admin/auth/google/callback`).
-   - **Preview deployments:** Google sends the user back to the exact `GOOGLE_REDIRECT_URI`, and the sign-in state cookie belongs to the domain where sign-in started. To sign in on a preview, give it a stable domain (e.g. a Vercel branch alias like `seo-preview.pressdcafe.ae`), add `https://<that domain>/api/admin/auth/google/callback` to the OAuth client, and set `GOOGLE_REDIRECT_URI` to it in Vercel's **Preview** environment only.
-   - Copy the client ID and secret into `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, and set `GOOGLE_REDIRECT_URI` to the same redirect URI.
-5. **Credentials → Create credentials → API key**: restrict it to the *PageSpeed Insights API* and put it in `PAGESPEED_INSIGHTS_API_KEY`.
+## 2. Users and passwords
 
-## 3. Secrets and access list
+Create a password hash for each person (the password is not echoed or stored):
 
 ```bash
-openssl rand -base64 48   # → SEO_SESSION_SECRET
-openssl rand -base64 32   # → SEO_TOKEN_ENCRYPTION_KEY
+npm run seo:hash-password
 ```
 
-`SEO_ADMIN_USERS` lists the Google accounts allowed in, each with a role:
+Then set `SEO_ADMIN_USERS` to `email:role:hash` entries, comma-separated:
 
 | Role | Can |
 | --- | --- |
-| `viewer` | View all reports, download CSV exports |
-| `editor` | + run audits and rechecks, run PageSpeed tests, update issue status, manage tasks |
-| `publisher` | + publish and restore page metadata |
-| `admin` | + change settings, connect/disconnect Search Console, see the admin activity log |
+| `viewer` | View tags, drafts and history |
+| `editor` | + save drafts (cannot publish) |
+| `publisher` | + publish and restore |
+| `admin` | + settings (length guidance) and the activity log |
 
-Example: `SEO_ADMIN_USERS=owner@pressdcafe.ae:admin, seo@agency.example:publisher, dev@agency.example:editor`
+- Passwords: at least 12 characters, stored only as scrypt hashes.
+- 5 failed sign-ins for an email (or 20 from one IP) within 15 minutes lock sign-in for 15 minutes.
+- Access is re-checked on every request: removing someone from `SEO_ADMIN_USERS` and redeploying ends their access immediately.
 
-Access is checked on every request. Removing an address and redeploying revokes it immediately, even for someone who is signed in.
+## 3. Session secret
 
-## 4. Connect Search Console
+```bash
+openssl rand -base64 48   # → SEO_SESSION_SECRET (use a different value per environment)
+```
 
-1. Make sure the Google account you'll connect is a **verified owner or full/restricted user** of a Search Console property covering the site: either a Domain property `pressdcafe.ae` (recommended) or the URL-prefix property `https://www.pressdcafe.ae/`. If no property exists yet, add and verify one in Search Console first.
-2. Sign in to `/admin/seo` as an **admin**, open **Search Console** and click **Connect with Google**. Approve the read-only permission.
-3. Choose the PRESS'D property. Only properties that cover `www.pressdcafe.ae` and where the account is verified can be selected.
+## 4. Deploy (Preview first)
 
-SEO Studio only reads data. It never submits or deletes sitemaps or changes anything in Search Console. **Disconnect** deletes the stored tokens and revokes them at Google.
+In Vercel → Project → Settings → Environment Variables, set per environment:
 
-## 5. Deploy and check
+| Variable | Preview | Production |
+| --- | --- | --- |
+| `MONGODB_URI` | Preview user, database `pressd_seo_preview` | Production user, database `pressd_seo` |
+| `SEO_ADMIN_USERS` | test accounts (own hashes) | real accounts |
+| `SEO_SESSION_SECRET` | its own random value | a different random value |
+| `SEO_SITE_URL` | `https://www.pressdcafe.ae` (canonical and share URLs always point at the real domain; leave unset for the same result) | `https://www.pressdcafe.ae` or unset |
+| `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | optional | optional — live Google rating on the About section; without them a fixed 4.9 / 75 is shown |
 
-1. Add all variables in Vercel (Production, and Preview if wanted) and redeploy.
-2. Visit `/admin/seo/settings`: the Configuration table shows which variables are set (never their values).
-3. Run the first technical audit from **Technical audit**, and a mobile and desktop test from **Performance**.
+Never reuse Production credentials in Preview. Deploy a preview, open `/admin/seo` and check Settings → Configuration. Then save a test change, use Confirm & Publish, confirm "live check passed", and restore it from that screen's publish history.
 
-## robots.txt and sitemap
+## Previous dashboard modules
 
-`app/robots.ts` allows the site, disallows `/api/`, and points to `app/sitemap.ts`, which lists the single public URL (`https://www.pressdcafe.ae/`). `/admin` is intentionally **not** disallowed: its pages send `noindex`, and a robots.txt block would hide that from crawlers. After deploying, submit `https://www.pressdcafe.ae/sitemap.xml` in Search Console (SEO Studio itself never submits anything).
-
-## What's honest about the data
-
-- **Audit findings** come from the HTML the crawler actually received from `SEO_SITE_URL`. A 200 response or a sitemap listing is never treated as "indexed"; only URL Inspection (Search Console page) reports Google's index status.
-- **Title and description length thresholds** are editable guidance (Settings), not Google rules.
-- **PageSpeed** separates Lighthouse *lab* scores (one simulated run) from *field* Core Web Vitals (real Chrome users, 28 days). Field data appears only when Google has enough traffic.
-- **Search Console** numbers are shown only when connected, with the property, date range (Pacific Time, excluding the last ~3 days) and fetch time. Query tables omit anonymised queries, so they don't add up to the totals.
-- **Issues are never auto-closed.** They close only when someone confirms the fix or a recheck no longer finds the problem. A fixed issue found again is reopened.
-
-## Architecture notes
-
-- **Routes:** `app/admin/**` has its own root layout and stylesheet, separate from the public site (`app/(site)/**`). Unknown URLs use `app/global-not-found.tsx`, which renders the same 404 as before.
-- **Authorization:** every page and API route checks the session and role on the server (`lib/seo/auth/guard.ts`). `proxy.ts` only rejects requests with no session cookie early, and adds `X-Robots-Tag: noindex` to everything under `/admin`.
-- **Crawling:** the crawler (`lib/seo/core/crawler.ts`) runs in time-boxed steps of about 20 seconds that are saved to the database, so it fits serverless limits. It only fetches `https://` on the configured host, re-checks every redirect hop, refuses private, loopback and link-local addresses, respects robots.txt and has hard page, depth, size and time limits.
-- **Metadata:** defaults are in `lib/siteMetadata.ts`. Published overrides are read by `generateMetadata` in `app/(site)/layout.tsx`, with a 2-second timeout that falls back to the defaults. Only `/` exists as a public route. About, Menu, Visit and the other sections are `#anchors` on that page, so they can't have their own metadata unless they become separate routes.
+Earlier versions included a crawler, Search Console, PageSpeed and task modules. They have been removed from the dashboard and its API. Their library code and tests remain in `lib/seo/` and `tests/seo/` on their original Postgres (Drizzle) schema — `lib/seo/db/client.ts`, `lib/seo/db/schema.ts`, `drizzle/`, `lib/seo/page-data.ts` and `lib/seo/services/{audits,gsc,gsc-report,performance,tasks}.ts` — which is why `drizzle-orm` and `@electric-sql/pglite` remain as **dev** dependencies (used only by those modules' tests). Nothing at runtime imports them. They can be deleted, with those two packages, in a later reviewed change.

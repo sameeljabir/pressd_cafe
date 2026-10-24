@@ -1,5 +1,6 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart/CartContext";
 import { useBooking } from "@/components/booking/BookingContext";
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+  const alt = useAlt();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openCart } = useCart();
@@ -44,7 +46,7 @@ export default function Navbar() {
           aria-label="PRESS'D home"
           onClick={handleLink("#home")}
         >
-          <img src="/assets/pressd-logo.webp" alt="PRESS'D Wellness Café" />
+          <img src="/assets/pressd-logo.webp" alt={alt("chrome.navbar.logo")} />
         </a>
         <nav className="desktop-nav">
           {NAV_LINKS.map((link) => {

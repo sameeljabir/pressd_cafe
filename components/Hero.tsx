@@ -1,5 +1,6 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useEffect, useRef, useState } from "react";
 import { useSectionLinkHandler } from "@/components/navigation/SectionNavContext";
 import { useBooking } from "@/components/booking/BookingContext";
@@ -8,12 +9,13 @@ import PetPawTrail from "@/components/PetPawTrail";
 import PetInteractiveIcon from "@/components/PetInteractiveIcon";
 
 const RAIL_LINKS = [
-  { href: "#menu", label: "Menu", img: "/assets/menu-acai-bowl-cover.webp", kind: "a" as const },
-  { href: "#book", label: "Reservation", img: "/assets/reservation-cover.webp", kind: "book" as const },
-  { href: "#about", label: "Our café", img: "/assets/cafe-interior-cover.webp", kind: "a" as const },
+  { href: "#menu", label: "Menu", img: "/assets/menu-acai-bowl-cover.webp", imgKey: "hero.rail.menu", kind: "a" as const },
+  { href: "#book", label: "Reservation", img: "/assets/reservation-cover.webp", imgKey: "hero.rail.reservation", kind: "book" as const },
+  { href: "#about", label: "Our café", img: "/assets/cafe-interior-cover.webp", imgKey: "hero.rail.about", kind: "a" as const },
 ];
 
 export default function Hero() {
+  const alt = useAlt();
   const heroMediaRef = useRef<HTMLVideoElement>(null);
   const heroRailRef = useRef<HTMLElement>(null);
   const handleLink = useSectionLinkHandler();
@@ -174,7 +176,7 @@ export default function Hero() {
         {RAIL_LINKS.map((link) =>
           link.kind === "book" ? (
             <button key={link.label} className="rail-card" onClick={openBooking}>
-              <img src={link.img} alt="Intimate table reservation at PRESS'D Wellness Café" />
+              <img src={link.img} alt={alt(link.imgKey)} />
               <span>
                 {link.label} <b>→</b>
               </span>
@@ -186,7 +188,7 @@ export default function Hero() {
               href={link.href}
               onClick={handleLink(link.href)}
             >
-              <img src={link.img} alt={`PRESS'D ${link.label}`} />
+              <img src={link.img} alt={alt(link.imgKey)} />
               <span>
                 {link.label} <b>→</b>
               </span>

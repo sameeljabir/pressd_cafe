@@ -1,9 +1,11 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useCart } from "@/components/cart/CartContext";
 import { useSectionLinkHandler } from "@/components/navigation/SectionNavContext";
 
 export default function MobileDock() {
+  const alt = useAlt();
   const { quantity, openCart } = useCart();
   const handleLink = useSectionLinkHandler();
 
@@ -26,7 +28,7 @@ export default function MobileDock() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img src="/assets/whatsapp-transparent.webp" alt="" />
+        <img src="/assets/whatsapp-transparent.webp" alt={alt("chrome.dock.whatsapp")} />
         WhatsApp
       </a>
     </nav>

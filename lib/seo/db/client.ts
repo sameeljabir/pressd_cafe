@@ -1,8 +1,8 @@
-// Database access for the SEO dashboard.
-//  - DATABASE_URL set → Neon serverless Postgres over HTTP.
-//  - Not set, outside production → embedded PGlite in ./.data (local dev only),
-//    migrated automatically so the dashboard runs without any credentials.
-//  - Not set in production → DatabaseUnavailableError (fail closed).
+// LEGACY Postgres access, kept only for the dormant crawler / Search Console /
+// PageSpeed / tasks modules (lib/seo/services/{audits,gsc,performance,tasks}.ts)
+// and their tests. No route or page uses it, and nothing connects to a
+// Postgres server any more: SEO Studio stores its data in MongoDB
+// (lib/seo/db/mongo.ts). Delete together with those modules.
 
 import { mkdirSync } from "node:fs";
 import path from "node:path";
@@ -11,27 +11,7 @@ import * as schema from "./schema.ts";
 
 export type Db = PgDatabase<PgQueryResultHKT, typeof schema>;
 
-export class DatabaseUnavailableError extends Error {
-  constructor() {
-    super("DATABASE_URL is not configured");
-    this.name = "DatabaseUnavailableError";
-  }
-}
-
-const g = globalThis as unknown as { __seoDb?: Promise<Db> };
-
-async function connect(): Promise<Db> {
-  const url = process.env.DATABASE_URL?.trim();
-  if (url) {
-    const { neon } = await import("@neondatabase/serverless");
-    const { drizzle } = await import("drizzle-orm/neon-http");
-    return drizzle({ client: neon(url), schema }) as unknown as Db;
-  }
-  if (process.env.NODE_ENV === "production") throw new DatabaseUnavailableError();
-  return openPglite(path.join(process.cwd(), ".data", "seo-pglite"));
-}
-
-/** Embedded Postgres for local development and tests. `dataDir` null = in memory. */
+/** Embedded Postgres for the legacy modules' tests. `dataDir` null = in memory. */
 export async function openPglite(dataDir: string | null): Promise<Db> {
   const { PGlite } = await import("@electric-sql/pglite");
   const { drizzle } = await import("drizzle-orm/pglite");
@@ -41,16 +21,6 @@ export async function openPglite(dataDir: string | null): Promise<Db> {
   const db = drizzle({ client, schema });
   await migrate(db, { migrationsFolder: path.join(process.cwd(), "drizzle") });
   return db as unknown as Db;
-}
-
-export function getDb(): Promise<Db> {
-  if (!g.__seoDb) {
-    g.__seoDb = connect().catch((e) => {
-      g.__seoDb = undefined; // allow a retry on the next request
-      throw e;
-    });
-  }
-  return g.__seoDb;
 }
 
 export { schema };

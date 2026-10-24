@@ -1,20 +1,12 @@
 import "server-only";
-// Read-side queries used by the dashboard's server components.
+// LEGACY (not used by any route): read-side queries of the former crawler /
+// tasks / PageSpeed screens, on the old Postgres schema. SEO Studio itself uses
+// MongoDB (lib/seo/db/mongo.ts). Kept until those modules are deleted.
 
 import { and, desc, eq, inArray, lt, ne, sql } from "drizzle-orm";
-import { DatabaseUnavailableError, getDb, type Db } from "./db/client.ts";
+import type { Db } from "./db/client.ts";
 import { auditPages, auditRuns, issueEvents, issues, performanceRuns, tasks } from "./db/schema.ts";
 import type { FetchedPage } from "./core/crawler.ts";
-
-/** The database, or null when it is not configured (pages then show a setup notice). */
-export async function dbOrNull(): Promise<Db | null> {
-  try {
-    return await getDb();
-  } catch (e) {
-    if (e instanceof DatabaseUnavailableError) return null;
-    throw e;
-  }
-}
 
 export async function latestRuns(db: Db, limit = 12) {
   return db.select().from(auditRuns).orderBy(desc(auditRuns.startedAt)).limit(limit);

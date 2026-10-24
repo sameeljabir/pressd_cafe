@@ -100,8 +100,7 @@ describe("metadata overrides", () => {
       title: "PRESS'D Café",
       canonical: "https://www.pressdcafe.ae/",
       ogImage: "https://www.pressdcafe.ae/assets/x.webp",
-      robots: "index, follow",
-    });
+    }); // "index, follow" is the default, so it is not stored
   });
   test("rejects markup, off-site URLs, bad robots, unknown fields, over-long text", () => {
     const bad = (input: Record<string, unknown>) => assert.throws(() => validateOverride(input, site), MetadataValidationError);
@@ -111,7 +110,7 @@ describe("metadata overrides", () => {
     bad({ canonical: "https://www.pressdcafe.ae/?x=1" });
     bad({ ogImage: "javascript:alert(1)" });
     bad({ robots: "noarchive" });
-    bad({ keywords: "x" });
+    bad({ unknownField: "x" });
     bad({ title: "x".repeat(121) });
     bad({ title: 5 });
   });

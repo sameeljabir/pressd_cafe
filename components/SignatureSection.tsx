@@ -1,12 +1,14 @@
 "use client";
 
+import { useAlt } from "@/components/AltTextContext";
 import { useSectionLinkHandler } from "@/components/navigation/SectionNavContext";
 
 export default function SignatureSection() {
+  const alt = useAlt();
   const handleLink = useSectionLinkHandler();
   return (
     <section className="signature">
-      <img src="/assets/avocado-toast.webp" alt="PRESS'D signature avocado toast" loading="lazy" />
+      <img src="/assets/avocado-toast.webp" alt={alt("signature.toast")} loading="lazy" />
       <div className="signature-shade" />
       <div className="signature-copy reveal">
         <p className="eyebrow">SALADS · PROTEIN · BREAKFAST · SMOOTHIES</p>

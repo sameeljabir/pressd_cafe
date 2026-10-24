@@ -1,7 +1,9 @@
+import { SiteImg } from "@/components/AltTextContext";
+
 const CARDS = [
-  { img: "/assets/power-bowl.webp", alt: "Power Protein Bowl", caption: "01 · POWER PROTEIN BOWL · AED 59" },
-  { img: "/assets/avocado-toast.webp", alt: "Avocado Breakfast", caption: "02 · AVOCADO BREAKFAST · AED 48" },
-  { img: "/assets/smoothies.webp", alt: "Green Energy smoothie", caption: "03 · GREEN ENERGY · AED 28" },
+  { key: "wellness.bowl", img: "/assets/power-bowl.webp", caption: "01 · POWER PROTEIN BOWL · AED 59" },
+  { key: "wellness.avocado", img: "/assets/avocado-toast.webp", caption: "02 · AVOCADO BREAKFAST · AED 48" },
+  { key: "wellness.smoothie", img: "/assets/smoothies.webp", caption: "03 · GREEN ENERGY · AED 28" },
 ];
 
 export default function HealthySection() {
@@ -22,7 +24,7 @@ export default function HealthySection() {
       <div className="healthy-cards">
         {CARDS.map((card) => (
           <figure key={card.caption}>
-            <img src={card.img} alt={card.alt} loading="lazy" />
+            <SiteImg k={card.key} src={card.img} loading="lazy" />
             <figcaption>{card.caption}</figcaption>
           </figure>
         ))}

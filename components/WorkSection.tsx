@@ -1,14 +1,11 @@
+import { SiteImg } from "@/components/AltTextContext";
 import SectionHomeButton from "@/components/SectionHomeButton";
 
 export default function WorkSection() {
   return (
     <section className="split reverse dark-section" id="work">
       <div className="split-image">
-        <img
-          src="/assets/work-ambience-cafe.webp"
-          alt="A guest working with coffee and natural light at PRESS'D"
-          loading="lazy"
-        />
+        <SiteImg k="work.ambience" src="/assets/work-ambience-cafe.webp" loading="lazy" />
       </div>
       <div className="split-copy reveal">
         <p className="eyebrow">FAST WI-FI · POWER OUTLETS · CALM ATMOSPHERE</p>

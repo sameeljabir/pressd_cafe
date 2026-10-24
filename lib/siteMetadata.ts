@@ -18,7 +18,7 @@ export const siteMetadata: Metadata = {
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
-    apple: "/icon.png",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "PRESS'D | Wellness Café at Meydan Polo Residence",
