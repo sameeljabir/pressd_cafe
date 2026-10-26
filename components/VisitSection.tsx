@@ -19,7 +19,7 @@ const SCHEDULE = [
 const GALLERY_IMAGES = [
   {
     key: "visit.sofa",
-    src: "/assets/visit-lifestyle-sofa.webp",
+    src: "/assets/visit-table-latte.webp",
   },
   {
     key: "visit.dish",
@@ -31,7 +31,7 @@ const GALLERY_IMAGES = [
   },
   {
     key: "visit.pour",
-    src: "/assets/visit-coffee-detail.webp",
+    src: "/assets/visit-coffee-serving.webp",
   },
 ];
 

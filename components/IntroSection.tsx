@@ -24,7 +24,7 @@ const TOP_CAROUSEL_IMAGES = [
   },
   {
     key: "about.top.sanctuary",
-    src: "/assets/cafe-interior-cover.webp",
+    src: "/assets/about-sanctuary-candles.webp",
     label: "SANCTUARY",
   },
   {

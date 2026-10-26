@@ -14299,6 +14299,15 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   transform: scale(1.04) !important;
 }
 
+/* Portrait photos in square / narrow tiles: keep the cup and pour in frame. */
+.visit-gallery-tile img[src="/assets/visit-coffee-serving.webp"] {
+  object-position: 45% 80% !important;
+}
+
+.visit-gallery-tile img[src="/assets/visit-table-latte.webp"] {
+  object-position: 50% 65% !important;
+}
+
 /* ---------- 3. Location & Map Panel ---------- */
 .visit-map-panel {
   grid-column: span 7 !important;
@@ -14728,6 +14737,15 @@ body.detail-view #visit .section-home-button {
 
 .about-carousel-slide img[src="/assets/about-community-laptop.webp"] {
   object-position: 50% 42% !important;
+}
+
+/* On smaller cards the home/next buttons cover the right third: zoom slightly
+   toward the right edge so the lit candle sits in the open left area. */
+@media (max-width: 1100px) {
+  .about-carousel-slide img[src="/assets/about-sanctuary-candles.webp"] {
+    transform: scale(1.2);
+    transform-origin: 75% 30%;
+  }
 }
 
 .about-carousel-meta {

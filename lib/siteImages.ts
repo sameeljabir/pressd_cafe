@@ -32,7 +32,7 @@ export const SITE_IMAGES: SiteImage[] = [
   { key: "about.top.space", section: "about", label: "Top carousel — The space", src: "/assets/visit-main-interior.webp", alt: "Sunlit interior at PRESS'D Wellness Café with palm trees and modern lounge seating" },
   { key: "about.top.espresso", section: "about", label: "Top carousel — Espresso bar", src: "/assets/visit-service-counter.webp", alt: "Barista preparing specialty brew at the espresso bar" },
   { key: "about.top.lounge", section: "about", label: "Top carousel — Lounge retreat", src: "/assets/visit-lifestyle-sofa.webp", alt: "Guest enjoying iced matcha and dessert on lounge sofa" },
-  { key: "about.top.sanctuary", section: "about", label: "Top carousel — Sanctuary", src: "/assets/cafe-interior-cover.webp", alt: "Atmospheric interior architecture and warm lighting" },
+  { key: "about.top.sanctuary", section: "about", label: "Top carousel — Sanctuary", src: "/assets/about-sanctuary-candles.webp", alt: "Dessert-style candles glowing on a table under warm café lights" },
   { key: "about.top.pour", section: "about", label: "Top carousel — Pour & craft", src: "/assets/visit-coffee-detail.webp", alt: "Signature latte art served on handcrafted wood tray" },
   { key: "about.story.community", section: "about", label: "Story carousel — Community", src: "/assets/about-community-laptop.webp", alt: "Guest working on a laptop in the PRESS'D lounge" },
   { key: "about.story.pets", section: "about", label: "Story carousel — Pet friendly", src: "/assets/about-pet-friendly-guest.webp", alt: "Guest stroking her dog on a black banquette with yellow cushions" },
@@ -59,10 +59,10 @@ export const SITE_IMAGES: SiteImage[] = [
   { key: "instagram.smoothies", section: "instagram", label: "Instagram photo 5", src: "/assets/smoothies.webp", alt: "Fresh smoothies" },
   { key: "instagram.toast", section: "instagram", label: "Instagram photo 6", src: "/assets/avocado-toast.webp", alt: "Avocado breakfast" },
 
-  { key: "visit.sofa", section: "visit", label: "Visit gallery 1", src: "/assets/visit-lifestyle-sofa.webp", alt: "Guest relaxing on lounge sofa inside PRESS'D café" },
+  { key: "visit.sofa", section: "visit", label: "Visit gallery 1", src: "/assets/visit-table-latte.webp", alt: "Latte in a double-wall glass on a wooden tray beside the lounge sofa" },
   { key: "visit.dish", section: "visit", label: "Visit gallery 2", src: "/assets/sandwich-halloumi-pesto.webp", alt: "Freshly prepared wholesome dish at PRESS'D" },
   { key: "visit.counter", section: "visit", label: "Visit gallery 3", src: "/assets/visit-service-counter.webp", alt: "Barista preparing specialty coffee at the espresso counter" },
-  { key: "visit.pour", section: "visit", label: "Visit gallery 4", src: "/assets/visit-coffee-detail.webp", alt: "Craft coffee pour with signature latte art on handcrafted wood tray" },
+  { key: "visit.pour", section: "visit", label: "Visit gallery 4", src: "/assets/visit-coffee-serving.webp", alt: "Filter coffee being poured from a glass server into a glass cup" },
 
   { key: "chrome.navbar.logo", section: "chrome", label: "Header logo", src: "/assets/pressd-logo.webp", alt: "PRESS'D Wellness Café" },
   { key: "chrome.footer.logo", section: "chrome", label: "Footer logo", src: "/assets/pressd-logo.webp", alt: "PRESS'D Wellness Café" },
