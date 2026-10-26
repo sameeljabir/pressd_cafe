@@ -41,7 +41,7 @@ export default function LivePreview({ anchor = "" }: { anchor?: string }) {
         box.scrollTo({ left: box.scrollLeft + r.left - b.left - (o.inline === "center" ? (b.width - r.width) / 2 : 0), behavior: o.behavior });
       } else w.scrollTo({ top: r.top + w.scrollY, behavior: o.behavior });
     };
-    // After the site's own load handling, which resets the hash to #home (components/ScrollInit.tsx).
+    // After the site's own load handling (components/ScrollInit.tsx).
     w.setTimeout(jump, 1400);
   };
   useEffect(jump, [anchor]); // jump when the section changes (the frame stays loaded)

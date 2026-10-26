@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 
-/** Every fresh page load begins scrolled to the top, hash normalised to #home. */
+/** Every fresh page load begins scrolled to the top. The hash is left alone:
+ *  it names the section being viewed, so a refresh or a shared link reopens it. */
 export default function ScrollInit() {
   useEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -12,7 +13,6 @@ export default function ScrollInit() {
       const previous = root.style.scrollBehavior;
       root.style.scrollBehavior = "auto";
       window.scrollTo(0, 0);
-      if (location.hash && location.hash !== "#home") history.replaceState(null, "", "#home");
       setTimeout(() => {
         window.scrollTo(0, 0);
         root.style.scrollBehavior = previous;

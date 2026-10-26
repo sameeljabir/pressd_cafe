@@ -11,6 +11,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { prefersReducedMotion } from "@/lib/utils";
@@ -24,27 +25,36 @@ interface SectionNavValue {
 
 const SectionNavContext = createContext<SectionNavValue | null>(null);
 
+/** The section named by the URL hash, or null for Home (no hash, #home or an unknown id). */
+function sectionFromHash() {
+  const h = location.hash.slice(1);
+  return h && h !== "home" && document.getElementById(h) ? h : null;
+}
+
 export function SectionNavProvider({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  // A click (openSection/openHome) adds a history entry so Back and Forward
+  // step through sections; syncing from the URL (load, Back/Forward) doesn't.
+  const fromUser = useRef(false);
+  const firstSync = useRef(true);
 
   const openSection = useCallback((id: string, event?: { preventDefault: () => void }) => {
     event?.preventDefault();
-    setActiveSection(id);
+    setActiveSection((prev) => {
+      if (prev !== id) fromUser.current = true;
+      return id;
+    });
   }, []);
 
   const openHome = useCallback(() => {
-    setActiveSection(null);
+    setActiveSection((prev) => {
+      if (prev !== null) fromUser.current = true;
+      return null;
+    });
   }, []);
 
   useEffect(() => {
-    const handleHash = () => {
-      const h = location.hash.slice(1);
-      if (h && h !== "home" && document.getElementById(h)) {
-        setActiveSection(h);
-      } else {
-        setActiveSection(null);
-      }
-    };
+    const handleHash = () => setActiveSection(sectionFromHash());
     // Sync initial hash after hydration
     handleHash();
     window.addEventListener("hashchange", handleHash);
@@ -71,8 +81,17 @@ export function SectionNavProvider({ children }: { children: React.ReactNode }) 
       const target = isDetail ? document.getElementById(activeSection!) : null;
       if (target) target.scrollTop = 0;
     });
+    // On the first render the state is still Home while the URL may name a
+    // section (a refresh or shared link); the hash effect above is about to
+    // open it, so leave the URL alone rather than overwrite it with #home.
+    const keepUrl = firstSync.current && !isDetail && sectionFromHash() !== null;
+    firstSync.current = false;
     const hash = isDetail ? `#${activeSection}` : "#home";
-    if (location.hash !== hash) history.replaceState(null, "", hash);
+    if (!keepUrl && location.hash !== hash) {
+      if (fromUser.current) history.pushState(null, "", hash);
+      else history.replaceState(null, "", hash);
+    }
+    fromUser.current = false;
     void reduced;
   }, [activeSection]);
 
