@@ -14109,6 +14109,10 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
   gap: var(--visit-gap) !important;
   min-height: 100% !important;
+  /* The section is a start-aligned flex column, so without this the grid
+     only spans its content; that used to be full width only because the
+     gallery tiles were square. */
+  align-self: stretch !important;
   box-sizing: border-box !important;
   position: relative !important;
   padding-bottom: 8px !important;
@@ -14331,7 +14335,12 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   overflow: hidden !important;
   position: relative !important;
   background: var(--ink, #070806) !important;
-  aspect-ratio: 1 / 1 !important;
+  /* The grid's two 1fr rows stretch to the height of the hours panel beside
+     it. A square (aspect-ratio 1/1) tile sat at the top of each taller row,
+     leaving a large gap between the rows and under the gallery, so each tile
+     fills its cell instead, as it already does on touch tablets and phones. */
+  aspect-ratio: auto !important;
+  min-height: 0 !important;
 }
 
 .visit-gallery-tile img {
