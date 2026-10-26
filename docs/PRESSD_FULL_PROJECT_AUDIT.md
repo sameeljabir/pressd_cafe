@@ -294,7 +294,7 @@ None found.
 | Real-user Core Web Vitals | NOT AVAILABLE | No field data collected |
 | Vercel dashboard (project settings, env vars per environment, build logs, domains) | BLOCKED | No Vercel access from this machine |
 | Google Maps embed rendering | NOT VERIFIED | Third-party iframe blank in headless browser |
-| Live Google reviews (Places API) | NOT VERIFIED | Unknown whether keys are set in Vercel; fallback 4.9 / 75 renders |
+| Live Google reviews (Places API) | NOT VERIFIED | Unknown whether keys are set in Vercel; fallback 4.9 / 100 renders |
 | WhatsApp message delivery | NOT TESTED | Link and message content verified only |
 | Screen readers (VoiceOver/NVDA), 200% zoom | NOT TESTED | Manual assistive-technology session needed |
 | Production behaviour with the database down | NOT TESTED end-to-end | Covered by unit tests of the ISR failure policy |

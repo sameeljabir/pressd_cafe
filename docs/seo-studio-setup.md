@@ -96,7 +96,7 @@ In Vercel → Project → Settings → Environment Variables, set per environmen
 | `SEO_ADMIN_USERS` | test accounts (own hashes) | real accounts |
 | `SEO_SESSION_SECRET` | its own random value | a different random value |
 | `SEO_SITE_URL` | `https://www.pressdcafe.ae` (canonical and share URLs always point at the real domain; leave unset for the same result) | `https://www.pressdcafe.ae` or unset |
-| `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | optional | optional — live Google rating on the About section; without them a fixed 4.9 / 75 is shown |
+| `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | optional | optional — live Google rating on the About section; without them a fixed 4.9 / 100 is shown |
 
 Never reuse Production credentials in Preview. Deploy a preview, open `/admin/seo` and check Settings → Configuration. Then save a test change, use Confirm & Publish, confirm "live check passed", and restore it from that screen's publish history.
 

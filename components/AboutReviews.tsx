@@ -141,7 +141,7 @@ export default function AboutReviews({
   };
 
   const rating = data?.rating ?? 4.9;
-  const reviewCount = data?.reviewCount ?? 75;
+  const reviewCount = data?.reviewCount ?? 100;
   const ratingText = rating.toFixed(1);
   const mapsUri = data?.mapsUri ?? LISTING_URL;
 
