@@ -18286,6 +18286,74 @@ dialog.product-details-modal .product-modal-close {
   }
 }
 
+/* Story photo: fills the space right of the headline, in the pull quote's
+   column. The story becomes a grid whose columns the two-column copy row
+   shares (subgrid), so the photo lines up with the quote below it. The
+   image is absolutely positioned, so it never adds height: the photo takes
+   the eyebrow + headline rows exactly as they are. Shown only where the
+   copy row is two columns (the sheet is wider than 520px); elsewhere
+   (phones, narrow split panels) the sheet is unchanged. */
+#about .abx-photo {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  @container (min-width: 521px) {
+    #about .abx-story {
+      display: grid;
+      /* The text column never gets narrower than the headline (6.16em at the
+         .abx-title size), so it always stays on two lines. */
+      grid-template-columns: minmax(calc(6.2 * clamp(38px, min(4.3vw, 7.3vh), 72px)), 1.32fr) minmax(0, 1fr);
+      grid-template-areas:
+        "eyebrow photo"
+        "title photo"
+        "copy copy";
+      column-gap: clamp(22px, 2.6vw, 40px);
+    }
+
+    #about .abx-eyebrow { grid-area: eyebrow; }
+    #about .abx-title { grid-area: title; }
+
+    #about .abx-story .abx-copy {
+      grid-area: copy;
+      grid-template-columns: subgrid;
+    }
+
+    #about .abx .abx-photo {
+      grid-area: photo;
+      display: block;
+      position: relative;
+      min-height: 0;
+      margin: 0 0 clamp(16px, 2.8vh, 30px) !important;
+      overflow: hidden;
+      border: 1px solid var(--abx-line);
+      border-radius: 16px;
+      background: #14150f;
+    }
+
+    #about .abx-photo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 58%;
+    }
+  }
+}
+
+@media (min-width: 761px) and (max-height: 940px) {
+  @container (min-width: 521px) {
+    #about .abx-story {
+      grid-template-columns: minmax(calc(6.2 * clamp(38px, min(4.2vw, 6.6vh), 64px)), 1.55fr) minmax(0, 1fr);
+    }
+
+    #about .abx .abx-photo {
+      margin-bottom: clamp(12px, 2vh, 18px) !important;
+    }
+  }
+}
+
 /* ============================================================
    NAVIGATION ICONS — vector icons in place of Unicode glyphs
    (the ↗ arrow rendered as a colour emoji on iOS/Android).

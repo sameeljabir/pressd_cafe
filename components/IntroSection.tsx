@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import SectionHomeButton from "@/components/SectionHomeButton";
 import AboutReviews from "@/components/AboutReviews";
+import { useAlt } from "@/components/AltTextContext";
 import type { GoogleReviewsData } from "@/lib/googleReviews";
 
 type Value = { name: string; text: string; icon: ReactNode };
@@ -77,6 +78,7 @@ const VALUES: Value[] = [
  * The left-side hero video is rendered by <Hero /> and is not touched here.
  */
 export default function IntroSection({ googleReviews }: { googleReviews: GoogleReviewsData | null }) {
+  const alt = useAlt();
   return (
     <section className="intro about-panel section" id="about" aria-label="About PRESS'D Wellness Café">
       <div className="abx">
@@ -91,6 +93,17 @@ export default function IntroSection({ googleReviews }: { googleReviews: GoogleR
           <h2 className="abx-title">
             A Space Made <span className="abx-title-break">for <em>Good Days.</em></span>
           </h2>
+          {/* Beside the headline on wide sheets; hidden where the story is one column. */}
+          <figure className="abx-photo">
+            <img
+              src="/assets/about-cafe-interior-lounge.webp"
+              alt={alt("about.story.interior")}
+              width={1448}
+              height={1086}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
           <div className="abx-copy">
             <p className="abx-lead abx-lead-full">
               PRESS’D was created around the idea that good food, good coffee and good energy belong together. Born at
