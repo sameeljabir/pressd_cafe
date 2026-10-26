@@ -14721,6 +14721,15 @@ body.detail-view #visit .section-home-button {
   object-position: 50% 25% !important;
 }
 
+/* Same for the guest-and-dog and laptop photos: keep faces and the dog in frame. */
+.about-carousel-slide img[src="/assets/about-pet-friendly-guest.webp"] {
+  object-position: 50% 25% !important;
+}
+
+.about-carousel-slide img[src="/assets/about-community-laptop.webp"] {
+  object-position: 50% 42% !important;
+}
+
 .about-carousel-meta {
   position: absolute !important;
   top: 14px !important;

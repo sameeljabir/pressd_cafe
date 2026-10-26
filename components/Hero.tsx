@@ -9,7 +9,7 @@ import PetPawTrail from "@/components/PetPawTrail";
 import PetInteractiveIcon from "@/components/PetInteractiveIcon";
 
 const RAIL_LINKS = [
-  { href: "#menu", label: "Menu", img: "/assets/menu-acai-bowl-cover.webp", imgKey: "hero.rail.menu", kind: "a" as const },
+  { href: "#menu", label: "Menu", img: "/assets/home-menu-green-dream-bowl.webp", imgKey: "hero.rail.menu", kind: "a" as const },
   { href: "#book", label: "Reservation", img: "/assets/reservation-cover.webp", imgKey: "hero.rail.reservation", kind: "book" as const },
   { href: "#about", label: "Our café", img: "/assets/cafe-interior-cover.webp", imgKey: "hero.rail.about", kind: "a" as const },
 ];

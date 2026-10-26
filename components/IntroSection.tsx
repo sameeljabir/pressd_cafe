@@ -37,12 +37,12 @@ const TOP_CAROUSEL_IMAGES = [
 const STORY_CAROUSEL_IMAGES = [
   {
     key: "about.story.community",
-    src: "/assets/work-ambience-cafe.webp",
+    src: "/assets/about-community-laptop.webp",
     label: "COMMUNITY",
   },
   {
     key: "about.story.pets",
-    src: "/assets/pet-friendly-cafe.webp",
+    src: "/assets/about-pet-friendly-guest.webp",
     label: "PET FRIENDLY",
   },
   {

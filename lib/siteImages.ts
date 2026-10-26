@@ -25,7 +25,7 @@ export const SITE_SECTIONS = [
 export type SectionId = (typeof SITE_SECTIONS)[number]["id"];
 
 export const SITE_IMAGES: SiteImage[] = [
-  { key: "hero.rail.menu", section: "hero", label: "Explore card — Menu", src: "/assets/menu-acai-bowl-cover.webp", alt: "PRESS'D Menu" },
+  { key: "hero.rail.menu", section: "hero", label: "Explore card — Menu", src: "/assets/home-menu-green-dream-bowl.webp", alt: "Green Dream Bowl with granola, beetroot, berries and toasted almonds" },
   { key: "hero.rail.reservation", section: "hero", label: "Explore card — Reservation", src: "/assets/reservation-cover.webp", alt: "Intimate table reservation at PRESS'D Wellness Café" },
   { key: "hero.rail.about", section: "hero", label: "Explore card — Our café", src: "/assets/cafe-interior-cover.webp", alt: "PRESS'D Our café" },
 
@@ -34,8 +34,8 @@ export const SITE_IMAGES: SiteImage[] = [
   { key: "about.top.lounge", section: "about", label: "Top carousel — Lounge retreat", src: "/assets/visit-lifestyle-sofa.webp", alt: "Guest enjoying iced matcha and dessert on lounge sofa" },
   { key: "about.top.sanctuary", section: "about", label: "Top carousel — Sanctuary", src: "/assets/cafe-interior-cover.webp", alt: "Atmospheric interior architecture and warm lighting" },
   { key: "about.top.pour", section: "about", label: "Top carousel — Pour & craft", src: "/assets/visit-coffee-detail.webp", alt: "Signature latte art served on handcrafted wood tray" },
-  { key: "about.story.community", section: "about", label: "Story carousel — Community", src: "/assets/work-ambience-cafe.webp", alt: "Community members working and connecting at PRESS'D" },
-  { key: "about.story.pets", section: "about", label: "Story carousel — Pet friendly", src: "/assets/pet-friendly-cafe.webp", alt: "PRESS'D team member greeting a curly-haired dog at the café counter" },
+  { key: "about.story.community", section: "about", label: "Story carousel — Community", src: "/assets/about-community-laptop.webp", alt: "Guest working on a laptop in the PRESS'D lounge" },
+  { key: "about.story.pets", section: "about", label: "Story carousel — Pet friendly", src: "/assets/about-pet-friendly-guest.webp", alt: "Guest stroking her dog on a black banquette with yellow cushions" },
   { key: "about.story.roasts", section: "about", label: "Story carousel — Roasts", src: "/assets/our-cafe-cover.webp", alt: "Artisanal flat white coffee on a dark table" },
   { key: "about.story.rituals", section: "about", label: "Story carousel — Rituals", src: "/assets/visit-guest-reading.webp", alt: "Guest reading in the peaceful sunlit atmosphere" },
   { key: "about.story.nourishment", section: "about", label: "Story carousel — Nourishment", src: "/assets/power-bowl.webp", alt: "Nutrient-dense wholesome wellness bowl" },
