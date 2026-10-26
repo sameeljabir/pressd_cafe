@@ -87,7 +87,7 @@ Automated in Chromium, Firefox and WebKit (desktop 1440×900 and phone 390×844)
 | Menu | Customise → add to cart carries options and price; comment saved | PASS |
 | Menu | Category tabs announce selected state to assistive tech | **FAIL** (P2-07) |
 | Cart | Add, rapid repeated add (no duplicate lines), ± quantity, total = sum of lines, empty state, persists after reload | PASS |
-| Cart | WhatsApp link goes to +971 55 683 8426 with every item and the total | PASS |
+| Cart | WhatsApp link goes to +971 55 68 38 426 with every item and the total | PASS |
 | Cart | Desktop navbar shows item count | **FAIL** (P2-10) |
 | Cart | Escape closes the drawer; drawer is exposed as a dialog | **FAIL** (P2-06) |
 | Language | 10 locales; Arabic switches text and sets RTL; choice persists | PASS |

@@ -55,7 +55,7 @@ export default function Footer() {
           </a>
           <a href={`tel:${PHONE}`}>
             <PhoneIcon />
-            <span>+971 55 683 8426</span>
+            <span>+971 55 68 38 426</span>
           </a>
           <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">
             <ChatIcon />

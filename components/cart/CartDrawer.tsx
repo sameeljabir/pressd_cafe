@@ -105,7 +105,7 @@ export default function CartDrawer() {
             <img src="/assets/whatsapp-transparent.webp" alt="" />
             {t("ui.orderOnWhatsapp", "Order on WhatsApp")}
           </a>
-          <small>{t("ui.orderSentTo", "Order will be sent to +971 55 683 8426")}</small>
+          <small>{t("ui.orderSentTo", "Order will be sent to +971 55 68 38 426")}</small>
         </footer>
       </aside>
     </>

@@ -240,7 +240,7 @@ export default function VisitSection() {
             <div className="visit-contact-entry">
               <span className="visit-entry-label">PHONE</span>
               <a href="tel:+971556838426" className="visit-entry-link">
-                +971 55 683 8426
+                +971 55 68 38 426
               </a>
             </div>
 

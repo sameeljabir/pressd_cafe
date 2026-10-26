@@ -84,7 +84,7 @@ const ui = {
   exploreMenu: "Explore the menu →",
   total: "Total",
   orderOnWhatsapp: "Order on WhatsApp",
-  orderSentTo: "Order will be sent to +971 55 683 8426",
+  orderSentTo: "Order will be sent to +971 55 68 38 426",
   selectLanguage: "SELECT YOUR LANGUAGE",
   languageButtonAria: "Change menu language",
   changeLanguage: "Change language",

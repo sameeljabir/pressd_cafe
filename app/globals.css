@@ -16259,6 +16259,110 @@ body:not(.menu-detail-view)>footer .footer-bottom {
   }
 }
 
+/* Home view, same range. The navbar sits on the hero, left of its
+   Instagram button. The 44vw cap above made it narrower than its own
+   contents (Book a table spilled out by up to 120px), and below 835px the
+   phone header's left/right insets plus that cap centred it over the
+   Instagram button. Size it to its contents from the hero's left edge
+   instead. The full nav (logo, links, cart, Book a table) needs ~480px,
+   which the hero only has from ~930px; below that use the compact nav
+   (logo, cart, menu button), as the split views already do. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  body:not(.detail-view) .navbar {
+    left: clamp(24px, 2.6vw, 44px) !important;
+    right: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* Split views (Visit / About) above 1100px: the hero is only ~46% of the
+   window and the full navbar is ~550-640px wide, so it ran into the
+   Instagram button up to ~1600px (and past the hero below ~1300px).
+   - It sizes to its contents (the desktop 580px minimum width is dropped).
+   - Up to 1365px it uses the compact nav, as it already does below 1101px.
+   - From 1366px to 1649px the full nav fits the hero but not beside the
+     Instagram button, so that button moves down below the navbar. */
+@media (min-width: 1101px) {
+  body.detail-view:not(.menu-detail-view) .navbar {
+    min-width: 0 !important;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1365px) {
+  body.detail-view:not(.menu-detail-view) .navbar {
+    gap: 14px !important;
+  }
+
+  body.detail-view:not(.menu-detail-view) .navbar .desktop-nav,
+  body.detail-view:not(.menu-detail-view) .navbar .nav-actions .book-btn {
+    display: none !important;
+  }
+
+  body.detail-view:not(.menu-detail-view) .navbar .menu-toggle {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 1px solid rgba(246, 233, 218, 0.3) !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+  }
+
+  body.detail-view:not(.menu-detail-view) .navbar .menu-toggle i {
+    display: block !important;
+    width: 18px !important;
+    height: 2px !important;
+    background: #f5efdf !important;
+    margin: 2px 0 !important;
+  }
+}
+
+@media (min-width: 1366px) and (max-width: 1649px) {
+  body.detail-view:not(.menu-detail-view) .hero-round-link {
+    top: calc(clamp(20px, 2.5vh, 32px) + 64px) !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 929px) {
+  body:not(.detail-view) .navbar {
+    gap: 14px !important;
+  }
+
+  body:not(.detail-view) .navbar .desktop-nav,
+  body:not(.detail-view) .navbar .nav-actions .book-btn {
+    display: none !important;
+  }
+
+  body:not(.detail-view) .navbar .menu-toggle {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 1px solid rgba(246, 233, 218, 0.3) !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+  }
+
+  body:not(.detail-view) .navbar .menu-toggle i {
+    display: block !important;
+    width: 18px !important;
+    height: 2px !important;
+    background: #f5efdf !important;
+    margin: 2px 0 !important;
+  }
+}
+
 /* ============================================================
    PHONE HEADER + BOTTOM DOCK (<= 760px) — fit and touch targets only
    ============================================================ */
