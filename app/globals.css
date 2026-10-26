@@ -13874,6 +13874,31 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   }
 }
 
+/* Split view (Visit / About): the photo panel is only ~46% of the window
+   while the headline is sized from the window width, so the corner anchor
+   above put the badge on top of "BETTER DAYS." from ~1100px to ~1900px.
+   Here the badge is centred in the space right of that line instead
+   ("BETTER DAYS." is 6.383em wide and starts at .hero-content's left
+   offset), keeping at least 0.3em clear each side and only shrinking when
+   that space is narrower than its normal size. Its vertical centre is
+   unchanged. */
+@media (min-width: 761px) {
+  body.detail-view .hero-pet-float {
+    --pet-free: calc(100% - clamp(32px, 3.6vw, 56px) - 6.383 * var(--hero-title-fs));
+    --pet-fit: min(var(--pet-size), calc((var(--pet-free) - 0.6 * var(--hero-title-fs)) / 0.65));
+    width: var(--pet-fit) !important;
+    right: calc((var(--pet-free) - var(--pet-fit)) / 2) !important;
+    bottom: calc(11% + clamp(88px, 9vw, 138px) / 2) !important;
+    translate: 0 50%;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+  body.detail-view .hero-pet-float {
+    bottom: calc(10% + clamp(70px, 9vw, 105px) / 2) !important;
+  }
+}
+
 /* Desktop/laptop-only interactive variant of the pet icon (same
    .hero-pet-float position/size above). Base artwork (public/petIcon.png)
    is completely static; the two pupils are drawn as crisp CSS circles,
