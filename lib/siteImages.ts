@@ -25,20 +25,10 @@ export const SITE_SECTIONS = [
 export type SectionId = (typeof SITE_SECTIONS)[number]["id"];
 
 export const SITE_IMAGES: SiteImage[] = [
-  { key: "hero.rail.menu", section: "hero", label: "Explore card — Menu", src: "/assets/home-menu-green-dream-bowl.webp", alt: "Green Dream Bowl with granola, beetroot, berries and toasted almonds" },
+  { key: "hero.rail.menu", section: "hero", label: "Explore card — Menu", src: "/assets/home-menu-superfood-bowl.webp", alt: "Superfood bowl with a green smoothie base, granola, beetroot, mango, berries, broccoli and toasted almonds" },
   { key: "hero.rail.reservation", section: "hero", label: "Explore card — Reservation", src: "/assets/reservation-cover.webp", alt: "Intimate table reservation at PRESS'D Wellness Café" },
   { key: "hero.rail.about", section: "hero", label: "Explore card — Our café", src: "/assets/cafe-interior-cover.webp", alt: "PRESS'D Our café" },
 
-  { key: "about.top.space", section: "about", label: "Top carousel — The space", src: "/assets/visit-main-interior.webp", alt: "Sunlit interior at PRESS'D Wellness Café with palm trees and modern lounge seating" },
-  { key: "about.top.espresso", section: "about", label: "Top carousel — Espresso bar", src: "/assets/visit-service-counter.webp", alt: "Barista preparing specialty brew at the espresso bar" },
-  { key: "about.top.lounge", section: "about", label: "Top carousel — Lounge retreat", src: "/assets/visit-lifestyle-sofa.webp", alt: "Guest enjoying iced matcha and dessert on lounge sofa" },
-  { key: "about.top.sanctuary", section: "about", label: "Top carousel — Sanctuary", src: "/assets/about-sanctuary-candles.webp", alt: "Dessert-style candles glowing on a table under warm café lights" },
-  { key: "about.top.pour", section: "about", label: "Top carousel — Pour & craft", src: "/assets/visit-coffee-detail.webp", alt: "Signature latte art served on handcrafted wood tray" },
-  { key: "about.story.community", section: "about", label: "Story carousel — Community", src: "/assets/about-community-laptop.webp", alt: "Guest working on a laptop in the PRESS'D lounge" },
-  { key: "about.story.pets", section: "about", label: "Story carousel — Pet friendly", src: "/assets/about-pet-friendly-guest.webp", alt: "Guest stroking her dog on a black banquette with yellow cushions" },
-  { key: "about.story.roasts", section: "about", label: "Story carousel — Roasts", src: "/assets/our-cafe-cover.webp", alt: "Artisanal flat white coffee on a dark table" },
-  { key: "about.story.rituals", section: "about", label: "Story carousel — Rituals", src: "/assets/visit-guest-reading.webp", alt: "Guest reading in the peaceful sunlit atmosphere" },
-  { key: "about.story.nourishment", section: "about", label: "Story carousel — Nourishment", src: "/assets/power-bowl.webp", alt: "Nutrient-dense wholesome wellness bowl" },
 
   { key: "signature.toast", section: "signature", label: "Signature dish", src: "/assets/avocado-toast.webp", alt: "PRESS'D signature avocado toast" },
   { key: "work.ambience", section: "work", label: "Work ambience", src: "/assets/work-ambience-cafe.webp", alt: "A guest working with coffee and natural light at PRESS'D" },
@@ -65,7 +55,7 @@ export const SITE_IMAGES: SiteImage[] = [
   { key: "visit.pour", section: "visit", label: "Visit gallery 4", src: "/assets/visit-coffee-serving.webp", alt: "Filter coffee being poured from a glass server into a glass cup" },
 
   { key: "chrome.navbar.logo", section: "chrome", label: "Header logo", src: "/assets/pressd-logo.webp", alt: "PRESS'D Wellness Café" },
-  { key: "chrome.footer.logo", section: "chrome", label: "Footer logo", src: "/assets/pressd-logo.webp", alt: "PRESS'D Wellness Café" },
+  { key: "chrome.footer.logo", section: "chrome", label: "Footer logo", src: "/assets/pressd-footer-logo.png?v=2", alt: "PRESS'D Wellness Café" },
   { key: "chrome.loader.logo", section: "chrome", label: "Loading-screen logo (decorative)", src: "/assets/pressd-logo.webp", alt: "" },
   { key: "chrome.dock.whatsapp", section: "chrome", label: "Mobile dock WhatsApp icon (decorative)", src: "/assets/whatsapp-transparent.webp", alt: "" },
 ];

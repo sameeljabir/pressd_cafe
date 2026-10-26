@@ -3,6 +3,7 @@
 import { useAlt } from "@/components/AltTextContext";
 import { useCart } from "@/components/cart/CartContext";
 import { useSectionLinkHandler } from "@/components/navigation/SectionNavContext";
+import { BagIcon, HomeIcon, MenuLinesIcon } from "@/components/icons";
 
 export default function MobileDock() {
   const alt = useAlt();
@@ -12,14 +13,15 @@ export default function MobileDock() {
   return (
     <nav className="mobile-dock" aria-label="Mobile quick navigation">
       <a href="#home" onClick={handleLink("#home")}>
-        <span>⌂</span>Home
+        <span><HomeIcon /></span>Home
       </a>
       <a href="#menu" onClick={handleLink("#menu")}>
-        <span>≡</span>Menu
+        <span><MenuLinesIcon /></span>Menu
       </a>
       <button className="dock-cart" onClick={openCart}>
         <span>
-          ▢<i>{quantity}</i>
+          <BagIcon />
+          <i>{quantity}</i>
         </span>
         Cart
       </button>

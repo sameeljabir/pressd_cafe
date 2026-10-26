@@ -6,6 +6,7 @@ import { useCart } from "@/components/cart/CartContext";
 import { useBooking } from "@/components/booking/BookingContext";
 import { useSectionLinkHandler, useSectionNav } from "@/components/navigation/SectionNavContext";
 import LanguageSelector from "@/components/menu/LanguageSelector";
+import { ArrowUpRightIcon } from "@/components/icons";
 
 const NAV_LINKS = [
   { href: "#menu", label: "Menu" },
@@ -88,7 +89,7 @@ export default function Navbar() {
             </svg>
           </button>
           <button className="book-btn" onClick={openBooking}>
-            Book a table <span>↗</span>
+            Book a table <span className="book-btn-icon"><ArrowUpRightIcon /></span>
           </button>
         </div>
         <button
@@ -149,7 +150,7 @@ export default function Navbar() {
                 openBooking();
               }}
             >
-              Book a table <span>↗</span>
+              Book a table <span className="book-btn-icon"><ArrowUpRightIcon /></span>
             </button>
           </div>
         </nav>

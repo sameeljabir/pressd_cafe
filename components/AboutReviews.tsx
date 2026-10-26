@@ -58,14 +58,14 @@ function Stars({
   return (
     <span className={className} role="img" aria-label={label}>
       {"★".repeat(filled)}
-      <span className="about-reviews-star-dim">{"★".repeat(5 - filled)}</span>
+      <span className="abx-star-dim">{"★".repeat(5 - filled)}</span>
     </span>
   );
 }
 
 /**
- * About page Google reviews module: an editorial review carousel (left) and
- * a total-rating panel (right). Autoplay is driven by the active progress
+ * About page Google reviews module: the total rating (left) set against an
+ * editorial review carousel (right). Autoplay is driven by the active progress
  * line's CSS animation (its `animationend` advances the slide), so pausing
  * on hover/focus/touch or when off-screen freezes timer and progress
  * together, and reduced motion — which removes the animation — disables
@@ -146,88 +146,103 @@ export default function AboutReviews({
   const mapsUri = data?.mapsUri ?? LISTING_URL;
 
   return (
-    <div className="about-tile about-tile-reviews">
-      <div className="about-reviews-inner">
-        <div
-          ref={panelRef}
-          className={`about-reviews-panel${paused ? " is-paused" : ""}`}
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Google reviews from our guests"
-          tabIndex={0}
-          onKeyDown={onKeyDown}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          // Only keyboard focus pauses: a mouse click on an arrow leaves the
-          // button focused, which must not freeze autoplay indefinitely.
-          onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
-          onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget as Node | null))
-              setFocused(false);
-          }}
-          onPointerDown={holdForTouch}
+    <div className="abx-reviews">
+      <div className="abx-rating">
+        <p className="abx-rating-label">Google Reviews</p>
+        <p
+          className="abx-rating-figure"
+          aria-label={`Rated ${ratingText} out of 5`}
         >
-          <div className="about-reviews-head">
-            <p className="about-reviews-label">
-              GOOGLE REVIEWS{" "}
-              <span className="about-reviews-label-rule" aria-hidden="true" />
-            </p>
-          </div>
+          <span className="abx-rating-value">{ratingText}</span>
+          <span className="abx-rating-max">/ 5</span>
+        </p>
+        <Stars
+          className="abx-rating-stars"
+          value={rating}
+          label={`${ratingText} out of 5 stars`}
+        />
+        <p className="abx-rating-count">
+          {reviewCount.toLocaleString("en-US")}+ reviews
+        </p>
+        <a
+          className="abx-rating-cta"
+          href={mapsUri}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Read all reviews <span aria-hidden="true">↗</span>
+        </a>
+        {data && (
+          // Google's required attribution for the live rating/count.
+          <span className="abx-google-attr" translate="no">
+            Google Maps
+          </span>
+        )}
+      </div>
 
-          <div
-            className="about-reviews-stage"
-            aria-live={paused ? "polite" : "off"}
-          >
-            {REVIEWS.map((review, i) => {
-              const state =
-                i === index
-                  ? " is-active"
-                  : i === prevIndex
-                    ? " is-leaving"
-                    : "";
-              return (
-                <figure
-                  key={review.author}
-                  className={`about-reviews-slide${state}`}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${i + 1} of ${total}`}
-                  aria-hidden={i !== index}
+      <div
+        ref={panelRef}
+        className={`abx-rev-panel${paused ? " is-paused" : ""}`}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Google reviews from our guests"
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        // Only keyboard focus pauses: a mouse click on an arrow leaves the
+        // button focused, which must not freeze autoplay indefinitely.
+        onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null))
+            setFocused(false);
+        }}
+        onPointerDown={holdForTouch}
+      >
+        <span className="abx-rev-mark" aria-hidden="true">
+          “
+        </span>
+        <div className="abx-rev-stage" aria-live={paused ? "polite" : "off"}>
+          {REVIEWS.map((review, i) => {
+            const state =
+              i === index ? " is-active" : i === prevIndex ? " is-leaving" : "";
+            return (
+              <figure
+                key={review.author}
+                className={`abx-rev-slide${state}`}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${total}`}
+                aria-hidden={i !== index}
+              >
+                <blockquote
+                  className={`abx-rev-quote${review.text.length > LONG_QUOTE ? " is-long" : ""}`}
                 >
-                  <span className="about-reviews-avatar" aria-hidden="true">
-                    {review.author.charAt(0)}
-                  </span>
+                  <p>{review.text}</p>
+                </blockquote>
+                <figcaption className="abx-rev-meta">
+                  <span className="abx-rev-author">{review.author}</span>
                   <Stars
-                    className="about-reviews-stars"
+                    className="abx-rev-stars"
                     value={review.rating}
                     label={`${review.rating} out of 5 stars`}
                   />
-                  <blockquote
-                    className={`about-reviews-quote${review.text.length > LONG_QUOTE ? " is-long" : ""}`}
-                  >
-                    <p>“{review.text}”</p>
-                  </blockquote>
-                  <figcaption className="about-reviews-meta">
-                    <span className="about-reviews-author">
-                      <span
-                        className="about-reviews-author-rule"
-                        aria-hidden="true"
-                      />
-                      {review.author}
-                    </span>
-                    <span className="about-reviews-source">Google Review</span>
-                  </figcaption>
-                </figure>
-              );
-            })}
-          </div>
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
 
-          <div className="about-reviews-progress">
+        <div className="abx-rev-progress">
+          <span className="abx-rev-count" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </span>
+          <span className="abx-rev-ticks">
             {REVIEWS.map((review, i) => (
               <button
                 key={review.author}
                 type="button"
-                className={`about-reviews-tick${i === index ? " is-active" : ""}`}
+                className={`abx-rev-tick${i === index ? " is-active" : ""}`}
                 onClick={() => go(i)}
                 aria-label={`Show review ${i + 1} of ${total}`}
                 aria-current={i === index ? "true" : undefined}
@@ -235,46 +250,13 @@ export default function AboutReviews({
                 {i === index && (
                   <span
                     key={index}
-                    className="about-reviews-tick-fill"
+                    className="abx-rev-tick-fill"
                     onAnimationEnd={() => go(index + 1)}
                   />
                 )}
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="about-reviews-rating">
-          <p className="about-reviews-rating-label">TOTAL RATING</p>
-          <p
-            className="about-reviews-rating-figure"
-            aria-label={`Rated ${ratingText} out of 5`}
-          >
-            <span className="about-reviews-rating-value">{ratingText}</span>
-            <span className="about-reviews-rating-max">/ 5</span>
-          </p>
-          <Stars
-            className="about-reviews-rating-stars"
-            value={rating}
-            label={`${ratingText} out of 5 stars`}
-          />
-          <p className="about-reviews-rating-count">
-            {reviewCount.toLocaleString("en-US")}+ REVIEWS
-          </p>
-          <a
-            className="about-reviews-cta"
-            href={mapsUri}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            READ ALL REVIEWS <span aria-hidden="true">↗</span>
-          </a>
-          {data && (
-            // Google's required attribution for the live rating/count.
-            <span className="about-google-attr" translate="no">
-              Google Maps
-            </span>
-          )}
+          </span>
         </div>
       </div>
     </div>

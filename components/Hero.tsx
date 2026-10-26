@@ -9,7 +9,7 @@ import PetPawTrail from "@/components/PetPawTrail";
 import PetInteractiveIcon from "@/components/PetInteractiveIcon";
 
 const RAIL_LINKS = [
-  { href: "#menu", label: "Menu", img: "/assets/home-menu-green-dream-bowl.webp", imgKey: "hero.rail.menu", kind: "a" as const },
+  { href: "#menu", label: "Menu", img: "/assets/home-menu-superfood-bowl.webp", imgKey: "hero.rail.menu", kind: "a" as const },
   { href: "#book", label: "Reservation", img: "/assets/reservation-cover.webp", imgKey: "hero.rail.reservation", kind: "book" as const },
   { href: "#about", label: "Our café", img: "/assets/cafe-interior-cover.webp", imgKey: "hero.rail.about", kind: "a" as const },
 ];
@@ -58,45 +58,83 @@ export default function Hero() {
     video.play().catch(() => {});
   }, []);
 
-  // Mobile auto-advancing carousel over the hero-rail cards.
+  // Scrolls only the card rail (never the page) so the given card sits at its start.
+  const scrollRailTo = (index: number) => {
+    const rail = heroRailRef.current;
+    const cards = rail?.querySelectorAll<HTMLElement>(".rail-card");
+    if (!rail || !cards?.length) return;
+    rail.scrollTo({ left: cards[index].offsetLeft - cards[0].offsetLeft, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  };
+
+  // Mobile auto-advancing carousel over the hero-rail cards. It opens on Menu
+  // (the first card) and holds there longer before the first advance, then
+  // cycles Menu → Reservation → Our café → Menu.
   useEffect(() => {
     const rail = heroRailRef.current;
     if (!rail) return;
     const mobile = matchMedia("(max-width:760px)");
     const cards = [...rail.querySelectorAll<HTMLElement>(".rail-card")];
     if (!cards.length) return;
+    const FIRST_HOLD_MS = 8000;
+    const STEP_MS = 3400;
     let timer = 0;
     let resumeTimer = 0;
+    let frame = 0;
+    rail.scrollLeft = 0;
 
-    const goTo = (index: number) => {
-      const next = (index + cards.length) % cards.length;
-      setCarouselIndex(next);
-      cards[next]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    // The card currently at the start of the rail, read from the scroll position
+    // so swipes and dot taps are respected.
+    const current = () => {
+      if (rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 2) return cards.length - 1;
+      let best = 0;
+      cards.forEach((card, i) => {
+        const d = Math.abs(card.offsetLeft - cards[0].offsetLeft - rail.scrollLeft);
+        if (d < Math.abs(cards[best].offsetLeft - cards[0].offsetLeft - rail.scrollLeft)) best = i;
+      });
+      return best;
     };
     const advance = () => {
       if (!mobile.matches || document.hidden) return;
-      goTo(carouselIndex + 1);
+      const next = (current() + 1) % cards.length;
+      setCarouselIndex(next);
+      scrollRailTo(next);
     };
-    const start = () => {
+    const schedule = (delay: number) => {
+      clearTimeout(timer);
       clearInterval(timer);
-      if (mobile.matches && !prefersReducedMotion()) timer = window.setInterval(advance, 3400);
+      if (!mobile.matches || prefersReducedMotion()) return;
+      timer = window.setTimeout(() => {
+        advance();
+        timer = window.setInterval(advance, STEP_MS);
+      }, delay);
     };
     const pause = () => {
+      clearTimeout(timer);
       clearInterval(timer);
       clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(start, 6500);
+      resumeTimer = window.setTimeout(() => schedule(STEP_MS), 6500);
     };
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setCarouselIndex(current()));
+    };
+    const onVisibility = () => (document.hidden ? (clearTimeout(timer), clearInterval(timer)) : schedule(STEP_MS));
+    const onMediaChange = () => schedule(FIRST_HOLD_MS);
     rail.addEventListener("pointerdown", pause, { passive: true });
-    document.addEventListener("visibilitychange", () => (document.hidden ? clearInterval(timer) : start()));
-    mobile.addEventListener("change", start);
-    start();
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+    mobile.addEventListener("change", onMediaChange);
+    schedule(FIRST_HOLD_MS);
     return () => {
+      clearTimeout(timer);
       clearInterval(timer);
       clearTimeout(resumeTimer);
+      cancelAnimationFrame(frame);
       rail.removeEventListener("pointerdown", pause);
-      mobile.removeEventListener("change", start);
+      rail.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", onVisibility);
+      mobile.removeEventListener("change", onMediaChange);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -207,9 +245,7 @@ export default function Hero() {
             className={carouselIndex === index ? "active" : undefined}
             onClick={() => {
               setCarouselIndex(index);
-              const rail = heroRailRef.current;
-              const cards = rail?.querySelectorAll<HTMLElement>(".rail-card");
-              cards?.[index]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+              scrollRailTo(index);
             }}
           />
         ))}

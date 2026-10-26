@@ -282,7 +282,7 @@ export default function VisitSection() {
 
           <div className="visit-touch-signature">
             <p className="visit-touch-note">
-              For inquiries, collaborations or private events, feel free to reach out. Our team will get back to you as soon as possible.
+              Have a question or collaboration in mind? Get in touch with our team.
             </p>
             <div className="visit-pet-sig-wrap" title="Pet friendly café with love">
               <PetLoveArt />
@@ -292,8 +292,6 @@ export default function VisitSection() {
 
         {/* 5. BOTTOM ROW: BRAND COLOPHON */}
         <div className="visit-colophon-bar">
-          <span className="visit-colophon-loc">47XV+XQ2 · MUSCAT ST · NAD AL SHEBA 1 · DUBAI</span>
-          <span className="visit-colophon-sep" aria-hidden="true">◇</span>
           <span className="visit-colophon-tag">WELLNESS CAFÉ &amp; SPECIALTY ROASTS</span>
           <span className="visit-colophon-sep" aria-hidden="true">◇</span>
           <span className="visit-colophon-copy">© PRESS’D · ALL RIGHTS RESERVED</span>

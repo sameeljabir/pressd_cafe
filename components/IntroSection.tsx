@@ -1,219 +1,127 @@
 "use client";
 
-import { useAlt } from "@/components/AltTextContext";
-import { useState } from "react";
+import type { ReactNode } from "react";
 import SectionHomeButton from "@/components/SectionHomeButton";
 import AboutReviews from "@/components/AboutReviews";
 import type { GoogleReviewsData } from "@/lib/googleReviews";
 
-const TOP_CAROUSEL_IMAGES = [
+type Value = { name: string; text: string; icon: ReactNode };
+
+// Fine-line icons drawn on a 24px grid, stroked in currentColor (gold).
+const iconProps = {
+  width: 22,
+  height: 22,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.3,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+
+const VALUES: Value[] = [
   {
-    key: "about.top.space",
-    src: "/assets/visit-main-interior.webp",
-    label: "THE SPACE",
+    name: "Wellness Food",
+    text: "Honest ingredients and thoughtful preparation.",
+    icon: (
+      <svg {...iconProps}>
+        <path d="M3.5 11.5h17a8.5 8.5 0 0 1-17 0Z" />
+        <path d="M12 11.5c0-3.6 2.3-6.2 5.6-6.9-.3 3.6-2.4 6.2-5.6 6.9" />
+        <path d="M12 11.5C11.4 8.8 9.6 7 7 6.6c.1 2.7 1.9 4.5 5 4.9" />
+      </svg>
+    ),
   },
   {
-    key: "about.top.espresso",
-    src: "/assets/visit-service-counter.webp",
-    label: "ESPRESSO BAR",
+    name: "Pet Friendly",
+    text: "Four-legged regulars are always welcome.",
+    icon: (
+      <svg {...iconProps}>
+        <ellipse cx="6.2" cy="10.2" rx="1.7" ry="2.2" />
+        <ellipse cx="10" cy="6.3" rx="1.7" ry="2.3" />
+        <ellipse cx="14.4" cy="6.3" rx="1.7" ry="2.3" />
+        <ellipse cx="18" cy="10.2" rx="1.7" ry="2.2" />
+        <path d="M12.2 11.6c-2.6 0-5 3.4-5 5.6 0 1.5 1.2 2.3 2.6 2.3 1 0 1.5-.5 2.4-.5s1.4.5 2.4.5c1.4 0 2.6-.8 2.6-2.3 0-2.2-2.4-5.6-5-5.6Z" />
+      </svg>
+    ),
   },
   {
-    key: "about.top.lounge",
-    src: "/assets/visit-lifestyle-sofa.webp",
-    label: "LOUNGE RETREAT",
+    name: "Work Friendly",
+    text: "A calm corner for productive afternoons.",
+    icon: (
+      <svg {...iconProps}>
+        <rect x="4.5" y="5.5" width="15" height="10" rx="1.2" />
+        <path d="M2.5 18.5h19" />
+        <path d="M10 18.5l.6-1.2h2.8l.6 1.2" />
+      </svg>
+    ),
   },
   {
-    key: "about.top.sanctuary",
-    src: "/assets/about-sanctuary-candles.webp",
-    label: "SANCTUARY",
-  },
-  {
-    key: "about.top.pour",
-    src: "/assets/visit-coffee-detail.webp",
-    label: "POUR & CRAFT",
+    name: "Specialty Coffee",
+    text: "Specialty roasts, poured with care.",
+    icon: (
+      <svg {...iconProps}>
+        <path d="M4.5 9.5h12v4.5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5Z" />
+        <path d="M16.5 11h1.2a2.3 2.3 0 0 1 0 4.6h-1.6" />
+        <path d="M8.5 3.5c-.6.8.6 1.4 0 2.2M12.5 3.5c-.6.8.6 1.4 0 2.2" />
+      </svg>
+    ),
   },
 ];
 
-const STORY_CAROUSEL_IMAGES = [
-  {
-    key: "about.story.community",
-    src: "/assets/about-community-laptop.webp",
-    label: "COMMUNITY",
-  },
-  {
-    key: "about.story.pets",
-    src: "/assets/about-pet-friendly-guest.webp",
-    label: "PET FRIENDLY",
-  },
-  {
-    key: "about.story.roasts",
-    src: "/assets/our-cafe-cover.webp",
-    label: "ROASTS",
-  },
-  {
-    key: "about.story.rituals",
-    src: "/assets/visit-guest-reading.webp",
-    label: "RITUALS",
-  },
-  {
-    key: "about.story.nourishment",
-    src: "/assets/power-bowl.webp",
-    label: "NOURISHMENT",
-  },
-];
-
+/**
+ * About panel (right side of the About split screen). One continuous
+ * editorial sheet rather than a grid of cards:
+ *   masthead → story (headline + copy) → four values → Google reviews → colophon
+ *   (location + copyright).
+ * The left-side hero video is rendered by <Hero /> and is not touched here.
+ */
 export default function IntroSection({ googleReviews }: { googleReviews: GoogleReviewsData | null }) {
-  const alt = useAlt();
-  const [topIndex, setTopIndex] = useState(0);
-  const [storyIndex, setStoryIndex] = useState(0);
-
-  const nextTopImage = () => {
-    setTopIndex((prev) => (prev + 1) % TOP_CAROUSEL_IMAGES.length);
-  };
-
-  const nextStoryImage = () => {
-    setStoryIndex((prev) => (prev + 1) % STORY_CAROUSEL_IMAGES.length);
-  };
-
   return (
     <section className="intro about-panel section" id="about" aria-label="About PRESS'D Wellness Café">
-      <div className="about-grid">
-        {/* ROW 1 LEFT: Philosophy tile */}
-        <div className="about-tile about-tile-intro">
-          <div>
-            <p className="about-micro-eyebrow">THE PRESS’D PHILOSOPHY</p>
-            <h2 className="about-headline">
-              <span className="about-head-serif">CRAFTED WELLNESS,</span>
-              <span className="about-head-serif about-head-accent">CURATED TASTE.</span>
-            </h2>
-          </div>
-          <div>
-            <p className="about-lead-statement">
-              A modern wellness café built around honest ingredients, thoughtful preparation and a space designed for better everyday moments.
+      <div className="abx">
+        <div className="abx-mast" aria-hidden="true">
+          <span>About</span>
+          <span className="abx-mast-rule" />
+          <span>Wellness Café &amp; Specialty Roasts</span>
+        </div>
+
+        <div className="abx-story">
+          <p className="abx-eyebrow">Our Story</p>
+          <h2 className="abx-title">
+            A Space Made <span className="abx-title-break">for <em>Good Days.</em></span>
+          </h2>
+          <div className="abx-copy">
+            <p className="abx-lead abx-lead-full">
+              PRESS’D was created around the idea that good food, good coffee and good energy belong together. Born at
+              Meydan Polo Residence, we built an unhurried sanctuary where nutrition meets uncompromising flavour.
             </p>
-            <p className="about-features" aria-label="Café features">
-              <span>Pet Friendly</span>
-              <span>Work Friendly</span>
-              <span>Wellness Food</span>
-              <span>Specialty Coffee</span>
+            {/* Shorter story for small phones, where the About panel must fit one screen. */}
+            <p className="abx-lead abx-lead-short">
+              Good food, good coffee and good energy, together in one unhurried wellness café at Meydan Polo Residence.
+            </p>
+            <p className="abx-pull">
+              A thoughtfully crafted space for morning rituals, productive afternoons and genuine community.
             </p>
           </div>
         </div>
 
-        {/* ROW 1 RIGHT: Interactive Large Image Carousel */}
-        <div className="about-tile about-tile-carousel about-tile-carousel-top">
-          <div className="about-carousel-viewport">
-            {TOP_CAROUSEL_IMAGES.map((item, idx) => (
-              <figure
-                key={item.src}
-                className={`about-carousel-slide ${idx === topIndex ? "is-active" : ""}`}
-                aria-hidden={idx !== topIndex}
-              >
-                <img src={item.src} alt={alt(item.key)} loading="lazy" />
-              </figure>
-            ))}
-          </div>
-          <div className="about-carousel-meta">
-            <span className="about-carousel-tag">
-              0{topIndex + 1} / 0{TOP_CAROUSEL_IMAGES.length} · {TOP_CAROUSEL_IMAGES[topIndex].label}
-            </span>
-          </div>
-          <button
-            type="button"
-            className="about-carousel-btn"
-            onClick={nextTopImage}
-            aria-label="Next photograph"
-            title="Next photograph"
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        </div>
+        <ul className="abx-values" aria-label="What PRESS'D stands for">
+          {VALUES.map((value) => (
+            <li key={value.name} className="abx-value">
+              <span className="abx-value-icon">{value.icon}</span>
+              <span className="abx-value-name">{value.name}</span>
+              <span className="abx-value-text">{value.text}</span>
+            </li>
+          ))}
+        </ul>
 
-        {/* ROW 2: One Cohesive Editorial Community / Google Review Block */}
         <AboutReviews data={googleReviews} />
 
-        {/* ROW 3 LEFT: Interactive Story Image Carousel */}
-        <div className="about-tile about-tile-carousel about-tile-carousel-story">
-          <div className="about-carousel-viewport">
-            {STORY_CAROUSEL_IMAGES.map((item, idx) => (
-              <figure
-                key={item.src}
-                className={`about-carousel-slide ${idx === storyIndex ? "is-active" : ""}`}
-                aria-hidden={idx !== storyIndex}
-              >
-                <img src={item.src} alt={alt(item.key)} loading="lazy" />
-              </figure>
-            ))}
-          </div>
-          <div className="about-carousel-meta">
-            <span className="about-carousel-tag">
-              0{storyIndex + 1} / 0{STORY_CAROUSEL_IMAGES.length} · {STORY_CAROUSEL_IMAGES[storyIndex].label}
-            </span>
-          </div>
-          <button
-            type="button"
-            className="about-carousel-btn"
-            onClick={nextStoryImage}
-            aria-label="Next story photograph"
-            title="Next story photograph"
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        </div>
-
-        {/* ROW 3 RIGHT: Our Story Tile */}
-        <div className="about-tile about-tile-story">
-          <div className="about-col-label">
-            <span className="about-col-label-line" aria-hidden="true" />
-            <span>OUR STORY</span>
-            <span className="about-col-label-line" aria-hidden="true" />
-          </div>
-          <div>
-            <h3 className="about-story-title">A Space Made for Good Days</h3>
-            <p className="about-story-text">
-              PRESS’D was created around the idea that good food, good coffee and good energy belong together. Born at
-              Meydan Polo Residence, we built an unhurried sanctuary where nutrition meets uncompromising flavour. A
-              thoughtfully crafted space for morning rituals, productive afternoons, and genuine community.
-            </p>
-          </div>
-          <div className="about-story-signoff">
-            <span className="about-story-loc">Meydan Polo Residence · Nad Al Sheba 1, Dubai</span>
-          </div>
-        </div>
-
-        {/* ROW 4: Brand Colophon Strip */}
-        <div className="about-tile about-colophon">
-          <span className="about-colophon-loc">MEYDAN POLO RESIDENCE · NAD AL SHEBA 1 · DUBAI</span>
-          <span className="about-colophon-sep" aria-hidden="true">◇</span>
-          <span className="about-colophon-tag">WELLNESS CAFÉ &amp; SPECIALTY ROASTS</span>
-          <span className="about-colophon-sep" aria-hidden="true">◇</span>
-          <span className="about-colophon-copy">© PRESS’D WELLNESS CAFÉ</span>
+        <div className="abx-foot">
+          <span>Meydan Polo Residence · Nad Al Sheba 1 · Dubai</span>
+          <span className="abx-foot-sep" aria-hidden="true">◇</span>
+          <span>© PRESS’D Wellness Café</span>
         </div>
       </div>
 

@@ -5086,7 +5086,7 @@ body.home-view main {
 
   body.home-view .hero-rail {
     flex-shrink: 0 !important;
-    height: clamp(78px, 13dvh, 112px) !important;
+    height: clamp(118px, 19dvh, 168px) !important;
     min-height: 0 !important;
     margin: 0 !important;
     gap: clamp(8px, 2vw, 12px) !important;
@@ -5110,6 +5110,19 @@ body.home-view main {
     min-height: 0 !important;
     scroll-snap-align: start !important;
     border-radius: 14px !important;
+  }
+
+  /* Per-photo focal points for the wide phone cards. */
+  body.home-view .hero-rail .rail-card img[src*="home-menu-superfood-bowl"] {
+    object-position: 54% 43% !important;
+  }
+
+  body.home-view .hero-rail .rail-card img[src*="reservation-cover"] {
+    object-position: 45% 30% !important;
+  }
+
+  body.home-view .hero-rail .rail-card img[src*="cafe-interior-cover"] {
+    object-position: 40% 55% !important;
   }
 
   body.home-view .hero-rail .rail-card span {
@@ -13450,8 +13463,18 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
     transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease !important;
   }
 
+  /* Per-photo focal points: the whole bowl, the reader's face and book,
+     the bright window side of the café. */
+  .hero-rail .rail-card img[src*="home-menu-superfood-bowl"] {
+    object-position: 54% 43% !important;
+  }
+
   .hero-rail .rail-card img[src*="reservation-cover"] {
-    object-position: 50% 55% !important;
+    object-position: 45% 30% !important;
+  }
+
+  .hero-rail .rail-card img[src*="cafe-interior-cover"] {
+    object-position: 40% 55% !important;
   }
 
   .hero-rail .rail-card:hover img {
@@ -14498,11 +14521,14 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
 
 .visit-touch-note {
   font-family: "DM Sans", sans-serif !important;
-  font-size: clamp(10.5px, 0.74vw, 11.5px) !important;
-  line-height: 1.45 !important;
-  color: rgba(245, 239, 223, 0.5) !important;
+  font-size: clamp(11px, 0.78vw, 12px) !important;
+  line-height: 1.5 !important;
+  color: rgba(245, 239, 223, 0.55) !important;
   margin: 0 !important;
-  max-width: 24ch !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 34ch !important;
+  text-wrap: pretty;
 }
 
 .visit-pet-sig-wrap {
@@ -14520,13 +14546,83 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   opacity: 0.85 !important;
 }
 
+/* Narrow "Connect with us" cards: the note takes the full card width and the
+   decorative pet sketch steps aside, so the note never squeezes into a sliver. */
+.visit-touch-panel {
+  container-type: inline-size;
+}
+
+@container (max-width: 260px) {
+  .visit-touch-signature .visit-pet-sig-wrap {
+    display: none !important;
+  }
+
+  .visit-touch-note {
+    max-width: none !important;
+  }
+
+  .visit-touch-head {
+    gap: 3px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .visit-contact-entries {
+    gap: 5px !important;
+  }
+}
+
+/* Shorter split screens: tighter spacing inside the card, sketch hidden,
+   so the contact details and the note still fit. */
+@media (min-width: 761px) and (max-height: 940px) {
+  .visit-touch-panel .visit-touch-head {
+    gap: 3px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .visit-touch-panel .visit-title-divider {
+    margin-top: 2px !important;
+  }
+
+  .visit-touch-panel .visit-contact-entries {
+    gap: 5px !important;
+  }
+
+  .visit-touch-panel .visit-entry-val {
+    line-height: 1.3 !important;
+  }
+
+  .visit-touch-panel .visit-touch-signature {
+    padding-top: 7px !important;
+  }
+
+  .visit-touch-panel .visit-pet-sig-wrap {
+    display: none !important;
+  }
+
+  .visit-touch-panel .visit-touch-note {
+    max-width: none !important;
+    line-height: 1.4 !important;
+  }
+}
+
+/* Short laptop/landscape screens (≈1024×768, 1280×720, 1366×768): the card
+   cannot hold the full contact details plus the note, so the note gives way. */
+@media (min-width: 1000px) and (max-height: 780px) {
+  .visit-touch-panel .visit-touch-signature {
+    display: none !important;
+  }
+}
+
 /* ---------- 5. Brand Colophon Strip ---------- */
 .visit-colophon-bar {
+  container-type: inline-size;
   grid-column: 1 / -1 !important;
   display: flex !important;
+  flex-wrap: wrap !important;
+  row-gap: 4px !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 14px !important;
+  column-gap: 14px !important;
   padding: 12px 20px !important;
   border: 1px solid var(--visit-line) !important;
   border-radius: var(--visit-radius) !important;
@@ -14544,6 +14640,24 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   color: var(--orange, #fbb019) !important;
   opacity: 0.65 !important;
   font-size: 8px !important;
+}
+
+.visit-colophon-tag,
+.visit-colophon-copy {
+  white-space: nowrap;
+}
+
+/* Narrow bars: tagline and copyright on two centred lines, no separator. */
+@container (max-width: 560px) {
+  .visit-colophon-sep {
+    display: none !important;
+  }
+
+  .visit-colophon-tag,
+  .visit-colophon-copy {
+    flex: 1 0 100%;
+    text-align: center;
+  }
 }
 
 /* Section Home/Back-to-top button in top-right */
@@ -14728,24 +14842,6 @@ body.detail-view #visit .section-home-button {
    centre so the team member's face, hands and the dog stay in view. */
 .about-carousel-slide img[src="/assets/pet-friendly-cafe.webp"] {
   object-position: 50% 25% !important;
-}
-
-/* Same for the guest-and-dog and laptop photos: keep faces and the dog in frame. */
-.about-carousel-slide img[src="/assets/about-pet-friendly-guest.webp"] {
-  object-position: 50% 25% !important;
-}
-
-.about-carousel-slide img[src="/assets/about-community-laptop.webp"] {
-  object-position: 50% 42% !important;
-}
-
-/* On smaller cards the home/next buttons cover the right third: zoom slightly
-   toward the right edge so the lit candle sits in the open left area. */
-@media (max-width: 1100px) {
-  .about-carousel-slide img[src="/assets/about-sanctuary-candles.webp"] {
-    transform: scale(1.2);
-    transform-origin: 75% 30%;
-  }
 }
 
 .about-carousel-meta {
@@ -17233,5 +17329,1128 @@ dialog.product-details-modal .product-modal-close {
     width: 100% !important;
     max-width: 100% !important;
     resize: vertical;
+  }
+}
+
+/* ============================================================
+   ABOUT — EDITORIAL SHEET (right side of the About split screen)
+   One continuous art-directed column instead of a grid of cards:
+     masthead → story → four values → Google reviews → colophon.
+   Every selector is scoped to #about and to the .abx-* classes
+   rendered by IntroSection / AboutReviews, so the left-side hero
+   video, the navbar and every other page are untouched. The older
+   .about-grid / .about-tile rules above no longer match anything.
+   The sheet sizes its type from the viewport height as well as the
+   width so the whole story fits one desktop screen (1440×900 and
+   down to ~1280×720) without shrinking body copy below 15px.
+   ============================================================ */
+#about .abx {
+  --abx-gold: var(--orange, #ffb31a);
+  --abx-cream: var(--cream, #f4eedf);
+  --abx-line: rgba(244, 238, 223, 0.1);
+  --abx-serif: "PRESSD Editorial", "Playfair Display", Georgia, serif;
+  --abx-sans: "DM Sans", "Manrope", system-ui, sans-serif;
+  --abx-caps: "Manrope", "DM Sans", system-ui, sans-serif;
+  --abx-pad-y: clamp(22px, 3.6vh, 40px);
+  --abx-pad-x: clamp(24px, 2.9vw, 48px);
+  container-type: inline-size;
+  position: relative;
+  flex: 1 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto auto;
+  align-content: space-between;
+  row-gap: clamp(14px, 2.4vh, 30px);
+  min-height: 100%;
+  margin: 0;
+  padding: var(--abx-pad-y) var(--abx-pad-x);
+  box-sizing: border-box;
+  border: 1px solid var(--abx-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(255, 179, 26, 0.045), transparent 60%),
+    #0a0b08;
+  color: var(--abx-cream);
+}
+
+#about .abx p,
+#about .abx figure,
+#about .abx blockquote,
+#about .abx ul {
+  margin: 0 !important;
+  padding: 0;
+}
+
+/* ---------- Masthead ---------- */
+#about .abx-mast {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-right: 56px; /* clears the corner home button */
+  font-family: var(--abx-caps);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 223, 0.42);
+  white-space: nowrap;
+}
+
+#about .abx-mast-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--abx-line);
+}
+
+/* ---------- Story ---------- */
+#about .abx-eyebrow {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(10px, 1.7vh, 18px) !important;
+  font-family: var(--abx-caps) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.32em !important;
+  text-transform: uppercase !important;
+  color: var(--abx-gold) !important;
+}
+
+#about .abx-eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--abx-gold);
+}
+
+#about .abx-title {
+  margin: 0 0 clamp(16px, 2.8vh, 30px) !important;
+  padding: 0 !important;
+  max-width: none !important;
+  font-family: var(--abx-serif) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: clamp(38px, min(4.3vw, 7.3vh), 72px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.022em !important;
+  text-transform: none !important;
+  color: var(--abx-cream) !important;
+  text-wrap: balance;
+}
+
+#about .abx-title-break {
+  display: block;
+}
+
+#about .abx-title em {
+  font-style: italic !important;
+  color: var(--abx-gold) !important;
+}
+
+#about .abx-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
+  column-gap: clamp(22px, 2.6vw, 40px);
+  align-items: end;
+}
+
+#about .abx-lead {
+  font-family: var(--abx-sans) !important;
+  font-size: clamp(15px, min(1.15vw, 1.95vh), 17px) !important;
+  font-weight: 400 !important;
+  line-height: 1.66 !important;
+  color: rgba(244, 238, 223, 0.8) !important;
+  text-wrap: pretty;
+}
+
+#about .abx-pull {
+  padding-left: clamp(16px, 1.5vw, 22px) !important;
+  border-left: 1px solid rgba(255, 179, 26, 0.5);
+  font-family: var(--abx-serif) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(17px, min(1.4vw, 2.35vh), 21px) !important;
+  line-height: 1.38 !important;
+  color: var(--abx-cream) !important;
+  text-wrap: pretty;
+}
+
+/* ---------- Values ---------- */
+#about .abx-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  border-top: 1px solid var(--abx-line);
+  border-bottom: 1px solid var(--abx-line);
+  padding: clamp(12px, 2vh, 20px) 0 !important;
+}
+
+#about .abx-value {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "icon"
+    "name"
+    "text";
+  align-content: start;
+  justify-items: start;
+  row-gap: 6px;
+  padding: 2px clamp(12px, 1.3vw, 20px);
+  border-left: 1px solid var(--abx-line);
+}
+
+#about .abx-value:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+#about .abx-value:last-child {
+  padding-right: 0;
+}
+
+#about .abx-value-icon {
+  grid-area: icon;
+  display: grid;
+  margin-bottom: 4px;
+  color: var(--abx-gold);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#about .abx-value:hover .abx-value-icon {
+  transform: translateY(-2px);
+}
+
+#about .abx-value-name {
+  grid-area: name;
+  font-family: var(--abx-serif);
+  font-size: clamp(16px, 1.2vw, 19px);
+  font-weight: 500;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: var(--abx-cream);
+}
+
+#about .abx-value-text {
+  grid-area: text;
+  font-family: var(--abx-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(244, 238, 223, 0.6);
+  text-wrap: pretty;
+}
+
+/* ---------- Google reviews ---------- */
+#about .abx-reviews {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.5fr) minmax(0, 1fr);
+  column-gap: clamp(22px, 2.6vw, 40px);
+  align-items: stretch;
+}
+
+#about .abx-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: clamp(22px, 2.6vw, 40px);
+  border-right: 1px solid rgba(255, 179, 26, 0.35);
+}
+
+#about .abx-rating-label,
+#about .abx-rating-count {
+  font-family: var(--abx-caps) !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: rgba(244, 238, 223, 0.55) !important;
+}
+
+#about .abx-rating-label {
+  color: var(--abx-gold) !important;
+}
+
+#about .abx-rating-figure {
+  display: flex !important;
+  align-items: baseline;
+  gap: 8px;
+  margin: clamp(4px, 1vh, 10px) 0 2px !important;
+  font-family: var(--abx-serif) !important;
+  line-height: 1 !important;
+}
+
+#about .abx-rating-value {
+  font-size: clamp(50px, min(4.6vw, 8vh), 74px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  color: var(--abx-gold);
+}
+
+#about .abx-rating-max {
+  font-style: italic;
+  font-size: 20px;
+  color: rgba(244, 238, 223, 0.5);
+}
+
+#about .abx-rating-stars {
+  margin: 10px 0 8px;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  color: var(--abx-gold);
+}
+
+#about .abx-star-dim {
+  color: rgba(244, 238, 223, 0.2);
+}
+
+#about .abx-rating-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding: 10px 0 3px;
+  border-bottom: 1px solid rgba(255, 179, 26, 0.45);
+  font-family: var(--abx-caps);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--abx-gold);
+  transition: border-color 0.3s ease, gap 0.3s ease;
+}
+
+#about .abx-rating-cta:hover {
+  gap: 10px;
+  border-color: var(--abx-gold);
+}
+
+#about .abx-rating-cta:focus-visible,
+#about .abx-rev-panel:focus-visible,
+#about .abx-rev-tick:focus-visible {
+  outline: 1px solid var(--abx-gold);
+  outline-offset: 4px;
+}
+
+#about .abx-google-attr {
+  margin-top: 6px;
+  font-family: var(--abx-sans);
+  font-size: 10px;
+  color: rgba(244, 238, 223, 0.4);
+}
+
+#about .abx-rev-panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  row-gap: clamp(10px, 1.6vh, 16px);
+  min-width: 0;
+  padding-left: clamp(30px, 3vw, 44px);
+  outline: none;
+}
+
+#about .abx-rev-mark {
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  font-family: var(--abx-serif);
+  font-size: 72px;
+  line-height: 1;
+  color: rgba(255, 179, 26, 0.55);
+  pointer-events: none;
+}
+
+#about .abx-rev-stage {
+  display: grid;
+  grid-template-areas: "stack";
+  align-items: start;
+}
+
+#about .abx-rev-slide {
+  grid-area: stack;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6vh, 16px);
+  opacity: 0;
+  transform: translateY(8px);
+  visibility: hidden;
+  transition:
+    opacity 260ms ease-in,
+    transform 260ms ease-in,
+    visibility 0s linear 260ms;
+}
+
+#about .abx-rev-slide.is-leaving {
+  transform: translateY(-8px);
+}
+
+#about .abx-rev-slide.is-active {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1) 200ms,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1) 200ms,
+    visibility 0s;
+}
+
+#about .abx-rev-quote p {
+  font-family: var(--abx-serif) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(17px, min(1.45vw, 2.45vh), 22px) !important;
+  line-height: 1.42 !important;
+  color: var(--abx-cream) !important;
+  text-wrap: pretty;
+}
+
+#about .abx-rev-quote.is-long p {
+  font-size: clamp(15.5px, min(1.22vw, 2.1vh), 18.5px) !important;
+  line-height: 1.45 !important;
+}
+
+#about .abx-rev-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#about .abx-rev-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--abx-caps);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 223, 0.85);
+}
+
+#about .abx-rev-author::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--abx-gold);
+}
+
+#about .abx-rev-stars {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--abx-gold);
+}
+
+#about .abx-rev-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#about .abx-rev-count {
+  font-family: var(--abx-caps);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(244, 238, 223, 0.45);
+}
+
+#about .abx-rev-ticks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#about .abx-rev-tick {
+  position: relative;
+  width: 20px;
+  padding: 9px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#about .abx-rev-tick::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: rgba(244, 238, 223, 0.22);
+  transition: background-color 0.3s ease;
+}
+
+#about .abx-rev-tick:hover::before {
+  background: rgba(244, 238, 223, 0.5);
+}
+
+#about .abx-rev-tick.is-active {
+  width: 40px;
+}
+
+#about .abx-rev-tick.is-active::before {
+  background: rgba(255, 179, 26, 0.28);
+}
+
+#about .abx-rev-tick-fill {
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 100%;
+  height: 1px;
+  background: var(--abx-gold);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: about-reviews-fill 5500ms linear forwards;
+}
+
+#about .abx-rev-panel.is-paused .abx-rev-tick-fill {
+  animation-play-state: paused;
+}
+
+/* ---------- Colophon ---------- */
+#about .abx-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding-top: clamp(10px, 1.6vh, 16px);
+  border-top: 1px solid var(--abx-line);
+  font-family: var(--abx-caps);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(244, 238, 223, 0.45);
+}
+
+#about .abx-foot-sep {
+  font-size: 0.85em;
+  color: rgba(255, 179, 26, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #about .abx-rev-slide,
+  #about .abx-rev-slide.is-active {
+    transform: none;
+    transition: opacity 120ms linear, visibility 0s;
+  }
+
+  /* No fill animation means no animationend, so autoplay is off;
+     the active line simply shows as fully gold. */
+  #about .abx-rev-tick-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  #about .abx-rev-tick,
+  #about .abx-value-icon,
+  #about .abx-rating-cta {
+    transition: none;
+  }
+}
+
+/* ---------- Desktop split: never clip ----------
+   The split-screen shell locks the panel at one screen with overflow
+   hidden. The sheet is sized to fit, but on unusually short or narrow
+   desktop windows let the panel scroll inside its frame rather than
+   cut text off. */
+@media (min-width: 761px) {
+  html body.detail-view:not(.menu-detail-view) main > #about.active-detail {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+}
+
+/* ---------- Shorter desktop screens (laptops ≤ 820px tall) ----------
+   Tighten spacing and leading first; type stays at reading size. */
+@media (min-width: 761px) and (max-height: 940px) {
+  #about .abx {
+    --abx-pad-y: clamp(18px, 2.8vh, 26px);
+    row-gap: clamp(10px, 1.7vh, 16px);
+  }
+
+  #about .abx-eyebrow {
+    margin-bottom: 10px !important;
+  }
+
+  #about .abx-title {
+    margin-bottom: clamp(12px, 2vh, 18px) !important;
+    font-size: clamp(38px, min(4.2vw, 6.6vh), 64px) !important;
+  }
+
+  #about .abx-copy {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  }
+
+  #about .abx-lead {
+    line-height: 1.58 !important;
+  }
+
+  #about .abx-values {
+    padding: clamp(10px, 1.6vh, 14px) 0 !important;
+  }
+
+  #about .abx-value {
+    row-gap: 4px;
+  }
+
+  #about .abx-value-icon {
+    margin-bottom: 2px;
+  }
+
+  #about .abx-rev-slide {
+    gap: 10px;
+  }
+
+  #about .abx-rev-panel {
+    row-gap: 8px;
+  }
+}
+
+@media (min-width: 761px) and (max-height: 760px) {
+  #about .abx-mast {
+    display: none;
+  }
+
+  #about .abx-lead {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  #about .abx-pull {
+    font-size: 17px !important;
+  }
+
+  #about .abx-value-text {
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  #about .abx-rating-value {
+    font-size: 52px;
+  }
+}
+
+/* ---------- Narrow sheet (tablet split, small laptops) ----------
+   Container queries follow the panel's own width, not the viewport. */
+@container (max-width: 520px) {
+  /* The corner home button needs the top row on narrow panels. */
+  #about .abx-mast {
+    display: none;
+  }
+
+  #about .abx-copy {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 16px;
+  }
+
+  #about .abx-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 16px;
+  }
+
+  #about .abx-value:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  #about .abx-value:nth-child(even) {
+    padding-right: 0;
+  }
+
+  #about .abx-foot {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    white-space: normal;
+  }
+}
+
+@container (max-width: 470px) {
+  #about .abx-title {
+    font-size: clamp(34px, 10.5cqi, 46px) !important;
+  }
+
+  #about .abx-reviews {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 20px;
+  }
+
+  #about .abx-rating {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "label label"
+      "figure stars"
+      "figure count"
+      "cta cta";
+    column-gap: 16px;
+    align-items: center;
+    padding: 0 0 18px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 179, 26, 0.35);
+  }
+
+  #about .abx-rating-label { grid-area: label; }
+  #about .abx-rating-figure { grid-area: figure; }
+  #about .abx-rating-stars { grid-area: stars; align-self: end; margin: 0; }
+  #about .abx-rating-count { grid-area: count; align-self: start; }
+  #about .abx-rating-cta { grid-area: cta; justify-self: start; margin-top: 8px; }
+  #about .abx-google-attr { grid-column: 1 / -1; }
+
+  #about .abx-rev-panel {
+    padding-left: 30px;
+  }
+
+  #about .abx-foot-sep {
+    display: none;
+  }
+
+  #about .abx-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+/* ---------- Phones ----------
+   Base phone styling; the single-screen fit rules at the end of this
+   file then compact the sheet to the space between navbar and dock.
+   (Touch tablets keep the split-screen rules above.) */
+@media (max-width: 760px) {
+  #about .abx {
+    min-height: 100%;
+    height: auto;
+    align-content: start;
+    row-gap: 26px;
+    border-radius: 14px;
+    --abx-pad-y: 26px;
+    --abx-pad-x: clamp(18px, 5vw, 32px);
+  }
+
+  #about .abx-lead {
+    font-size: 15.5px !important;
+  }
+
+  #about .abx-pull {
+    font-size: 18px !important;
+  }
+
+  #about .abx-rev-quote p {
+    font-size: 18.5px !important;
+  }
+
+  #about .abx-rev-quote.is-long p {
+    font-size: 16.5px !important;
+  }
+
+  #about .abx-rev-tick {
+    padding: 14px 0;
+  }
+
+  #about .abx-rev-tick-fill {
+    top: 14px;
+  }
+}
+
+/* ============================================================
+   ABOUT — SINGLE-SCREEN FIT
+   The About panel must show everything without scrolling, from a
+   320×568 phone up to desktop. Content is fitted to the space, in
+   priority order: story → brand values → Google rating → reviews →
+   colophon. Lower-priority pieces are hidden where they do not fit
+   and come back as height/width allows. The panel keeps its scroll
+   fallback, but at supported sizes there is nothing left to scroll.
+   ============================================================ */
+#about .abx-lead-short {
+  display: none;
+}
+
+/* Rows follow the blocks actually shown, so hidden blocks leave no empty
+   tracks (and no stray gaps) behind. */
+#about .abx {
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+}
+
+/* ---------- Phones: fit between the navbar and the bottom dock ---------- */
+@media (max-width: 760px) {
+  #about .abx {
+    height: 100%;
+    min-height: 0;
+    align-content: space-between;
+    row-gap: clamp(8px, 1.8dvh, 18px);
+    --abx-pad-y: clamp(14px, 2.4dvh, 24px);
+    --abx-pad-x: clamp(14px, 4.6vw, 24px);
+  }
+
+  #about .abx-eyebrow {
+    margin-bottom: clamp(6px, 1.2dvh, 12px) !important;
+    font-size: 10px !important;
+    letter-spacing: 0.28em !important;
+  }
+
+  #about .abx-title {
+    margin-bottom: clamp(8px, 1.6dvh, 16px) !important;
+    font-size: clamp(27px, min(8.6vw, 5.6dvh), 42px) !important;
+  }
+
+  /* Short story; the long version and the pull quote need more room. */
+  #about .abx-lead-full,
+  #about .abx-pull {
+    display: none;
+  }
+
+  #about .abx-lead-short {
+    display: block;
+    font-size: clamp(13.5px, 3.9vw, 15.5px) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Brand values: a 2×2 grid of icon + name. */
+  #about .abx-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: clamp(8px, 1.6dvh, 14px);
+    padding: clamp(8px, 1.6dvh, 14px) 0 !important;
+  }
+
+  #about .abx-value,
+  #about .abx-value:nth-child(odd),
+  #about .abx-value:nth-child(even) {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "icon name"
+      "text text";
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 2px;
+    padding: 0 0 0 clamp(8px, 3vw, 14px);
+    border-left: 1px solid var(--abx-line);
+  }
+
+  #about .abx-value:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  #about .abx-value-icon {
+    margin: 0;
+  }
+
+  #about .abx-value-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  #about .abx-value-name {
+    font-size: clamp(13.5px, 3.8vw, 15.5px);
+    white-space: normal;
+  }
+
+  #about .abx-value-text {
+    display: none;
+  }
+
+  /* Google reviews: a compact rating summary. */
+  #about .abx-reviews {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(10px, 1.8dvh, 16px);
+  }
+
+  #about .abx-rev-panel {
+    display: none;
+  }
+
+  #about .abx-rating {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "label label"
+      "figure stars"
+      "figure count"
+      "cta cta";
+    column-gap: 14px;
+    align-items: center;
+    padding: 0;
+    border: 0;
+  }
+
+  #about .abx-rating-label { grid-area: label; }
+  #about .abx-rating-figure { grid-area: figure; margin: 4px 0 0 !important; }
+  #about .abx-rating-value { font-size: clamp(36px, min(11vw, 7dvh), 52px); }
+  #about .abx-rating-stars { grid-area: stars; align-self: end; margin: 0; }
+  #about .abx-rating-count { grid-area: count; align-self: start; }
+  #about .abx-rating-cta { grid-area: cta; justify-self: start; margin-top: 6px; padding-top: 6px; }
+  #about .abx-google-attr { grid-column: 1 / -1; }
+
+  #about .abx-foot {
+    display: none;
+  }
+}
+
+
+/* Taller phones: room for the review carousel (and then the value notes). */
+@media (max-width: 760px) and (min-width: 360px) and (min-height: 800px) {
+  #about .abx-rev-panel {
+    display: grid;
+    padding-left: 28px;
+  }
+
+  #about .abx-rev-mark {
+    font-size: 56px;
+  }
+
+  #about .abx-rev-quote p {
+    font-size: 15.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  #about .abx-rev-quote.is-long p {
+    font-size: 14.5px !important;
+  }
+
+  #about .abx-rating {
+    padding-bottom: clamp(10px, 1.8dvh, 16px);
+    border-bottom: 1px solid rgba(255, 179, 26, 0.35);
+  }
+}
+
+@media (max-width: 760px) and (min-width: 360px) and (min-height: 900px) {
+  #about .abx-value-text {
+    display: block;
+    font-size: 12.5px;
+  }
+}
+
+/* ---------- Split screen (tablets, laptops) ---------- */
+/* Narrow panels: the decorative pull quote gives way to the story itself. */
+@container (max-width: 500px) {
+  #about .abx-pull {
+    display: none;
+  }
+}
+
+/* Narrow split panels (portrait tablets): brand values as names only. */
+@media (min-width: 761px) and (max-height: 1100px) {
+  @container (max-width: 480px) {
+    #about .abx-value-text {
+      display: none;
+    }
+  }
+}
+
+/* Short split screens (landscape tablets, small laptops): names only, and
+   the colophon (location and copyright, also in the site footer) gives way. */
+@media (min-width: 761px) and (max-height: 820px) {
+  @container (max-width: 500px) {
+    #about .abx-value-text,
+    #about .abx-foot {
+      display: none;
+    }
+  }
+}
+
+/* ============================================================
+   NAVIGATION ICONS — vector icons in place of Unicode glyphs
+   (the ↗ arrow rendered as a colour emoji on iOS/Android).
+   Sized in em so they keep the old glyphs' size and colour.
+   ============================================================ */
+.book-btn .book-btn-icon svg {
+  display: inline-block;
+  vertical-align: -0.14em;
+}
+
+.mobile-dock span > svg {
+  display: block;
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* ============================================================
+   MENU FOOTER — compact footer on the brand gold background
+   The footer is only shown on the Menu. Small logo + tagline, page
+   links and contact options (email, phone, WhatsApp) on one row,
+   then copyright / socials / location. Scoped to body.menu-detail-view.
+   ============================================================ */
+body.menu-detail-view > footer {
+  --footer-ink: #070806;
+  background: var(--orange, #fbb019);
+  color: var(--footer-ink);
+  /* Right padding keeps the content clear of the fixed back-to-top button. */
+  padding: clamp(26px, 3vw, 36px) calc(5vw + 64px) clamp(16px, 1.8vw, 22px) 5vw;
+}
+
+body.menu-detail-view > footer .footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 40px;
+}
+
+body.menu-detail-view > footer .footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+body.menu-detail-view > footer .footer-logo {
+  width: auto;
+  height: clamp(40px, 3.4vw, 48px);
+  margin: 0;
+  object-fit: contain;
+  object-position: left center;
+}
+
+body.menu-detail-view > footer .footer-statement {
+  margin: 0;
+  font: 800 10px/1.2 Manrope, sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--footer-ink);
+}
+
+body.menu-detail-view > footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 30px;
+  margin: 0;
+}
+
+body.menu-detail-view > footer .footer-links a {
+  color: var(--footer-ink);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+/* Contact options: icon + label, each a direct action (email, call, chat). */
+body.menu-detail-view > footer .footer-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+}
+
+body.menu-detail-view > footer .footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--footer-ink);
+  font: 700 12px/1 "DM Sans", sans-serif;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: opacity 0.25s ease;
+}
+
+body.menu-detail-view > footer .footer-contact svg {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  box-sizing: border-box;
+  border: 1px solid rgba(7, 8, 6, 0.35);
+  border-radius: 50%;
+}
+
+body.menu-detail-view > footer .footer-contact a:hover {
+  opacity: 0.7;
+}
+
+body.menu-detail-view > footer .footer-links a:focus-visible,
+body.menu-detail-view > footer .footer-contact a:focus-visible,
+body.menu-detail-view > footer .footer-bottom a:focus-visible {
+  outline: 2px solid var(--footer-ink);
+  outline-offset: 3px;
+}
+
+body.menu-detail-view > footer .footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: clamp(18px, 2vw, 26px);
+  padding-top: 14px;
+  border-top: 1px solid rgba(7, 8, 6, 0.25);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(7, 8, 6, 0.75);
+}
+
+body.menu-detail-view > footer .footer-bottom a {
+  color: var(--footer-ink);
+}
+
+/* Social links: outlined icon buttons, same style as the contact icons. */
+body.menu-detail-view > footer .footer-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.menu-detail-view > footer .footer-social a {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(7, 8, 6, 0.35);
+  border-radius: 50%;
+  color: var(--footer-ink);
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+body.menu-detail-view > footer .footer-social svg {
+  width: 17px;
+  height: 17px;
+}
+
+body.menu-detail-view > footer .footer-social a:hover {
+  background: var(--footer-ink);
+  border-color: var(--footer-ink);
+  color: var(--orange, #fbb019);
+  opacity: 1;
+}
+
+body.menu-detail-view > footer .footer-social a:focus-visible {
+  outline: 2px solid var(--footer-ink);
+  outline-offset: 3px;
+}
+
+/* Phones: stacked and left-aligned, still compact. The bottom padding
+   keeps the last line clear of the fixed bottom dock. */
+@media (max-width: 760px) {
+  body.menu-detail-view > footer {
+    padding: 24px 20px calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.menu-detail-view > footer .footer-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  body.menu-detail-view > footer .footer-logo {
+    height: 38px;
+  }
+
+  body.menu-detail-view > footer .footer-links {
+    gap: 10px 22px;
+  }
+
+  body.menu-detail-view > footer .footer-contact {
+    gap: 8px 20px;
+  }
+
+  body.menu-detail-view > footer .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 18px;
   }
 }
