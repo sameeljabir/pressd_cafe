@@ -23,11 +23,11 @@ const GALLERY_IMAGES = [
   },
   {
     key: "visit.dish",
-    src: "/assets/sandwich-halloumi-pesto.webp",
+    src: "/assets/visit-pet-friendly-booth.webp",
   },
   {
     key: "visit.counter",
-    src: "/assets/visit-service-counter.webp",
+    src: "/assets/visit-laptop-lounge.webp",
   },
   {
     key: "visit.pour",

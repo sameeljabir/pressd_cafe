@@ -50,8 +50,8 @@ export const SITE_IMAGES: SiteImage[] = [
   { key: "instagram.toast", section: "instagram", label: "Instagram photo 6", src: "/assets/avocado-toast.webp", alt: "Avocado breakfast" },
 
   { key: "visit.sofa", section: "visit", label: "Visit gallery 1", src: "/assets/visit-table-latte.webp", alt: "Latte in a double-wall glass on a wooden tray beside the lounge sofa" },
-  { key: "visit.dish", section: "visit", label: "Visit gallery 2", src: "/assets/sandwich-halloumi-pesto.webp", alt: "Freshly prepared wholesome dish at PRESS'D" },
-  { key: "visit.counter", section: "visit", label: "Visit gallery 3", src: "/assets/visit-service-counter.webp", alt: "Barista preparing specialty coffee at the espresso counter" },
+  { key: "visit.dish", section: "visit", label: "Visit gallery 2", src: "/assets/visit-pet-friendly-booth.webp", alt: "Guest stroking her dog on the black booth seating against the yellow slatted wall" },
+  { key: "visit.counter", section: "visit", label: "Visit gallery 3", src: "/assets/visit-laptop-lounge.webp", alt: "Guest working on a laptop on the lounge sofa in warm evening light" },
   { key: "visit.pour", section: "visit", label: "Visit gallery 4", src: "/assets/visit-coffee-serving.webp", alt: "Filter coffee being poured from a glass server into a glass cup" },
 
   { key: "chrome.navbar.logo", section: "chrome", label: "Header logo", src: "/assets/pressd-logo.webp", alt: "PRESS'D Wellness Café" },
