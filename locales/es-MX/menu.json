@@ -642,7 +642,11 @@
       "name": "Energy Booster",
       "description": "Frutos rojos mixtos, plátano y una mezcla de fruta naturalmente energizante",
       "ingredients": [
-        "Cerezas"
+        "Puré de açaí",
+        "Plátano",
+        "Arándanos",
+        "Cereza",
+        "Crema de cacahuate"
       ]
     },
     "green-machine": {

@@ -15,7 +15,7 @@ export default function InstagramSection() {
       <div className="instagram-head reveal">
         <div>
           <p className="eyebrow dark">FOLLOW THE GOOD STUFF</p>
-          <h2>@PRESSD_WELLNESS_CAFE</h2>
+          <h2>@PRESSD.CAFE</h2>
         </div>
         <p>
           Coffee. Wellness. Work. Dogs.
@@ -30,7 +30,7 @@ export default function InstagramSection() {
       </div>
       <a
         className="instagram-follow"
-        href="https://www.instagram.com/pressd_wellness_cafe?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+        href="https://www.instagram.com/pressd.cafe"
         target="_blank"
         rel="noopener noreferrer"
       >

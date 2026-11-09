@@ -14648,9 +14648,11 @@ body.menu-detail-view .navbar .desktop-nav a.nav-link-menu {
   }
 }
 
-/* Short laptop/landscape screens (≈1024×768, 1280×720, 1366×768): the card
-   cannot hold the full contact details plus the note, so the note gives way. */
-@media (min-width: 1000px) and (max-height: 780px) {
+/* Short laptop/landscape screens (≈1024×768, 1280×720, 1366×768, and small
+   desktop windows such as 900×700, where the note ran 39px out of the card):
+   the card cannot hold the full contact details plus the note, so the note
+   gives way. */
+@media (min-width: 761px) and (max-height: 780px) {
   .visit-touch-panel .visit-touch-signature {
     display: none !important;
   }
@@ -16853,6 +16855,8 @@ body:not(.menu-detail-view)>footer .footer-bottom {
   body.detail-view #visit .visit-schedule-row { line-height: 1.22 !important; }
   body.detail-view #visit .visit-hours-footer { padding-top: 4px !important; gap: 4px !important; }
   body.detail-view #visit .visit-contact-entries { gap: 3px !important; }
+  /* 320 x 568: the last contact line sat 4px over the card's edge. */
+  body.detail-view #visit .visit-touch-panel .visit-touch-head { margin-bottom: 3px !important; }
   body.detail-view #visit .visit-map-viewport { min-height: 44px !important; margin-top: 3px !important; }
 
   body.detail-view #visit .visit-panel-serif-title,
@@ -18730,5 +18734,21 @@ body.menu-detail-view > footer .footer-social a:focus-visible {
     align-items: flex-start;
     gap: 6px;
     margin-top: 18px;
+  }
+}
+
+/* ============================================================
+   MENU GRID — tablet column counts
+   A 3-column rule for 960-1279px is overridden by a later 2-column
+   rule for 640-1100px, so from ~900px to 1100px the menu showed two
+   442px cards per row (330px-tall photos, larger than on desktop) and
+   half-empty rows. Three columns give the same ~290px cards as a
+   1280px desktop.
+   ============================================================ */
+@media (min-width: 900px) and (max-width: 1100px) {
+  .menu-section .menu-subsection .menu-grid,
+  .menu-section .menu-subsection[data-column="Iced Coffee"] .menu-grid,
+  body.detail-view .menu-section .menu-subsection .menu-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }

@@ -642,7 +642,11 @@
       "name": "Carica di Energia",
       "description": "Frutti di bosco misti, banana e un mix di frutta naturalmente energizzante",
       "ingredients": [
-        "Ciliegie"
+        "Purè di acai",
+        "Banana",
+        "Mirtilli",
+        "Ciliegia",
+        "Burro di arachidi"
       ]
     },
     "green-machine": {

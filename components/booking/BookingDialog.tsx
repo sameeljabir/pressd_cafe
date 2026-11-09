@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBooking } from "@/components/booking/BookingContext";
+import { WHATSAPP_NUMBER } from "@/lib/cart";
 
 export default function BookingDialog() {
   const { dialogRef, closeBooking } = useBooking();
@@ -28,26 +29,37 @@ export default function BookingDialog() {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          setNote("Thanks — we’ll call shortly to confirm your table.");
+          // The request used to go nowhere: send it to the café on WhatsApp,
+          // the same channel as cart orders.
+          const form = new FormData(event.currentTarget);
+          const message = [
+            "Hello PRESS'D! I'd like to book a table.",
+            `Name: ${form.get("name")}`,
+            `Phone: ${form.get("phone")}`,
+            `Date: ${form.get("date")}`,
+            `Guests: ${form.get("guests")}`,
+          ].join("\n");
+          window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+          setNote("Your request is ready in WhatsApp — send it and we’ll confirm your table.");
           setSubmitted(true);
         }}
       >
         <label>
           Name
-          <input required placeholder="Your name" />
+          <input name="name" required placeholder="Your name" />
         </label>
         <label>
           Phone
-          <input required type="tel" placeholder="+971" />
+          <input name="phone" required type="tel" placeholder="+971" />
         </label>
         <div>
           <label>
             Date
-            <input required type="date" />
+            <input name="date" required type="date" />
           </label>
           <label>
             Guests
-            <select>
+            <select name="guests">
               <option>2 guests</option>
               <option>3 guests</option>
               <option>4 guests</option>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useCart } from "@/components/cart/CartContext";
 import { escapeCartText, cartImageFor } from "@/lib/cart";
 import { customizationText } from "@/lib/customization";
@@ -8,6 +9,23 @@ import { useLocale } from "@/lib/i18n/LocaleContext";
 export default function CartDrawer() {
   const { cart, quantity, total, isOpen, closeCart, changeQty, whatsappHref } = useCart();
   const { t, dir } = useLocale();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const closeCartRef = useRef(closeCart);
+  useEffect(() => {
+    closeCartRef.current = closeCart;
+  });
+
+  // Keyboard: Escape closes the drawer (like the site's dialogs) and focus
+  // moves into it when it opens.
+  useEffect(() => {
+    if (!isOpen) return;
+    closeRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeCartRef.current();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen]);
 
   return (
     <>
@@ -19,6 +37,8 @@ export default function CartDrawer() {
       <aside
         className={`cart-drawer${isOpen ? " open" : ""}`}
         aria-hidden={!isOpen}
+        // Off-screen when closed; inert keeps its buttons out of the Tab order.
+        inert={!isOpen}
         aria-labelledby="cart-title"
         dir={dir}
       >
@@ -29,7 +49,7 @@ export default function CartDrawer() {
               {t("ui.cart", "CART")} <span className="cart-heading-count">{quantity}</span>
             </h2>
           </div>
-          <button className="cart-close" aria-label={t("ui.closeCartAria", "Close cart")} onClick={closeCart}>
+          <button ref={closeRef} className="cart-close" aria-label={t("ui.closeCartAria", "Close cart")} onClick={closeCart}>
             ×
           </button>
         </header>

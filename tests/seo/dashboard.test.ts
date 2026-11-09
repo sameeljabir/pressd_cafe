@@ -16,14 +16,18 @@ const site = parseSiteUrl("https://www.pressdcafe.ae");
 const metaDefaults = defaultsFrom({ title: "PRESS'D | Specialty Coffee", description: "Default description", alternates: { canonical: "/" } }, site);
 const thresholds = { titleMin: 30, titleMax: 60, descriptionMin: 70, descriptionMax: 160 };
 
-// The JSON-LD the site rendered before business info became editable.
-const ORIGINAL_LD = {
+// The JSON-LD the site renders with nothing published in SEO Studio.
+const DEFAULT_LD = {
   "@context": "https://schema.org",
   "@type": "CafeOrCoffeeShop",
   name: "PRESS'D Wellness Café",
-  address: { "@type": "PostalAddress", addressLocality: "Jumeirah Village Triangle", addressRegion: "Dubai", addressCountry: "AE" },
+  url: "https://www.pressdcafe.ae",
+  telephone: "+971 55 683 8426",
+  email: "pressd.dxb@gmail.com",
+  address: { "@type": "PostalAddress", streetAddress: "Meydan Polo Residence, Muscat St", addressLocality: "Nad Al Sheba 1", addressRegion: "Dubai", addressCountry: "AE" },
+  geo: { "@type": "GeoCoordinates", latitude: 25.1497789, longitude: 55.2944217 },
   servesCuisine: ["Healthy", "Breakfast", "Coffee"],
-  openingHours: ["Mo-Th 07:00-23:00", "Fr-Su 07:00-00:00"],
+  openingHours: ["Mo-Su 07:00-22:00"],
   priceRange: "AED 18-65",
 };
 
@@ -54,8 +58,8 @@ describe("alt text", () => {
 });
 
 describe("business info", () => {
-  test("defaults render the original JSON-LD byte for byte", () => {
-    assert.equal(JSON.stringify(buildJsonLd(null)), JSON.stringify(ORIGINAL_LD));
+  test("defaults render the site's own business details byte for byte", () => {
+    assert.equal(JSON.stringify(buildJsonLd(null)), JSON.stringify(DEFAULT_LD));
     assert.deepEqual(validateBusiness({ ...BUSINESS_DEFAULTS }), {});
   });
   test("only changed fields are stored, and re-validating a stored draft keeps it unchanged", () => {
@@ -63,7 +67,7 @@ describe("business info", () => {
     assert.deepEqual(stored, { telephone: "+971 4 000 0000", streetAddress: "Meydan Polo Residence" });
     assert.deepEqual(validateBusiness(stored as Record<string, unknown>), stored, "partial input keeps the other defaults");
     const ld = buildJsonLd(stored);
-    assert.deepEqual((ld.address as Record<string, unknown>).addressLocality, "Jumeirah Village Triangle");
+    assert.deepEqual((ld.address as Record<string, unknown>).addressLocality, "Nad Al Sheba 1");
     assert.equal(ld.priceRange, "AED 18-65");
     assert.equal(ld.telephone, "+971 4 000 0000");
   });
@@ -75,7 +79,7 @@ describe("business info", () => {
   test("rejects bad values", () => {
     for (const bad of [
       { url: "http://pressdcafe.ae" }, { url: "not a url" }, { telephone: "call us!" }, { email: "nope" }, { addressCountry: "UAE" },
-      { latitude: "95" }, { latitude: "25.1" }, { name: "" }, { foo: "bar" }, { servesCuisine: "Coffee" },
+      { latitude: "95" }, { latitude: "25.1", longitude: "" }, { name: "" }, { foo: "bar" }, { servesCuisine: "Coffee" },
       { openingHours: [{ days: "Funday", opens: "07:00", closes: "23:00" }] }, { openingHours: [{ days: "Mo-Fr", opens: "7am", closes: "23:00" }] },
     ]) assert.throws(() => validateBusiness(bad as Record<string, unknown>), MetadataValidationError, JSON.stringify(bad));
   });
@@ -86,8 +90,9 @@ describe("business info", () => {
     assert.equal(JSON.parse(script).name, "</script><script>alert(1)</script>");
   });
   test("warns about the Meydan / JVT mismatch", () => {
-    const w = businessWarnings(effectiveBusiness(null), "PRESS'D at Meydan Polo Residence");
-    assert.ok(w.some((x) => /Meydan Polo Residence/.test(x)));
+    const jvt = effectiveBusiness({ streetAddress: "", addressLocality: "Jumeirah Village Triangle" });
+    assert.ok(businessWarnings(jvt, "PRESS'D at Meydan Polo Residence").some((x) => /Meydan Polo Residence/.test(x)));
+    assert.ok(!businessWarnings(effectiveBusiness(null), "PRESS'D at Meydan Polo Residence").some((x) => /Confirm which/.test(x)), "defaults match the site");
     assert.ok(!businessWarnings(effectiveBusiness({ streetAddress: "Meydan Polo Residence" }), "Meydan").some((x) => /Confirm which/.test(x)));
   });
 });
@@ -99,7 +104,8 @@ describe("documents", () => {
     assert.throws(() => validateDoc("@images", { x: "y" }, site), MetadataValidationError);
   });
   test("diff rows describe visible changes only", () => {
-    assert.deepEqual(diffRows("@business", null, { telephone: "+971 4 000 0000" }, metaDefaults), [{ label: "Phone", before: "—", after: "+971 4 000 0000" }]);
+    assert.deepEqual(diffRows("@business", null, { telephone: "+971 4 000 0000" }, metaDefaults), [{ label: "Phone", before: "+971 55 683 8426", after: "+971 4 000 0000" }]);
+    assert.deepEqual(diffRows("@business", null, { postalCode: "00000" }, metaDefaults), [{ label: "Postal code", before: "—", after: "00000" }]);
     assert.equal(diffRows("@images", null, {}, metaDefaults).length, 0);
     assert.match(diffRows("@images", null, { "hero.rail.menu": "Açaí bowl with berries" }, metaDefaults)[0].label, /^Alt — /);
     assert.deepEqual(diffRows("/", null, { title: "New title for the home page" }, metaDefaults).map((r) => r.label), ["Title"]);

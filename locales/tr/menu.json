@@ -642,7 +642,11 @@
       "name": "Enerji Takviyesi",
       "description": "Karışık orman meyveleri, muz ve doğal enerji veren bir meyve karışımı",
       "ingredients": [
-        "Kiraz meyvesi"
+        "Açai püresi",
+        "Muz",
+        "Yaban mersini",
+        "Kiraz",
+        "Fıstık ezmesi"
       ]
     },
     "green-machine": {

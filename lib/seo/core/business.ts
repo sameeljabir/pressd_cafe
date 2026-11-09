@@ -1,6 +1,6 @@
 // Business details for the home page's structured data (schema.org JSON-LD).
-// Pure module. The defaults reproduce the JSON-LD the layout rendered before
-// this became editable, key for key, so with nothing published the page is unchanged.
+// Pure module. The defaults are what the site itself states (Visit page,
+// contact details, its Google Maps link); SEO Studio can override any field.
 
 import { MetadataValidationError } from "./metadata.ts";
 
@@ -27,25 +27,27 @@ export interface BusinessInfo {
   openingHours: OpeningRow[];
 }
 
-/** Exactly the values that were hard-coded in app/(site)/layout.tsx. */
+/**
+ * The values hard-coded in the old layout placed the café in Jumeirah Village
+ * Triangle, open until 23:00 / midnight, which contradicted the site. These
+ * match the Visit page (address, 7:00–22:00 daily), the contact details and the
+ * coordinates of the site's Google Maps link. Price range is unchanged (no source).
+ */
 export const BUSINESS_DEFAULTS: BusinessInfo = {
   name: "PRESS'D Wellness Café",
-  url: "",
-  telephone: "",
-  email: "",
+  url: "https://www.pressdcafe.ae",
+  telephone: "+971 55 683 8426",
+  email: "pressd.dxb@gmail.com",
   servesCuisine: ["Healthy", "Breakfast", "Coffee"],
   priceRange: "AED 18-65",
-  streetAddress: "",
-  addressLocality: "Jumeirah Village Triangle",
+  streetAddress: "Meydan Polo Residence, Muscat St",
+  addressLocality: "Nad Al Sheba 1",
   addressRegion: "Dubai",
   postalCode: "",
   addressCountry: "AE",
-  latitude: "",
-  longitude: "",
-  openingHours: [
-    { days: "Mo-Th", opens: "07:00", closes: "23:00" },
-    { days: "Fr-Su", opens: "07:00", closes: "00:00" },
-  ],
+  latitude: "25.1497789",
+  longitude: "55.2944217",
+  openingHours: [{ days: "Mo-Su", opens: "07:00", closes: "22:00" }],
 };
 
 const DAY = "(Mo|Tu|We|Th|Fr|Sa|Su)";

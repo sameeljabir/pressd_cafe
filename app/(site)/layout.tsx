@@ -56,12 +56,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <link
-          rel="preload"
-          href="/assets/pressd-hero-cinematic.mp4?v=2"
-          as="video"
-          type="video/mp4"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLdScript(await publishedDoc<Partial<BusinessInfo>>("@business")) }}

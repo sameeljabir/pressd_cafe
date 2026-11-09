@@ -642,7 +642,11 @@
       "name": "Booster d'Énergie",
       "description": "Fruits rouges mélangés, banane et un mélange de fruits naturellement énergisant",
       "ingredients": [
-        "Cerises"
+        "Purée d'acai",
+        "Banane",
+        "Myrtilles",
+        "Cerise",
+        "Beurre de cacahuète"
       ]
     },
     "green-machine": {

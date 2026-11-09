@@ -2,7 +2,7 @@
   "categories": {
     "fresh-start": "Fresh Start",
     "hot-beverages": "Hot Beverages",
-    "ice-beverages": "Ice Beverages",
+    "ice-beverages": "Iced Beverages",
     "protein-shakes-bars": "Protein Shakes/Bars",
     "smoothies": "Smoothies",
     "fresh-juices": "Fresh Juices",
@@ -41,7 +41,7 @@
   },
   "products": {
     "avacado-toast-with-poached-eggs": {
-      "name": "Avacado Toast with Poached Eggs",
+      "name": "Avocado Toast with Poached Eggs",
       "description": "Creamy avocado toast topped with poached eggs and served with a fresh garden salad",
       "ingredients": [
         "Sourdough bread",
@@ -56,7 +56,7 @@
       ]
     },
     "avacado-toast-with-salmon": {
-      "name": "Avacado Toast with Salmon",
+      "name": "Avocado Toast with Salmon",
       "description": "Creamy avocado toast topped with salmon and served with a fresh garden salad",
       "ingredients": [
         "Sourdough bread",
@@ -72,7 +72,7 @@
       ]
     },
     "avacado-toast-with-green-olives": {
-      "name": "Avacado Toast with Green Olives",
+      "name": "Avocado Toast with Green Olives",
       "description": "Avocado toast with green olives, served with a fresh garden salad",
       "ingredients": [
         "Sourdough bread",
@@ -199,7 +199,7 @@
       ]
     },
     "chicken-ceasar": {
-      "name": "Chicken Ceasar",
+      "name": "Chicken Caesar",
       "description": "Grilled chicken, avocado, baby gem, parmesan and croutons",
       "ingredients": [
         "Lettuce",
@@ -237,7 +237,7 @@
       ]
     },
     "tabbouloleh-salad": {
-      "name": "Tabbouloleh Salad",
+      "name": "Tabbouleh Salad",
       "description": "Couscous, cucumber, tomato, herbs and red onion",
       "ingredients": [
         "Bulgur wheat",
@@ -350,7 +350,7 @@
       ]
     },
     "expresso": {
-      "name": "Expresso",
+      "name": "Espresso",
       "description": "A rich, full-bodied single shot",
       "ingredients": [
         "A rich, full-bodied single shot"
@@ -446,7 +446,7 @@
       ]
     },
     "ice-latte": {
-      "name": "Ice Latte",
+      "name": "Iced Latte",
       "description": "Espresso layered with chilled milk and served over ice",
       "ingredients": [
         "Espresso",
@@ -642,7 +642,11 @@
       "name": "Energy Booster",
       "description": "Mixed berries, banana and a naturally energising fruit blend",
       "ingredients": [
-        "Cherry fruit"
+        "Acai puree",
+        "Banana",
+        "Blueberries",
+        "Cherry",
+        "Peanut butter"
       ]
     },
     "green-machine": {
@@ -679,7 +683,7 @@
       ]
     },
     "rubby-antioxidant-blend": {
-      "name": "Rubby Antioxidant Blend",
+      "name": "Ruby Antioxidant Blend",
       "description": "A deep ruby blend of antioxidant-rich fruits and berries",
       "ingredients": [
         "Prunes",
