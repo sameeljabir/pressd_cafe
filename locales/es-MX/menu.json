@@ -73,7 +73,7 @@
     },
     "avacado-toast-with-green-olives": {
       "name": "Tostada de Aguacate con Aceitunas Verdes",
-      "description": "Tostada de aguacate con un huevo pochado, acompañada de una fresca ensalada de la huerta",
+      "description": "Tostada de aguacate con aceitunas verdes, acompañada de una fresca ensalada de la huerta",
       "ingredients": [
         "Pan de masa madre",
         "Aceitunas verdes",
@@ -81,7 +81,6 @@
         "Jitomates cherry",
         "Lechuga",
         "Rábano",
-        "Queso labneh",
         "Pimienta negra",
         "Semillas de ajonjolí",
         "Sal de mesa"
@@ -365,11 +364,11 @@
         "Leche al vapor y espuma"
       ]
     },
-    "matcha": {
-      "name": "Matcha",
-      "description": "Suave matcha servido caliente con un acabado cremoso",
+    "macchiato": {
+      "name": "Macchiato",
+      "description": "Un shot de espresso marcado con una cucharada de espuma de leche",
       "ingredients": [
-        "Matcha suave servido caliente con un acabado cremoso"
+        "Un shot de espresso marcado con una cucharada de espuma de leche"
       ]
     },
     "mochaccino": {
@@ -965,6 +964,16 @@
         "Pavo ahumado",
         "Salsa pesto",
         "Jitomates",
+        "Pan"
+      ]
+    },
+    "tuna-melt": {
+      "name": "Tuna Melt",
+      "description": "Mezcla de atún, queso cheddar y lechuga",
+      "ingredients": [
+        "Queso cheddar",
+        "Mezcla de atún",
+        "Lechuga",
         "Pan"
       ]
     }

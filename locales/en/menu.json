@@ -73,7 +73,7 @@
     },
     "avacado-toast-with-green-olives": {
       "name": "Avacado Toast with Green Olives",
-      "description": "Avocado toast with a poached egg, served with a fresh garden salad",
+      "description": "Avocado toast with green olives, served with a fresh garden salad",
       "ingredients": [
         "Sourdough bread",
         "Green olives",
@@ -81,7 +81,6 @@
         "Cherry tomatoes",
         "Lettuce",
         "Radish",
-        "Labneh cheese",
         "Black pepper",
         "Sesame seeds",
         "Table salt"
@@ -365,11 +364,11 @@
         "Steamed milk and froth"
       ]
     },
-    "matcha": {
-      "name": "Matcha",
-      "description": "Smooth matcha served warm with a creamy finish",
+    "macchiato": {
+      "name": "Macchiato",
+      "description": "A shot of espresso marked with a spoonful of milk foam",
       "ingredients": [
-        "Smooth matcha served warm with a creamy finish"
+        "A shot of espresso marked with a spoonful of milk foam"
       ]
     },
     "mochaccino": {
@@ -965,6 +964,16 @@
         "Smoked turkey",
         "Pesto sauce",
         "Tomatoes",
+        "Bread"
+      ]
+    },
+    "tuna-melt": {
+      "name": "Tuna Melt",
+      "description": "Tuna mix, cheddar cheese and lettuce",
+      "ingredients": [
+        "Cheddar cheese",
+        "Tuna mix",
+        "Lettuce",
         "Bread"
       ]
     }

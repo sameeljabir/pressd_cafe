@@ -73,7 +73,7 @@
     },
     "avacado-toast-with-green-olives": {
       "name": "Yeşil Zeytinli Avokado Tost",
-      "description": "Poşe yumurtalı avokado tost, taze mevsim salatasıyla servis edilir",
+      "description": "Yeşil zeytinli avokado tost, taze mevsim salatasıyla servis edilir",
       "ingredients": [
         "Ekşi mayalı ekmek",
         "Yeşil zeytin",
@@ -81,7 +81,6 @@
         "Çeri domates",
         "Marul",
         "Turp",
-        "Labne peyniri",
         "Karabiber",
         "Susam",
         "Masa tuzu"
@@ -365,11 +364,11 @@
         "Buharlanmış süt ve köpük"
       ]
     },
-    "matcha": {
-      "name": "Matcha",
-      "description": "Kremamsı bir bitişle sıcak servis edilen yumuşak matcha",
+    "macchiato": {
+      "name": "Macchiato",
+      "description": "Bir kaşık süt köpüğüyle tamamlanan bir shot espresso",
       "ingredients": [
-        "Kremamsı bitişli, ılık servis edilen yumuşak matcha"
+        "Bir kaşık süt köpüğüyle tamamlanan bir shot espresso"
       ]
     },
     "mochaccino": {
@@ -965,6 +964,16 @@
         "Füme hindi",
         "Pesto sos",
         "Domates",
+        "Ekmek"
+      ]
+    },
+    "tuna-melt": {
+      "name": "Tuna Melt",
+      "description": "Ton balığı karışımı, cheddar peyniri ve marul",
+      "ingredients": [
+        "Cheddar peyniri",
+        "Ton balığı karışımı",
+        "Marul",
         "Ekmek"
       ]
     }

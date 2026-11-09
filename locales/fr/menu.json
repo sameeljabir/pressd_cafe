@@ -73,7 +73,7 @@
     },
     "avacado-toast-with-green-olives": {
       "name": "Toast à l'Avocat et Olives Vertes",
-      "description": "Toast à l'avocat avec un œuf poché, servi avec une salade fraîche du jardin",
+      "description": "Toast à l'avocat aux olives vertes, servi avec une salade fraîche du jardin",
       "ingredients": [
         "Pain au levain",
         "Olives vertes",
@@ -81,7 +81,6 @@
         "Tomates cerises",
         "Laitue",
         "Radis",
-        "Fromage labneh",
         "Poivre noir",
         "Graines de sésame",
         "Sel de table"
@@ -365,11 +364,11 @@
         "Lait chaud et mousse"
       ]
     },
-    "matcha": {
-      "name": "Matcha",
-      "description": "Matcha onctueux servi chaud avec une finition crémeuse",
+    "macchiato": {
+      "name": "Macchiato",
+      "description": "Un expresso relevé d'une cuillerée de mousse de lait",
       "ingredients": [
-        "Matcha doux servi chaud avec une touche crémeuse"
+        "Un expresso relevé d'une cuillerée de mousse de lait"
       ]
     },
     "mochaccino": {
@@ -965,6 +964,16 @@
         "Dinde fumée",
         "Sauce pesto",
         "Tomates",
+        "Pain"
+      ]
+    },
+    "tuna-melt": {
+      "name": "Tuna Melt",
+      "description": "Préparation au thon, cheddar et laitue",
+      "ingredients": [
+        "Cheddar",
+        "Préparation au thon",
+        "Laitue",
         "Pain"
       ]
     }

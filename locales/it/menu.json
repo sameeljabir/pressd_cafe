@@ -73,7 +73,7 @@
     },
     "avacado-toast-with-green-olives": {
       "name": "Toast all'Avocado con Olive Verdi",
-      "description": "Toast all'avocado con un uovo in camicia, servito con un'insalata fresca dell'orto",
+      "description": "Toast all'avocado con olive verdi, servito con un'insalata fresca dell'orto",
       "ingredients": [
         "Pane a lievitazione naturale",
         "Olive verdi",
@@ -81,7 +81,6 @@
         "Pomodori ciliegino",
         "Lattuga",
         "Ravanello",
-        "Formaggio labneh",
         "Pepe nero",
         "Semi di sesamo",
         "Sale da tavola"
@@ -365,11 +364,11 @@
         "Latte caldo e schiuma"
       ]
     },
-    "matcha": {
-      "name": "Matcha",
-      "description": "Matcha vellutato servito caldo con una nota cremosa",
+    "macchiato": {
+      "name": "Macchiato",
+      "description": "Un espresso macchiato con un cucchiaio di schiuma di latte",
       "ingredients": [
-        "Matcha cremoso servito caldo con una finitura morbida"
+        "Un espresso macchiato con un cucchiaio di schiuma di latte"
       ]
     },
     "mochaccino": {
@@ -965,6 +964,16 @@
         "Tacchino affumicato",
         "Salsa al pesto",
         "Pomodori",
+        "Pane"
+      ]
+    },
+    "tuna-melt": {
+      "name": "Tuna Melt",
+      "description": "Mix di tonno, formaggio cheddar e lattuga",
+      "ingredients": [
+        "Formaggio cheddar",
+        "Mix di tonno",
+        "Lattuga",
         "Pane"
       ]
     }
