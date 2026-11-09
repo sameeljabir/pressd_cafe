@@ -18,6 +18,8 @@ export interface ProductDetails {
   protein?: string;
   carbohydrates?: string;
   calories?: string;
+  fat?: string;
+  fibre?: string;
 }
 
 /** [name, description, price, image, tag, details, column, id] */
@@ -34,9 +36,9 @@ function buildMenu() {
   let menu = [
     {category:'Breakfast',slug:'breakfast',tagline:'Fresh mornings · made to nourish',items:[['Avacado Toast with Poached Eggs','Creamy avocado toast topped with poached eggs and served with a fresh garden salad',41,'/assets/avacado-toast-poached-eggs-f2.webp',''],['Avacado Toast with Salmon','Creamy avocado toast topped with salmon and served with a fresh garden salad',49,'/assets/avacado-toast-salmon-f1.webp',''],['Avacado Toast with Green Olives','Avocado toast with green olives, served with a fresh garden salad',41,'/assets/avacado-toasted-poached-egg-f3.webp','']]},
     {category:'Pancakes',slug:'pancakes',tagline:'Warm stacks · sweet moments',items:[['Nutella Pancake','Fluffy pancakes layered with Nutella and finished with fresh berries',32,'/assets/pancake-nutella.webp','V'],['Berries Pancake','Fluffy pancakes topped with strawberries, blueberries, raspberries and blackberries',32,'/assets/pancake-berries.webp','V'],['Classic Pancake','Classic fluffy pancakes finished with cream, berries and a touch of syrup',27,'/assets/pancake-classic.webp','V'],['French Toast','Golden French toast served with banana, cream and fresh berries',46,'/assets/pancake-french-toast.webp','V'],['Pistachio Pancake','Fluffy pancakes topped with pistachio cream, crushed pistachios and fresh fruit',32,'/assets/pancake-pistachio.webp','V']]},
-    {category:'Hot Beverages',slug:'hot-beverages',tagline:'Warm cups · better moments',items:[['Americano','Espresso lengthened with hot water for a smooth, bold cup',19,'/assets/hot-americano.webp',''],['Cappuccino','Espresso with silky steamed milk and a smooth foam finish',24,'/assets/hot-cappuccino-flat-white.webp',''],['Cafe Latte','Espresso marked with silky milk and a smooth foam finish',24,'/assets/hot-cappuccino-macchiato.webp',''],['Spanish Latte','Espresso balanced with warm, lightly textured milk',24,'/assets/hot-cappuccino-cortado.webp',''],['Expresso','A rich, full-bodied single shot',17,'/assets/hot-expresso.webp',''],['Hot Matcha Latte','Matcha whisked with smooth steamed milk',26,'/assets/hot-matcha-latte.webp','V'],['Macchiato','A shot of espresso marked with a spoonful of milk foam',24,'/assets/hot-matcha-new.webp','V'],['Mochaccino','Espresso, chocolate and silky steamed milk',25,'/assets/hot-mochaccino.webp',''],['Cortado','A short espresso softened with textured milk',24,'/assets/hot-piccolo.webp',''],['Flat White','Velvety espresso with smooth steamed milk and a fine microfoam finish',24,'/assets/hot-piccolo.webp',''],['Piccolo','A short espresso softened with smooth steamed milk',24,'/assets/hot-piccolo-glass.webp',''],['Tea Selections','A curated selection of classic hot teas',18,'/assets/hot-tea-selections.webp','V'],['Tisane Tea','A soothing caffeine-free herbal infusion',20,'/assets/hot-tisane-tea.webp','VG'],['V60','Hand-poured filter coffee with a clean, aromatic finish',26,'/assets/hot-v60.webp','']]},
+    {category:'Hot Beverages',slug:'hot-beverages',tagline:'Warm cups · better moments',items:[['Americano','Espresso lengthened with hot water for a smooth, bold cup',19,'/assets/hot-americano.webp',''],['Cappuccino','Espresso with silky steamed milk and a smooth foam finish',24,'/assets/hot-cappuccino-flat-white.webp',''],['Cafe Latte','Espresso marked with silky milk and a smooth foam finish',24,'/assets/hot-cappuccino-macchiato.webp',''],['Spanish Latte','Espresso balanced with warm, lightly textured milk',26,'/assets/hot-cappuccino-cortado.webp',''],['Expresso','A rich, full-bodied single shot',17,'/assets/hot-expresso.webp',''],['Hot Matcha Latte','Matcha whisked with smooth steamed milk',26,'/assets/hot-matcha-latte.webp','V'],['Macchiato','A shot of espresso marked with a spoonful of milk foam',24,'/assets/hot-matcha-new.webp','V'],['Mochaccino','Espresso, chocolate and silky steamed milk',25,'/assets/hot-mochaccino.webp',''],['Cortado','A short espresso softened with textured milk',24,'/assets/hot-piccolo.webp',''],['Flat White','Velvety espresso with smooth steamed milk and a fine microfoam finish',24,'/assets/hot-piccolo.webp',''],['Piccolo','A short espresso softened with smooth steamed milk',24,'/assets/hot-piccolo-glass.webp',''],['Tea Selections','A curated selection of classic hot teas',18,'/assets/hot-tea-selections.webp','V'],['Tisane Tea','A soothing caffeine-free herbal infusion',20,'/assets/hot-tisane-tea.webp','VG'],['V60','Hand-poured filter coffee with a clean, aromatic finish',26,'/assets/hot-v60.webp','']]},
     {category:'Salads',slug:'salads',tagline:'Fresh · crisp · satisfying',items:[['Blood Sugar Level','Chickpeas, avocado, cucumber, tomatoes, radish and olives',25,'/assets/salad-blood-sugar-level.webp','VG'],['Chicken Ceasar','Grilled chicken, avocado, baby gem, parmesan and croutons',29,'/assets/salad-chicken-ceasar.webp',''],['Colon Cleaning','Beetroot, carrot and cabbage in a bright citrus dressing',25,'/assets/salad-colon-cleaning.webp','VG'],['Flat Stomach','Green peas, cucumber and red cabbage with fresh herbs',25,'/assets/salad-flat-stomach.webp','VG'],['Tabbouloleh Salad','Couscous, cucumber, tomato, herbs and red onion',25,'/assets/salad-tabbouloleh.webp','VG'],['Triple Berries Salad','Spinach, strawberries, blueberries, blackberries and feta',29,'/assets/salad-triple-berries.webp','V']]},
-    {category:'Sandwiches',slug:'sandwiches',tagline:'Freshly made · full of flavour',items:[['Beef Pastrami','Beef pastrami, melted cheese, lettuce and onion',38,'/assets/sandwich-beef-pastrami-new.webp',''],['Chickado','Chicken, avocado, tomato, cucumber and creamy dressing',38,'/assets/sandwich-chickado-new.webp',''],['Halloumi Avacado','Halloumi, avocado, cucumber and tomato',38,'/assets/sandwich-halloumi-avocado-new.webp','V'],['Halloumi Pesto','Halloumi, pesto, cucumber and tomato',38,'/assets/sandwich-halloumi-pesto-new.webp','V'],['Labneh','Labneh, cucumber, tomato, olives and greens',38,'/assets/sandwich-labneh-new.webp','V'],['Melted Cheese','Warm melted cheese and tomato',38,'/assets/sandwich-melted-cheese-new.webp','V'],['Smoked Salmon','Smoked salmon, cucumber and cream cheese',38,'/assets/sandwich-smoked-salmon-new.webp',''],['Smoked Turkey','Smoked turkey, melted cheese, tomato and pesto',38,'/assets/sandwich-smoked-turkey-new.webp',''],['Tuna Melt','Tuna mix, cheddar cheese and lettuce',38,'/assets/sandwich-tuna-melt.webp','']]},
+    {category:'Sandwiches',slug:'sandwiches',tagline:'Freshly made · full of flavour',items:[['Beef Pastrami','Beef pastrami, melted cheese, lettuce and onion',39,'/assets/sandwich-beef-pastrami-new.webp',''],['Chickado','Chicken, avocado, tomato, cucumber and creamy dressing',39,'/assets/sandwich-chickado-new.webp',''],['Halloumi Avacado','Halloumi, avocado, cucumber and tomato',39,'/assets/sandwich-halloumi-avocado-new.webp','V'],['Halloumi Pesto','Halloumi, pesto, cucumber and tomato',39,'/assets/sandwich-halloumi-pesto-new.webp','V'],['Labneh','Labneh, cucumber, tomato, olives and greens',39,'/assets/sandwich-labneh-new.webp','V'],['Melted Cheese','Warm melted cheese and tomato',39,'/assets/sandwich-melted-cheese-new.webp','V'],['Smoked Salmon','Smoked salmon, cucumber and cream cheese',39,'/assets/sandwich-smoked-salmon-new.webp',''],['Smoked Turkey','Smoked turkey, melted cheese, tomato and pesto',39,'/assets/sandwich-smoked-turkey-new.webp',''],['Tuna Melt','Tuna mix, cheddar cheese and lettuce',39,'/assets/sandwich-tuna-melt.webp','']]},
     {category:'Healthy Bowls',slug:'healthy-bowls',tagline:'Balanced fuel · bold flavour',items:[['Acai Bowl','Açaí topped with banana, berries, granola and peanut butter',46,'/assets/bowl-acai-new.webp','VG'],['Blue Crash Bowl','A vibrant blue smoothie bowl with mango, banana, berries and granola',44,'/assets/bowl-blue-crash-new.webp','VG'],['Mystic Matcha Bowl','A berry smoothie bowl with avocado, banana, cucumber and granola',44,'/assets/bowl-mystic-matcha-new.webp','VG'],['Green Dream Bowl','A colourful wellness bowl with fruit, vegetables, nuts and granola',44,'/assets/bowl-green-dream-new.webp','VG'],['Detox Me Later Glow Bowl','A pink smoothie bowl topped with tropical fruit, berries and pomegranate',44,'/assets/bowl-detox-glow-new.webp','VG'],['Tropical Glow Bowl','A tropical green bowl with avocado, mango, pineapple and berries',44,'/assets/bowl-tropical-glow-new.webp','VG'],['Watermelon Feta','Fresh watermelon, feta, chia seeds and mint',25,'/assets/bowl-watermelon-feta-new.webp','V']]},
     {category:'Protein Bars',slug:'protein-bars',tagline:'Clean energy · ready to go',items:[['Fignuts','Figs, nuts and seeds pressed into a naturally energising bar',16,'/assets/protein-bar-fignuts.webp','VG'],['Walnana','A rich cacao and nut protein bar with a smooth finish',16,'/assets/protein-bar-klalnana.webp','VG'],['Nutri Tropix','A layered tropical fruit and nut energy bar',16,'/assets/protein-bar-nutri-tropix.webp','VG'],['Nutty Date Delight Ball','Chocolate-coated date and nut energy balls',16,'/assets/protein-bar-nutty-date-delight-ball.webp','VG']]},
     {category:'Cakes & Pastries',slug:'cakes-pastries',tagline:'Freshly baked · perfectly paired',items:[['Banana Bread','A soft, moist slice of classic banana bread',16,'/assets/pastry-banana-cake.webp',''],['Blueberry Muffin','A tender muffin baked with juicy blueberries',16,'/assets/pastry-blueberry-muffin.webp',''],['Brownies','A rich, fudgy chocolate brownie',16,'/assets/pastry-brownies.webp',''],['Chocolate Muffin','A soft chocolate muffin with a deeply cocoa-rich finish',16,'/assets/pastry-chocolate-muffin.webp','']]},
@@ -120,21 +122,21 @@ function buildMenu() {
     'Immunity Booster':{price:24,ingredients:['Carrot','Ginger','Green apple'],protein:'3 g',carbohydrates:'65 g',calories:'258 kcal'},
     'The Shield':{price:24,ingredients:['Green apple','Ginger','Pineapple','Turmeric','Black pepper'],protein:'1 g',carbohydrates:'58 g',calories:'230 kcal'},
     'Incredible Hulk':{price:24,ingredients:['Green apple','Ginger','Pineapple','Passion fruit','Green spirulina powder'],protein:'5 g',carbohydrates:'56 g',calories:'214 kcal'},
-    'Smoked Turkey':{price:38,ingredients:['Mozzarella cheese','Smoked turkey','Pesto sauce','Tomatoes','Bread'],protein:'55 g',carbohydrates:'60 g',calories:'888 kcal'},
-    'Beef Pastrami':{price:38,ingredients:['Emmental cheese','Beef pastrami','Caramelized onions','Lettuce','Bread'],protein:'56 g',carbohydrates:'64 g',calories:'888 kcal'},
-    'Smoked Salmon':{price:38,ingredients:['Philadelphia mix','Smoked salmon','Cucumber','Tomato','Bread'],protein:'20 g',carbohydrates:'9 g',calories:'467 kcal'},
-    'Chickado':{price:38,ingredients:['Mozzarella cheese','Chicken mousse','Cucumber','Tomato','Avocado','Bread'],protein:'53 g',carbohydrates:'143 g',calories:'1,971 kcal'},
-    'Melted Cheese':{price:38,ingredients:['Cheddar and Emmental cheese','Tomato','Bread'],protein:'49 g',carbohydrates:'50 g',calories:'844 kcal'},
-    'Halloumi Avacado':{name:'Halloumi Avocado',price:38,ingredients:['Grilled halloumi cheese','Avocado sauce','Tomato','Cucumber','Bread'],protein:'35 g',carbohydrates:'51 g',calories:'809 kcal'},
-    'Halloumi Pesto':{price:38,ingredients:['Grilled halloumi cheese','Pesto sauce','Tomato','Cucumber','Bread'],protein:'43 g',carbohydrates:'121 g',calories:'1,756 kcal'},
-    'Labneh':{price:38,ingredients:['Labneh cheese','Sliced green olives','Olive oil','Tomato','Cucumber','Bread'],protein:'11 g',carbohydrates:'57 g',calories:'595 kcal'},
-    'Tuna Melt':{price:38,ingredients:['Cheddar cheese','Tuna mix','Lettuce','Bread'],protein:'48 g',carbohydrates:'64 g',calories:'838 kcal'},
+    'Smoked Turkey':{price:39,ingredients:['Mozzarella cheese','Smoked turkey','Pesto sauce','Tomatoes','Bread'],protein:'55 g',carbohydrates:'60 g',calories:'888 kcal'},
+    'Beef Pastrami':{price:39,ingredients:['Emmental cheese','Beef pastrami','Caramelized onions','Lettuce','Bread'],protein:'56 g',carbohydrates:'64 g',calories:'888 kcal'},
+    'Smoked Salmon':{price:39,ingredients:['Philadelphia mix','Smoked salmon','Cucumber','Tomato','Bread'],protein:'20 g',carbohydrates:'9 g',calories:'467 kcal'},
+    'Chickado':{price:39,ingredients:['Mozzarella cheese','Chicken mousse','Cucumber','Tomato','Avocado','Bread'],protein:'53 g',carbohydrates:'143 g',calories:'1,971 kcal'},
+    'Melted Cheese':{price:39,ingredients:['Cheddar and Emmental cheese','Tomato','Bread'],protein:'49 g',carbohydrates:'50 g',calories:'844 kcal'},
+    'Halloumi Avacado':{name:'Halloumi Avocado',price:39,ingredients:['Grilled halloumi cheese','Avocado sauce','Tomato','Cucumber','Bread'],protein:'35 g',carbohydrates:'51 g',calories:'809 kcal'},
+    'Halloumi Pesto':{price:39,ingredients:['Grilled halloumi cheese','Pesto sauce','Tomato','Cucumber','Bread'],protein:'43 g',carbohydrates:'121 g',calories:'1,756 kcal'},
+    'Labneh':{price:39,ingredients:['Labneh cheese','Sliced green olives','Olive oil','Tomato','Cucumber','Bread'],protein:'11 g',carbohydrates:'57 g',calories:'595 kcal'},
+    'Tuna Melt':{price:39,ingredients:['Cheddar cheese','Tuna mix','Lettuce','Bread'],protein:'48 g',carbohydrates:'64 g',calories:'838 kcal'},
     'Brownies':{calories:'355 kcal'}
   };
   
   menu.forEach(category=>category.items.forEach(item=>{
     const details=productDetails[`${category.category}:${item[0]}`]||productDetails[item[0]]||{};
-    item[5]={ingredients:details.ingredients||[item[1]],size:details.size,protein:details.protein,carbohydrates:details.carbohydrates,calories:details.calories};
+    item[5]={ingredients:details.ingredients||[item[1]],size:details.size,protein:details.protein,carbohydrates:details.carbohydrates,calories:details.calories,fat:details.fat,fibre:details.fibre};
     if(details.price)item[2]=details.price;
     if(details.name)item[0]=details.name;
   }));
@@ -172,6 +174,77 @@ function buildMenu() {
     const id=usedIds.has(base)?slugify(`${category.slug}-${item[0]}`):base;
     usedIds.add(id);
     item[7]=id;
+  }));
+
+  // Nutrition supplied by the client in PRESSD_Nutritional_Information_Updated
+  // (docs/client), keyed by product ID. Products not listed keep the values above.
+  const clientNutrition={
+    'avacado-toast-with-poached-eggs':{calories:'505 kcal',protein:'23 g',carbohydrates:'45 g',fat:'26 g',fibre:'9 g'},
+    'avacado-toast-with-salmon':{calories:'480 kcal',protein:'22 g',carbohydrates:'44 g',fat:'24 g',fibre:'9 g'},
+    'avacado-toast-with-green-olives':{calories:'420 kcal',protein:'11 g',carbohydrates:'44 g',fat:'22 g',fibre:'10 g'},
+    'mystic-matcha-bowl':{calories:'560 kcal',protein:'20 g',carbohydrates:'75 g',fat:'20 g',fibre:'8 g'},
+    'green-dream-bowl':{calories:'500 kcal',protein:'24 g',carbohydrates:'60 g',fat:'18 g',fibre:'9 g'},
+    'detox-me-later-glow-bowl':{calories:'385 kcal',protein:'8 g',carbohydrates:'70 g',fat:'8 g',fibre:'9 g'},
+    'tropical-glow-bowl':{calories:'550 kcal',protein:'22 g',carbohydrates:'62 g',fat:'24 g',fibre:'10 g'},
+    'watermelon-feta':{calories:'310 kcal',protein:'12 g',carbohydrates:'30 g',fat:'16 g',fibre:'3 g'},
+    'blood-sugar-level':{calories:'390 kcal',protein:'14 g',carbohydrates:'38 g',fat:'20 g',fibre:'11 g'},
+    'chicken-ceasar':{calories:'525 kcal',protein:'42 g',carbohydrates:'22 g',fat:'30 g',fibre:'5 g'},
+    'colon-cleaning':{calories:'240 kcal',protein:'10 g',carbohydrates:'32 g',fat:'8 g',fibre:'10 g'},
+    'flat-stomach':{calories:'190 kcal',protein:'4 g',carbohydrates:'30 g',fat:'6 g',fibre:'7 g'},
+    'tabbouloleh-salad':{calories:'275 kcal',protein:'7 g',carbohydrates:'42 g',fat:'9 g',fibre:'5 g'},
+    'triple-berries-salad':{calories:'295 kcal',protein:'10 g',carbohydrates:'32 g',fat:'14 g',fibre:'6 g'},
+    'nutella-pancake':{calories:'655 kcal',protein:'11 g',carbohydrates:'85 g',fat:'30 g',fibre:'4 g'},
+    'berries-pancake':{calories:'495 kcal',protein:'11 g',carbohydrates:'72 g',fat:'18 g',fibre:'5 g'},
+    'classic-pancake':{calories:'455 kcal',protein:'10 g',carbohydrates:'68 g',fat:'16 g',fibre:'3 g'},
+    'french-toast':{calories:'465 kcal',protein:'16 g',carbohydrates:'55 g',fat:'20 g',fibre:'3 g'},
+    'pistachio-pancake':{calories:'620 kcal',protein:'14 g',carbohydrates:'78 g',fat:'28 g',fibre:'4 g'},
+    'banana-bread':{calories:'290 kcal',protein:'4 g',carbohydrates:'42 g',fat:'12 g',fibre:'2 g'},
+    'blueberry-muffin':{calories:'370 kcal',protein:'5 g',carbohydrates:'52 g',fat:'16 g',fibre:'2 g'},
+    'brownies':{calories:'355 kcal',protein:'4 g',carbohydrates:'42 g',fat:'19 g',fibre:'2 g'},
+    'chocolate-muffin':{calories:'425 kcal',protein:'6 g',carbohydrates:'55 g',fat:'20 g',fibre:'3 g'},
+    'americano':{calories:'5 kcal',protein:'0 g',carbohydrates:'1 g',fat:'0 g',fibre:'0 g'},
+    'cappuccino':{calories:'115 kcal',protein:'6 g',carbohydrates:'9 g',fat:'6 g',fibre:'0 g'},
+    'cafe-latte':{calories:'170 kcal',protein:'9 g',carbohydrates:'13 g',fat:'9 g',fibre:'0 g'},
+    'spanish-latte':{calories:'245 kcal',protein:'9 g',carbohydrates:'30 g',fat:'10 g',fibre:'0 g'},
+    'expresso':{calories:'3 kcal',protein:'0.1 g',carbohydrates:'0.5 g',fat:'0.2 g',fibre:'0 g'},
+    'hot-matcha-latte':{calories:'185 kcal',protein:'8 g',carbohydrates:'20 g',fat:'8 g',fibre:'1 g'},
+    'macchiato':{calories:'15 kcal',protein:'1 g',carbohydrates:'1 g',fat:'1 g',fibre:'0 g'},
+    'mochaccino':{calories:'245 kcal',protein:'9 g',carbohydrates:'28 g',fat:'11 g',fibre:'1 g'},
+    'cortado':{calories:'60 kcal',protein:'3 g',carbohydrates:'4 g',fat:'3.5 g',fibre:'0 g'},
+    'flat-white':{calories:'130 kcal',protein:'7 g',carbohydrates:'10 g',fat:'7 g',fibre:'0 g'},
+    'piccolo':{calories:'40 kcal',protein:'2 g',carbohydrates:'3 g',fat:'2 g',fibre:'0 g'},
+    'v60':{calories:'5 kcal',protein:'0 g',carbohydrates:'1 g',fat:'0 g',fibre:'0 g'},
+    'tea-selections':{calories:'2 kcal',protein:'0 g',carbohydrates:'0 g',fat:'0 g',fibre:'0 g'},
+    'ginger-tisane-tea':{calories:'35 kcal',protein:'0 g',carbohydrates:'9 g',fat:'0 g',fibre:'0 g'},
+    'iced-americano':{calories:'5 kcal',protein:'0 g',carbohydrates:'1 g',fat:'0 g',fibre:'0 g'},
+    'raspberry-cano':{calories:'70 kcal',protein:'0 g',carbohydrates:'18 g',fat:'0 g',fibre:'0 g'},
+    'ice-latte':{calories:'150 kcal',protein:'8 g',carbohydrates:'12 g',fat:'8 g',fibre:'0 g'},
+    'iced-matcha-latte':{calories:'190 kcal',protein:'8 g',carbohydrates:'22 g',fat:'8 g',fibre:'1 g'},
+    'iced-spanish-latte':{calories:'245 kcal',protein:'9 g',carbohydrates:'32 g',fat:'9 g',fibre:'0 g'},
+    'cold-drip-coffee':{calories:'5 kcal',protein:'0 g',carbohydrates:'1 g',fat:'0 g',fibre:'0 g'},
+    'iced-v60':{calories:'5 kcal',protein:'0 g',carbohydrates:'1 g',fat:'0 g',fibre:'0 g'},
+    'caramel-frappe':{calories:'405 kcal',protein:'8 g',carbohydrates:'62 g',fat:'14 g',fibre:'0 g'},
+    'matcha-frappe':{calories:'375 kcal',protein:'9 g',carbohydrates:'55 g',fat:'13 g',fibre:'1 g'},
+    'mocha-frappe':{calories:'395 kcal',protein:'9 g',carbohydrates:'58 g',fat:'14 g',fibre:'1 g'},
+    'press-d-frappe':{calories:'330 kcal',protein:'7 g',carbohydrates:'48 g',fat:'12 g',fibre:'0 g'},
+    'fignuts':{calories:'205 kcal',protein:'5 g',carbohydrates:'28 g',fat:'8 g',fibre:'4 g'},
+    'walnana':{calories:'200 kcal',protein:'4 g',carbohydrates:'24 g',fat:'10 g',fibre:'3 g'},
+    'nutri-tropix':{calories:'210 kcal',protein:'4 g',carbohydrates:'30 g',fat:'8 g',fibre:'4 g'},
+    'nutty-date-delight-ball':{calories:'120 kcal',protein:'3 g',carbohydrates:'14 g',fat:'6 g',fibre:'2 g'},
+    'ginger-iced-tea':{calories:'70 kcal',protein:'0 g',carbohydrates:'18 g',fat:'0 g',fibre:'0 g'},
+    'passion-fruit-iced-tea':{calories:'95 kcal',protein:'0 g',carbohydrates:'24 g',fat:'0 g',fibre:'1 g'},
+    'peach-iced-tea':{calories:'95 kcal',protein:'0 g',carbohydrates:'24 g',fat:'0 g',fibre:'0 g'},
+    'blue-lagoon-mojito':{calories:'140 kcal',protein:'0 g',carbohydrates:'35 g',fat:'0 g',fibre:'0 g'},
+    'blueberry-mojito':{calories:'145 kcal',protein:'0 g',carbohydrates:'36 g',fat:'0 g',fibre:'1 g'},
+    'strawberry-mojito':{calories:'135 kcal',protein:'0 g',carbohydrates:'34 g',fat:'0 g',fibre:'1 g'},
+    'classic-mojito':{calories:'120 kcal',protein:'0 g',carbohydrates:'30 g',fat:'0 g',fibre:'0 g'},
+    'passion-fruit-mojito':{calories:'145 kcal',protein:'0 g',carbohydrates:'36 g',fat:'0 g',fibre:'1 g'},
+    'evian-water':{calories:'0 kcal',protein:'0 g',carbohydrates:'0 g',fat:'0 g',fibre:'0 g'},
+    'perrier-sparkling-water':{calories:'0 kcal',protein:'0 g',carbohydrates:'0 g',fat:'0 g',fibre:'0 g'},
+    'perrier-sparkling-water-with-lemon':{calories:'0 kcal',protein:'0 g',carbohydrates:'0 g',fat:'0 g',fibre:'0 g'}
+  };
+  menu.forEach(category=>category.items.forEach(item=>{
+    if(clientNutrition[item[7]])item[5]={...item[5],...clientNutrition[item[7]]};
   }));
 
   // Spelling corrections to customer-facing names, applied after the IDs are

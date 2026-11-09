@@ -50,6 +50,8 @@ const ui = {
   factsProtein: "Protein",
   factsCarbohydrates: "Carbohydrates",
   factsCalories: "Calories",
+  factsFat: "Fat",
+  factsFibre: "Fibre",
   closeDetailsAria: "Close product details",
   menuEyebrowModal: "PRESS'D MENU",
   whatsInside: "What's inside",

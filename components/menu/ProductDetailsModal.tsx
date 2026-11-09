@@ -36,9 +36,11 @@ export default function ProductDetailsModal() {
   const customizeMode = customizeModeFor(category, item);
   const facts: [string, string | undefined][] = [
     [t("ui.factsSize", "Size"), details?.size],
+    [t("ui.factsCalories", "Calories"), details?.calories],
     [t("ui.factsProtein", "Protein"), details?.protein],
     [t("ui.factsCarbohydrates", "Carbohydrates"), details?.carbohydrates],
-    [t("ui.factsCalories", "Calories"), details?.calories],
+    [t("ui.factsFat", "Fat"), details?.fat],
+    [t("ui.factsFibre", "Fibre"), details?.fibre],
   ];
 
   return (

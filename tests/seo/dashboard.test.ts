@@ -27,7 +27,7 @@ const DEFAULT_LD = {
   address: { "@type": "PostalAddress", streetAddress: "Meydan Polo Residence, Muscat St", addressLocality: "Nad Al Sheba 1", addressRegion: "Dubai", addressCountry: "AE" },
   geo: { "@type": "GeoCoordinates", latitude: 25.1497789, longitude: 55.2944217 },
   servesCuisine: ["Healthy", "Breakfast", "Coffee"],
-  openingHours: ["Mo-Su 07:00-22:00"],
+  openingHours: ["Mo-Su 07:00-21:00"],
   priceRange: "AED 18-65",
 };
 

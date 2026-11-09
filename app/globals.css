@@ -16524,7 +16524,7 @@ body:not(.menu-detail-view)>footer .footer-bottom {
   }
 
   /* Day + time sized to the zone's own width so the full
-     "7:00 AM – 10:00 PM" always fits beside the day. */
+     "7:00 AM – 9:00 PM" always fits beside the day. */
   body.detail-view #visit .visit-schedule-row {
     gap: 6px !important;
     font-size: clamp(9px, 5.6cqi, 14px) !important;
@@ -18750,5 +18750,49 @@ body.menu-detail-view > footer .footer-social a:focus-visible {
   .menu-section .menu-subsection[data-column="Iced Coffee"] .menu-grid,
   body.detail-view .menu-section .menu-subsection .menu-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ============================================================
+   PRODUCT DETAILS — nutrition tiles
+   Up to six tiles (size, calories, protein, carbohydrates, fat, fibre):
+   three columns at every width give two even rows. They were hidden
+   entirely at <= 390px (most phones); show a compact version instead.
+   Long labels (e.g. Malayalam "carbohydrates") wrap inside the tile.
+   ============================================================ */
+.product-details-modal .product-modal-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.product-details-modal .product-modal-facts dt {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .product-details-modal .product-modal-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 390px) {
+  .product-details-modal .product-modal-facts {
+    display: grid;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .product-details-modal .product-modal-facts div {
+    padding: 6px;
+  }
+
+  /* Keeps "CARBOHYDRATES" on one line in a 320px-wide tile. */
+  .product-details-modal .product-modal-facts dt {
+    font-size: 7.5px;
+    letter-spacing: .05em;
+  }
+
+  .product-details-modal .product-modal-facts dd {
+    margin-top: 2px;
+    font-size: 12px;
   }
 }

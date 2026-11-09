@@ -8,12 +8,12 @@ const MAPS_URL =
   "https://www.google.com/maps/place/PRESS%E2%80%99D+Wellness+Caf%C3%A9/@25.1497789,55.2944217,17z/data=!4m6!3m5!1s0x3e5f69b12bacfaa1:0xf705edb34aadfb3c!8m2!3d25.1497789!4d55.2944217!16s%2Fg%2F11svlbgvyk";
 
 const SCHEDULE = [
-  { day: "MON", hours: "7:00 AM — 10:00 PM" },
-  { day: "TUE", hours: "7:00 AM — 10:00 PM" },
-  { day: "WED", hours: "7:00 AM — 10:00 PM" },
-  { day: "THU", hours: "7:00 AM — 10:00 PM" },
-  { day: "FRI", hours: "7:00 AM — 10:00 PM" },
-  { day: "SAT & SUN", hours: "7:00 AM — 10:00 PM" },
+  { day: "MON", hours: "7:00 AM – 9:00 PM" },
+  { day: "TUE", hours: "7:00 AM – 9:00 PM" },
+  { day: "WED", hours: "7:00 AM – 9:00 PM" },
+  { day: "THU", hours: "7:00 AM – 9:00 PM" },
+  { day: "FRI", hours: "7:00 AM – 9:00 PM" },
+  { day: "SAT & SUN", hours: "7:00 AM – 9:00 PM" },
 ];
 
 const GALLERY_IMAGES = [

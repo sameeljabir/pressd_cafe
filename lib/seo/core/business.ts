@@ -30,7 +30,7 @@ export interface BusinessInfo {
 /**
  * The values hard-coded in the old layout placed the café in Jumeirah Village
  * Triangle, open until 23:00 / midnight, which contradicted the site. These
- * match the Visit page (address, 7:00–22:00 daily), the contact details and the
+ * match the Visit page (address, 7:00–21:00 daily), the contact details and the
  * coordinates of the site's Google Maps link. Price range is unchanged (no source).
  */
 export const BUSINESS_DEFAULTS: BusinessInfo = {
@@ -47,7 +47,7 @@ export const BUSINESS_DEFAULTS: BusinessInfo = {
   addressCountry: "AE",
   latitude: "25.1497789",
   longitude: "55.2944217",
-  openingHours: [{ days: "Mo-Su", opens: "07:00", closes: "22:00" }],
+  openingHours: [{ days: "Mo-Su", opens: "07:00", closes: "21:00" }],
 };
 
 const DAY = "(Mo|Tu|We|Th|Fr|Sa|Su)";
