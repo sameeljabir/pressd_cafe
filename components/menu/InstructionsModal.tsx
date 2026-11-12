@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMenuModals } from "@/components/menu/MenuModalsContext";
 import { useCart } from "@/components/cart/CartContext";
 import { readInstructions, saveInstructions } from "@/lib/cart";
-import { menuItemById } from "@/data/menu";
+import { useMenuData } from "@/components/SiteContentContext";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
 export default function InstructionsModal() {
@@ -12,10 +12,11 @@ export default function InstructionsModal() {
   const { instructionsProduct, closeInstructions } = useMenuModals();
   const { cart, applyCustomization } = useCart();
   const { t, dir } = useLocale();
+  const { byId } = useMenuData();
   const [value, setValue] = useState("");
   const [note, setNote] = useState("");
 
-  const productName = instructionsProduct ? menuItemById.get(instructionsProduct)?.[0] ?? "" : "";
+  const productName = instructionsProduct ? byId.get(instructionsProduct)?.[0] ?? "" : "";
   const displayProductName = instructionsProduct
     ? t(`products.${instructionsProduct}.name`, productName)
     : "";

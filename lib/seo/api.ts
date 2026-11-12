@@ -7,7 +7,7 @@ import type { Permission } from "./core/permissions.ts";
 import { jsonError, requireApi, type Viewer } from "./auth/guard.ts";
 import { DatabaseUnavailableError } from "./db/mongo.ts";
 import { MetadataValidationError } from "./core/metadata.ts";
-import { ConcurrentPublishError } from "./services/metadata.ts";
+import { ConcurrentPublishError, DraftConflictError } from "./services/metadata.ts";
 import { SettingsValidationError } from "./services/settings.ts";
 import { NothingToPublishError } from "./services/docs.ts";
 
@@ -32,6 +32,9 @@ export async function readJson(req: Request, maxBytes = 64_000): Promise<Record<
 
 export class BadRequest extends Error {}
 
+/** The signed-in role cannot do this to this document (checked per document on the server). */
+export class ForbiddenAction extends Error {}
+
 export function handle<C = unknown>(permission: Permission, fn: (req: Request, viewer: Viewer, ctx: C) => Promise<Response>) {
   return async (req: Request, ctx: C): Promise<Response> => {
     const viewer = await requireApi(req, permission);
@@ -42,7 +45,8 @@ export function handle<C = unknown>(permission: Permission, fn: (req: Request, v
       if (e instanceof BadRequest || e instanceof SettingsValidationError) return jsonError(400, "invalid", e.message);
       if (e instanceof MetadataValidationError) return NextResponse.json({ error: { code: "invalid", message: e.message, field: e.field } }, { status: 400 });
       if (e instanceof NothingToPublishError) return jsonError(409, "nothing_to_publish", e.message);
-      if (e instanceof ConcurrentPublishError) return jsonError(409, "conflict", e.message);
+      if (e instanceof ConcurrentPublishError || e instanceof DraftConflictError) return jsonError(409, "conflict", e.message);
+      if (e instanceof ForbiddenAction) return jsonError(403, "forbidden", e.message);
       if (e instanceof DatabaseUnavailableError) return jsonError(503, "database_unavailable", "The dashboard database is not configured (MONGODB_URI).");
       // Name only: driver messages can include host names; the client gets a generic message.
       console.error("[seo] unhandled API error", req.method, new URL(req.url).pathname, e instanceof Error ? e.name : typeof e);

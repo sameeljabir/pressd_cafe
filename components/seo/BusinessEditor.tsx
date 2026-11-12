@@ -6,11 +6,18 @@ import { api } from "./client";
 import { buildJsonLd, effectiveBusiness, validateBusiness, type BusinessInfo, type OpeningRow } from "@/lib/seo/core/business";
 import { MetadataValidationError } from "@/lib/seo/core/metadata";
 
-type Text = Exclude<keyof BusinessInfo, "servesCuisine" | "openingHours">;
+type Text = Exclude<keyof BusinessInfo, "servesCuisine" | "openingHours" | "addressLines">;
 const FIELDS: { k: Text; label: string; hint?: string; type?: string }[][] = [
   [{ k: "name", label: "Business name" }, { k: "url", label: "Website address", hint: "https://…", type: "url" }],
   [{ k: "telephone", label: "Phone", hint: "e.g. +971 4 123 4567", type: "tel" }, { k: "email", label: "Email", type: "email" }],
   [{ k: "priceRange", label: "Price range", hint: "e.g. AED 18-65" }],
+];
+// Shown on the website (Visit page, footer, phone dock, cart, booking) — the single source for these details.
+const CONTACT: { k: Text; label: string; hint?: string; type?: string }[][] = [
+  [{ k: "whatsapp", label: "WhatsApp number (orders & bookings)", hint: "e.g. +971 55 68 38 426", type: "tel" }],
+  [{ k: "instagram", label: "Instagram", hint: "https://www.instagram.com/…", type: "url" }, { k: "tiktok", label: "TikTok", hint: "https://www.tiktok.com/@…", type: "url" }],
+  [{ k: "facebook", label: "Facebook", hint: "https://www.facebook.com/…", type: "url" }, { k: "threads", label: "Threads", hint: "https://www.threads.com/@…", type: "url" }],
+  [{ k: "mapsUrl", label: "Google Maps link", hint: "https://www.google.com/maps/…", type: "url" }],
 ];
 const ADDRESS: { k: Text; label: string; hint?: string }[] = [
   { k: "streetAddress", label: "Street" },
@@ -36,9 +43,10 @@ export default function BusinessEditor({ published, draft, canDraft, warnings }:
   const baseline = useMemo(() => effectiveBusiness(draft ?? published), [draft, published]);
   const [b, setB] = useState<BusinessInfo>(baseline);
   const [cuisine, setCuisine] = useState(baseline.servesCuisine.join(", "));
+  const [addressText, setAddressText] = useState(baseline.addressLines.join("\n"));
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ text: string; error?: boolean } | null>(null);
-  const current: BusinessInfo = { ...b, servesCuisine: cuisine.split(",").map((c) => c.trim()).filter(Boolean) };
+  const current: BusinessInfo = { ...b, servesCuisine: cuisine.split(",").map((c) => c.trim()).filter(Boolean), addressLines: addressText.split("\n").map((l) => l.trim()).filter(Boolean) };
   const dirty = JSON.stringify(current) !== JSON.stringify(baseline);
   const err = errorOf(current);
 
@@ -82,6 +90,16 @@ export default function BusinessEditor({ published, draft, canDraft, warnings }:
         </div>
       </fieldset>
       <fieldset className="card" disabled={!canDraft}>
+        <legend>Contact &amp; social (shown on the website)</legend>
+        <p className="small muted" style={{ margin: 0 }}>Used by the Visit page, footer, phone dock, cart and booking form. The phone above is shown and dialled as written.</p>
+        {CONTACT.map((row, i) => <div className="form-row" key={i}>{row.map(input)}</div>)}
+        <div className="field">
+          <label htmlFor="b-addr">Address on the Visit page (one line each, up to 4)</label>
+          <textarea id="b-addr" className="input" rows={3} value={addressText} onChange={(e) => setAddressText(e.target.value)} aria-invalid={err?.field.startsWith("addressLines") ? true : undefined} />
+          {err?.field.startsWith("addressLines") ? <span className="field-error" role="alert">{err.message}</span> : null}
+        </div>
+      </fieldset>
+      <fieldset className="card" disabled={!canDraft}>
         <legend>Address</legend>
         <div className="form-row">{ADDRESS.map(input)}</div>
       </fieldset>
@@ -107,7 +125,7 @@ export default function BusinessEditor({ published, draft, canDraft, warnings }:
       {canDraft ? (
         <div className="action-bar sticky-actions">
           <button type="button" className="btn btn-primary" disabled={!dirty || !!err || busy} onClick={save}>{busy ? "Saving…" : "Save"}</button>
-          <button type="button" className="btn" disabled={!dirty} onClick={() => { setB(baseline); setCuisine(baseline.servesCuisine.join(", ")); }}>Discard changes</button>
+          <button type="button" className="btn" disabled={!dirty} onClick={() => { setB(baseline); setCuisine(baseline.servesCuisine.join(", ")); setAddressText(baseline.addressLines.join("\n")); }}>Discard changes</button>
           {dirty ? <span className="small" style={{ color: "var(--amber)" }}>Unsaved changes</span> : null}
           {err && err.field.startsWith("servesCuisine") ? <span className="field-error">{err.message}</span> : null}
           {msg ? <span className={msg.error ? "field-error" : "small"} role={msg.error ? "alert" : "status"} style={msg.error ? undefined : { color: "var(--good)" }}>{msg.text}</span> : null}

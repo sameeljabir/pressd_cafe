@@ -10,7 +10,7 @@
 // battle-tested transform logic below from type-checking, while the exported
 // `menu` constant is still given a real MenuCategory[] type for every consumer.
 
-import { slugify } from "@/lib/slugify";
+import { slugify } from "../lib/slugify.ts";
 
 export interface ProductDetails {
   ingredients: string[];
@@ -20,6 +20,9 @@ export interface ProductDetails {
   calories?: string;
   fat?: string;
   fibre?: string;
+  /** Set from SEO Studio (lib/content/menu.ts); not used by the code data below. */
+  imageAlt?: string;
+  customize?: "full" | "milk-only" | "none";
 }
 
 /** [name, description, price, image, tag, details, column, id] */

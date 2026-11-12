@@ -7,6 +7,8 @@ export interface ExpectedLive {
   meta: EffectiveMeta;
   alts: Record<string, string>;
   jsonLd: Record<string, unknown>;
+  /** Page content (SEO Studio pages and menu): images with their current files, and visible English text. */
+  content?: { images: { key: string; label: string; src: string; alt: string }[]; texts: string[] };
 }
 
 function readMeta(d: Document): RenderedMeta {
@@ -39,11 +41,15 @@ export function compareLive(expected: ExpectedLive, html: string): string[] {
     rendered.set(k, (rendered.get(k) ?? 0) + 1);
   });
   const need = new Map<string, { n: number; label: string }>();
-  for (const i of SITE_IMAGES) {
+  for (const i of expected.content?.images ?? SITE_IMAGES) {
     const k = `${i.src}\u0000${expected.alts[i.key] ?? i.alt}`;
     need.set(k, { n: (need.get(k)?.n ?? 0) + 1, label: i.label });
   }
-  for (const [k, { n, label }] of need) if ((rendered.get(k) ?? 0) < n) out.push(`alt text for "${label}" is not "${k.split("\u0000")[1]}"`);
+  for (const [k, { n, label }] of need) if ((rendered.get(k) ?? 0) < n) out.push(`image "${label}" is not ${k.split("\u0000")[0]} with alt text "${k.split("\u0000")[1]}"`);
+  // page text (English, as rendered on the server)
+  const body = (d.body.textContent ?? "").replace(/\s+/g, " ");
+  const missing = (expected.content?.texts ?? []).filter((t) => !body.includes(t.replace(/\s+/g, " ")));
+  if (missing.length) out.push(`text not on the page yet: ${missing.slice(0, 3).map((t) => `"${t}"`).join(", ")}${missing.length > 3 ? ` and ${missing.length - 3} more` : ""}`);
   // structured data
   const ld = d.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
   let parsed: unknown = null;
@@ -61,7 +67,8 @@ export async function checkLive(expected: ExpectedLive): Promise<{ ok: boolean; 
   let problems: string[] = [];
   for (let i = 0; i < 15; i++) {
     try {
-      const res = await fetch(`/?seo-check=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
+      // Without cookies: the public page exactly as visitors get it (never an editor preview).
+      const res = await fetch(`/?seo-check=${Date.now()}`, { cache: "no-store", credentials: "omit" });
       problems = res.ok ? compareLive(expected, await res.text()) : [`page returned HTTP ${res.status}`];
     } catch {
       problems = ["page could not be loaded"];

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMenuModals } from "@/components/menu/MenuModalsContext";
 import { useCart } from "@/components/cart/CartContext";
 import { readCustomizations, readInstructions, saveCustomizations, saveInstructions } from "@/lib/cart";
-import { menuItemById } from "@/data/menu";
+import { useMenuData } from "@/components/SiteContentContext";
 import { slugify } from "@/lib/slugify";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import {
@@ -57,8 +57,9 @@ export default function CustomizeModal() {
   const { customizeProduct, customizeMode, closeCustomize } = useMenuModals();
   const { cart, applyCustomization } = useCart();
   const { t, dir } = useLocale();
+  const { byId } = useMenuData();
 
-  const productName = customizeProduct ? menuItemById.get(customizeProduct)?.[0] ?? "" : "";
+  const productName = customizeProduct ? byId.get(customizeProduct)?.[0] ?? "" : "";
   const displayProductName = customizeProduct
     ? t(`products.${customizeProduct}.name`, productName)
     : "";

@@ -1063,7 +1063,7 @@
     "exploreMenu": "استكشف القائمة →",
     "total": "الإجمالي",
     "orderOnWhatsapp": "اطلب عبر واتساب",
-    "orderSentTo": "سيتم إرسال الطلب إلى +971 55 68 38 426",
+    "orderSentTo": "سيتم إرسال الطلب إلى {phone}",
     "selectLanguage": "اختر لغتك",
     "languageButtonAria": "تغيير لغة القائمة",
     "changeLanguage": "تغيير اللغة"

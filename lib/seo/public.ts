@@ -67,3 +67,35 @@ export async function publishedDoc<T = Record<string, unknown>>(key: string): Pr
 export function publishedOverride(pagePath: string): Promise<MetaOverride | null> {
   return publishedDoc<MetaOverride>(pagePath);
 }
+
+/**
+ * Published values of several documents in one query (same failure policy as
+ * publishedDoc). Missing documents are absent from the result.
+ */
+export async function publishedDocs(keys: readonly string[]): Promise<Record<string, unknown>> {
+  if (!databaseConfigured()) return {};
+  const fields = await readOverrideResilient(
+    async () => {
+      const db = await getDb();
+      const rows = await db.overrides.find({ _id: { $in: [...keys] } }, { projection: { fields: 1 } }).toArray();
+      return Object.fromEntries(rows.map((r) => [r._id, r.fields])) as MetaOverride;
+    },
+    { isBuild: process.env.NEXT_PHASE === "phase-production-build" },
+  );
+  return (fields as Record<string, unknown> | null) ?? {};
+}
+
+/**
+ * Preview only (Draft Mode + a signed-in SEO Studio user, checked by the
+ * caller): published values with saved drafts on top. Never cached, never
+ * reached by public visitors. Errors propagate (the editor sees them).
+ */
+export async function draftDocs(keys: readonly string[]): Promise<Record<string, unknown>> {
+  if (!databaseConfigured()) return {};
+  const db = await getDb();
+  const [live, drafts] = await Promise.all([
+    db.overrides.find({ _id: { $in: [...keys] } }, { projection: { fields: 1 } }).toArray(),
+    db.drafts.find({ _id: { $in: [...keys] } }, { projection: { fields: 1 } }).toArray(),
+  ]);
+  return { ...Object.fromEntries(live.map((r) => [r._id, r.fields])), ...Object.fromEntries(drafts.map((r) => [r._id, r.fields])) };
+}

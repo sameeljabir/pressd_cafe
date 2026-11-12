@@ -20,7 +20,8 @@ import RevealObserver from "@/components/RevealObserver";
 import ScrollInit from "@/components/ScrollInit";
 import { getGoogleReviews } from "@/lib/googleReviews";
 import { AltTextProvider } from "@/components/AltTextContext";
-import { publishedDoc } from "@/lib/seo/public";
+import PreviewBanner from "@/components/PreviewBanner";
+import { loadSiteContent } from "@/lib/content/load";
 
 // Regenerate in the background at most every 6 hours so the About page's
 // Google rating/reviews stay current without calling Google per visit
@@ -29,10 +30,12 @@ import { publishedDoc } from "@/lib/seo/public";
 export const revalidate = 21600;
 
 export default async function Home() {
-  const [googleReviews, altText] = await Promise.all([getGoogleReviews(), publishedDoc<Record<string, string>>("@images")]);
+  // Published content (or, in an SEO Studio preview, drafts). Nothing published = code defaults.
+  const [googleReviews, { content, docs }] = await Promise.all([getGoogleReviews(), loadSiteContent()]);
+  const altText = (docs["@images"] as Record<string, string> | undefined) ?? null;
 
   return (
-    <AppProviders>
+    <AppProviders content={content}>
       <AltTextProvider overrides={altText}>
         <Loader />
         <Navbar />
@@ -55,6 +58,7 @@ export default async function Home() {
         <BookingDialog />
         <RevealObserver />
         <ScrollInit />
+        {content.preview && <PreviewBanner />}
       </AltTextProvider>
     </AppProviders>
   );

@@ -1063,7 +1063,7 @@
     "exploreMenu": "Menüyü keşfet →",
     "total": "Toplam",
     "orderOnWhatsapp": "WhatsApp'tan Sipariş Ver",
-    "orderSentTo": "Siparişin +971 55 68 38 426 numarasına gönderilecek",
+    "orderSentTo": "Siparişin {phone} numarasına gönderilecek",
     "selectLanguage": "DİLİNİ SEÇ",
     "languageButtonAria": "Menü dilini değiştir",
     "changeLanguage": "Dili değiştir"

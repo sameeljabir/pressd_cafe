@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 // (lib/seo/auth/guard.ts). This just turns away requests with no session
 // cookie early and keeps admin URLs out of search indexes and caches.
 const SESSION_COOKIE = "pressd_seo_session";
-const PUBLIC_ADMIN_PATHS = ["/admin/login", "/api/admin/auth/"];
+const PUBLIC_ADMIN_PATHS = ["/admin/login", "/api/admin/auth/", "/api/admin/preview/exit"];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

@@ -22,7 +22,7 @@ const DEFAULT_LD = {
   "@type": "CafeOrCoffeeShop",
   name: "PRESS'D Wellness Café",
   url: "https://www.pressdcafe.ae",
-  telephone: "+971 55 683 8426",
+  telephone: "+971 55 68 38 426",
   email: "pressd.dxb@gmail.com",
   address: { "@type": "PostalAddress", streetAddress: "Meydan Polo Residence, Muscat St", addressLocality: "Nad Al Sheba 1", addressRegion: "Dubai", addressCountry: "AE" },
   geo: { "@type": "GeoCoordinates", latitude: 25.1497789, longitude: 55.2944217 },
@@ -104,7 +104,7 @@ describe("documents", () => {
     assert.throws(() => validateDoc("@images", { x: "y" }, site), MetadataValidationError);
   });
   test("diff rows describe visible changes only", () => {
-    assert.deepEqual(diffRows("@business", null, { telephone: "+971 4 000 0000" }, metaDefaults), [{ label: "Phone", before: "+971 55 683 8426", after: "+971 4 000 0000" }]);
+    assert.deepEqual(diffRows("@business", null, { telephone: "+971 4 000 0000" }, metaDefaults), [{ label: "Phone", before: "+971 55 68 38 426", after: "+971 4 000 0000" }]);
     assert.deepEqual(diffRows("@business", null, { postalCode: "00000" }, metaDefaults), [{ label: "Postal code", before: "—", after: "00000" }]);
     assert.equal(diffRows("@images", null, {}, metaDefaults).length, 0);
     assert.match(diffRows("@images", null, { "hero.rail.menu": "Açaí bowl with berries" }, metaDefaults)[0].label, /^Alt — /);

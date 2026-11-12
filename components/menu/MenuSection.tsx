@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { menu } from "@/data/menu";
+import { useMenuData } from "@/components/SiteContentContext";
 import CategoryFilter from "@/components/menu/CategoryFilter";
 import ProductCard from "@/components/menu/ProductCard";
 import ProductDetailsModal from "@/components/menu/ProductDetailsModal";
@@ -17,6 +17,7 @@ import { useScrollDirection } from "@/lib/hooks/useScrollDirection";
 
 export default function MenuSection() {
   const { t, locale, dir } = useLocale();
+  const { menu } = useMenuData();
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeSubcategory, setActiveSubcategory] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
@@ -89,7 +90,8 @@ export default function MenuSection() {
     );
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+    // Re-observe when the published menu changes the category sections.
+  }, [menu]);
 
   // Keep active subcategory in sync while scrolling through menu subsections
   useEffect(() => {

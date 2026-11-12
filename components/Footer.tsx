@@ -11,23 +11,24 @@ import {
   ThreadsIcon,
   TikTokIcon,
 } from "@/components/icons";
-
-const EMAIL = "pressd.dxb@gmail.com";
-const PHONE = "+971556838426";
-// Opens the visitor's email app with a new message to the café, subject filled in.
-const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent("Enquiry for PRESS’D Wellness Café")}`;
-const WHATSAPP = "https://wa.me/971556838426?text=Hello%20PRESS%27D!";
+import { useBusiness, usePage } from "@/components/SiteContentContext";
+import { FOOTER } from "@/lib/content/pages";
+import { phoneDigits, whatsappLink } from "@/lib/content/hours";
 
 const SOCIAL = [
-  { name: "Instagram", href: "https://www.instagram.com/pressd.cafe", Icon: InstagramIcon },
-  { name: "TikTok", href: "https://www.tiktok.com/@pressd.cafe", Icon: TikTokIcon },
-  { name: "Facebook", href: "https://www.facebook.com/profile.php?id=61594102325840", Icon: FacebookIcon },
-  { name: "Threads", href: "https://www.threads.com/@pressd.cafe", Icon: ThreadsIcon },
-];
+  { name: "Instagram", field: "instagram", Icon: InstagramIcon },
+  { name: "TikTok", field: "tiktok", Icon: TikTokIcon },
+  { name: "Facebook", field: "facebook", Icon: FacebookIcon },
+  { name: "Threads", field: "threads", Icon: ThreadsIcon },
+] as const;
 
 export default function Footer() {
   const alt = useAlt();
   const handleLink = useSectionLinkHandler();
+  const { t } = usePage(FOOTER);
+  const business = useBusiness();
+  // Opens the visitor's email app with a new message to the café, subject filled in.
+  const MAILTO = `mailto:${business.email}?subject=${encodeURIComponent(t("emailSubject"))}`;
   // The footer is only shown on the Menu, on the gold background, so it uses
   // the gold-background logo.
   return (
@@ -35,44 +36,44 @@ export default function Footer() {
       <div className="footer-top">
         <div className="footer-brand">
           <img className="footer-logo" src="/assets/pressd-footer-logo.png?v=2" alt={alt("chrome.footer.logo")} />
-          <p className="footer-statement">Coffee. Food. People.</p>
+          <p className="footer-statement">{t("statement")}</p>
         </div>
         <div className="footer-links">
           <a href="#menu" onClick={handleLink("#menu")}>
-            Menu
+            {t("linkMenu")}
           </a>
           <a href="#about" onClick={handleLink("#about")}>
-            About
+            {t("linkAbout")}
           </a>
           <a href="#visit" onClick={handleLink("#visit")}>
-            Visit
+            {t("linkVisit")}
           </a>
         </div>
         <div className="footer-contact" aria-label="Contact PRESS’D">
           <a href={MAILTO}>
             <MailIcon />
-            <span>{EMAIL}</span>
+            <span>{business.email}</span>
           </a>
-          <a href={`tel:${PHONE}`}>
+          <a href={`tel:+${phoneDigits(business.telephone)}`}>
             <PhoneIcon />
-            <span>+971 55 68 38 426</span>
+            <span>{business.telephone}</span>
           </a>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">
+          <a href={whatsappLink(business.whatsapp, t("whatsappMessage"))} target="_blank" rel="noopener noreferrer">
             <ChatIcon />
-            <span>WhatsApp</span>
+            <span>{t("whatsappLabel")}</span>
           </a>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 PRESS’D WELLNESS CAFÉ</span>
+        <span>{t("copyright")}</span>
         <nav className="footer-social" aria-label="PRESS’D on social media">
-          {SOCIAL.map(({ name, href, Icon }) => (
-            <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={`PRESS’D on ${name}`} title={name}>
+          {SOCIAL.filter(({ field }) => business[field]).map(({ name, field, Icon }) => (
+            <a key={name} href={business[field]} target="_blank" rel="noopener noreferrer" aria-label={`PRESS’D on ${name}`} title={name}>
               <Icon />
             </a>
           ))}
         </nav>
-        <span>MEYDAN POLO RESIDENCE, DUBAI</span>
+        <span>{t("location")}</span>
       </div>
     </footer>
   );

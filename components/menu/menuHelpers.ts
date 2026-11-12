@@ -4,6 +4,9 @@ import type { MenuCategory, MenuItem } from "@/data/menu";
 export const FULL_CUSTOM_SLUGS = ["hot-beverages", "ice-beverages"];
 
 export function customizeModeFor(category: MenuCategory, item: MenuItem): "full" | "milk-only" | "" {
+  // Set per product in SEO Studio; otherwise decided by category as before.
+  const chosen = item[5].customize;
+  if (chosen) return chosen === "none" ? "" : chosen;
   const isFullCustomDrink = FULL_CUSTOM_SLUGS.includes(category.slug);
   const isProteinShake = item[6] === "Protein Shakes";
   if (isProteinShake) return "milk-only";

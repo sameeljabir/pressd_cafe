@@ -95,7 +95,7 @@ export default async function Overview() {
           </ul>
         ) : <div className="empty">No issues found. 🎉</div>}
       </section>
-      <p className="small faint">robots.txt and the XML sitemap are managed in code (a page set to noindex is automatically left out of the sitemap). Section wording stays in the code.</p>
+      <p className="small faint">robots.txt and the XML sitemap are managed in code (a page set to noindex is automatically left out of the sitemap). Page wording, the menu and its translations are edited under Pages and Menu.</p>
     </>
   );
 }

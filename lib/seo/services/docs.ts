@@ -1,8 +1,9 @@
 // Draft → Confirm & Publish across all SEO Studio documents.
 
 import { withTransaction, type Db } from "../db/mongo.ts";
-import { DOC_KEYS, DOC_LABELS, diffRows, validateDoc, type DiffRow, type DocKey } from "../core/docs.ts";
+import { DOC_KEYS, DOC_LABELS, MENU_KEY, TRANSLATIONS_KEY, diffRows, validateDoc, type DiffRow, type DocContext, type DocKey } from "../core/docs.ts";
 import { overrideWarnings, effectiveMeta, type EffectiveMeta, type MetaOverride, type Thresholds } from "../core/metadata.ts";
+import type { MenuOverrides } from "../../content/menu.ts";
 import { changeHistory, getDraft, getOverride, publishOverride } from "./metadata.ts";
 
 export interface Pending {
@@ -14,13 +15,20 @@ export interface Pending {
   warnings: string[];
 }
 
+/** The menu translations are checked against: the saved menu draft if any, else the live menu. */
+export async function menuContext(db: Db, preferDraft = true): Promise<DocContext> {
+  const [draft, live] = await Promise.all([preferDraft ? getDraft(db, MENU_KEY) : null, getOverride(db, MENU_KEY)]);
+  return { menu: ((draft ?? live)?.fields as MenuOverrides | undefined) ?? null };
+}
+
 /** Saved drafts that differ from what is published. */
 export async function pendingChanges(db: Db, metaDefaults: EffectiveMeta, thresholds: Thresholds, site: URL): Promise<Pending[]> {
   const out: Pending[] = [];
+  const ctx = await menuContext(db);
   for (const key of DOC_KEYS) {
     const [draft, live] = await Promise.all([getDraft(db, key), getOverride(db, key)]);
     if (!draft) continue;
-    const rows = diffRows(key, live?.fields ?? null, draft.fields, metaDefaults);
+    const rows = diffRows(key, live?.fields ?? null, draft.fields, metaDefaults, ctx);
     if (!rows.length) continue;
     const warnings = key === "/" ? overrideWarnings(draft.fields as MetaOverride, effectiveMeta(metaDefaults, draft.fields as MetaOverride), thresholds, site, "/") : [];
     out.push({ key, label: DOC_LABELS[key], savedBy: draft.savedBy, savedAt: draft.savedAt, rows, warnings });
@@ -41,15 +49,19 @@ export class NothingToPublishError extends Error {}
  * transactions (every Atlas cluster) all documents go live together or not at
  * all; otherwise each document is published atomically in turn. A draft is
  * cleared only if nobody saved it again while it was being published.
+ * Translations are validated against the menu that is going live with them.
  */
 export async function publishAll(db: Db, actor: string, metaDefaults: EffectiveMeta, thresholds: Thresholds, site: URL) {
   const pending = await pendingChanges(db, metaDefaults, thresholds, site);
   if (!pending.length) throw new NothingToPublishError("Nothing to publish — there are no saved changes.");
   const validated: { key: DocKey; fields: object; savedAt: Date }[] = [];
+  const ctx = await menuContext(db, false);
   for (const p of pending) {
     const draft = await getDraft(db, p.key);
     if (!draft) continue; // discarded meanwhile
-    validated.push({ key: p.key, fields: validateDoc(p.key, draft.fields as Record<string, unknown>, site), savedAt: draft.savedAt });
+    const fields = validateDoc(p.key, draft.fields as Record<string, unknown>, site, ctx);
+    if (p.key === MENU_KEY) ctx.menu = fields as MenuOverrides;
+    validated.push({ key: p.key, fields, savedAt: draft.savedAt });
   }
   if (!validated.length) throw new NothingToPublishError("Nothing to publish — there are no saved changes.");
   return withTransaction(db, async (session) => {
@@ -66,13 +78,14 @@ export async function publishAll(db: Db, actor: string, metaDefaults: EffectiveM
 /** Publish history of one document, with readable per-field changes. */
 export async function historyRows(db: Db, key: DocKey, metaDefaults: EffectiveMeta) {
   const rows = await changeHistory(db, key);
+  const ctx = key === TRANSLATIONS_KEY ? await menuContext(db, false) : {};
   return rows.map((h) => ({
     id: h.id,
     at: h.at.toISOString(),
     actor: h.actor,
     action: h.action,
     version: h.version,
-    changes: diffRows(key, (h.before ?? null) as object | null, (h.after ?? null) as object | null, metaDefaults),
+    changes: diffRows(key, (h.before ?? null) as object | null, (h.after ?? null) as object | null, metaDefaults, ctx),
     verified: h.verified,
   }));
 }

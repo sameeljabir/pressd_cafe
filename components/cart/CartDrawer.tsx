@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { useCart } from "@/components/cart/CartContext";
-import { escapeCartText, cartImageFor } from "@/lib/cart";
+import { escapeCartText } from "@/lib/cart";
+import { useBusiness } from "@/components/SiteContentContext";
 import { customizationText } from "@/lib/customization";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
 export default function CartDrawer() {
-  const { cart, quantity, total, isOpen, closeCart, changeQty, whatsappHref } = useCart();
+  const { cart, quantity, total, isOpen, closeCart, changeQty, whatsappHref, cartImageFor } = useCart();
+  const business = useBusiness();
   const { t, dir } = useLocale();
   const closeRef = useRef<HTMLButtonElement>(null);
   const closeCartRef = useRef(closeCart);
@@ -125,7 +127,7 @@ export default function CartDrawer() {
             <img src="/assets/whatsapp-transparent.webp" alt="" />
             {t("ui.orderOnWhatsapp", "Order on WhatsApp")}
           </a>
-          <small>{t("ui.orderSentTo", "Order will be sent to +971 55 68 38 426")}</small>
+          <small>{t("ui.orderSentTo", "Order will be sent to {phone}", { phone: business.whatsapp })}</small>
         </footer>
       </aside>
     </>

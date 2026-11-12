@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { useBooking } from "@/components/booking/BookingContext";
-import { WHATSAPP_NUMBER } from "@/lib/cart";
+import { useBusiness, usePage } from "@/components/SiteContentContext";
+import { BOOKING } from "@/lib/content/pages";
+import { phoneDigits } from "@/lib/content/hours";
 
 export default function BookingDialog() {
   const { dialogRef, closeBooking } = useBooking();
   const [note, setNote] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const { t, en, list } = usePage(BOOKING);
+  const business = useBusiness();
 
   return (
     <dialog
@@ -24,8 +28,8 @@ export default function BookingDialog() {
       <button className="dialog-close" aria-label="Close" onClick={closeBooking}>
         ×
       </button>
-      <p className="eyebrow dark">SAVE YOUR SPOT</p>
-      <h2>BOOK A TABLE.</h2>
+      <p className="eyebrow dark">{t("eyebrow")}</p>
+      <h2>{t("heading")}</h2>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -33,41 +37,47 @@ export default function BookingDialog() {
           // the same channel as cart orders.
           const form = new FormData(event.currentTarget);
           const message = [
-            "Hello PRESS'D! I'd like to book a table.",
+            en("messageIntro"),
             `Name: ${form.get("name")}`,
             `Phone: ${form.get("phone")}`,
             `Date: ${form.get("date")}`,
             `Guests: ${form.get("guests")}`,
           ].join("\n");
-          window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
-          setNote("Your request is ready in WhatsApp — send it and we’ll confirm your table.");
+          window.open(`https://wa.me/${phoneDigits(business.whatsapp)}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+          setNote(t("confirmation"));
           setSubmitted(true);
         }}
       >
         <label>
-          Name
-          <input name="name" required placeholder="Your name" />
+          {t("nameLabel")}
+          <input name="name" required placeholder={t("namePlaceholder")} />
         </label>
         <label>
-          Phone
-          <input name="phone" required type="tel" placeholder="+971" />
+          {t("phoneLabel")}
+          <input name="phone" required type="tel" placeholder={t("phonePlaceholder")} />
         </label>
         <div>
           <label>
-            Date
+            {t("dateLabel")}
             <input name="date" required type="date" />
           </label>
           <label>
-            Guests
+            {t("guestsLabel")}
             <select name="guests">
-              <option>2 guests</option>
-              <option>3 guests</option>
-              <option>4 guests</option>
-              <option>5+ guests</option>
+              {list("guests").map((g) => {
+                const label = t(`guests.${g.id}.label`);
+                const english = en(`guests.${g.id}.label`);
+                // The café receives the English option; visitors see their language.
+                return (
+                  <option key={g.id} value={english === label ? undefined : english}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </label>
         </div>
-        <button type="submit">{submitted ? "Request received ✓" : "Request table ↗"}</button>
+        <button type="submit">{submitted ? t("submitted") : t("submit")}</button>
         <p className="form-note" aria-live="polite">
           {note}
         </p>

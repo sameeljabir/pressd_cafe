@@ -73,8 +73,11 @@ function Stars({
  */
 export default function AboutReviews({
   data,
+  labels = { heading: "Google Reviews", count: "reviews", link: "Read all reviews" },
 }: {
   data: GoogleReviewsData | null;
+  /** Editable in SEO Studio (About page). */
+  labels?: { heading: string; count: string; link: string };
 }) {
   const [index, setIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
@@ -148,7 +151,7 @@ export default function AboutReviews({
   return (
     <div className="abx-reviews">
       <div className="abx-rating">
-        <p className="abx-rating-label">Google Reviews</p>
+        <p className="abx-rating-label">{labels.heading}</p>
         <p
           className="abx-rating-figure"
           aria-label={`Rated ${ratingText} out of 5`}
@@ -162,7 +165,7 @@ export default function AboutReviews({
           label={`${ratingText} out of 5 stars`}
         />
         <p className="abx-rating-count">
-          {reviewCount.toLocaleString("en-US")}+ reviews
+          {reviewCount.toLocaleString("en-US")}+ {labels.count}
         </p>
         <a
           className="abx-rating-cta"
@@ -170,7 +173,7 @@ export default function AboutReviews({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Read all reviews <span aria-hidden="true">↗</span>
+          {labels.link} <span aria-hidden="true">↗</span>
         </a>
         {data && (
           // Google's required attribution for the live rating/count.

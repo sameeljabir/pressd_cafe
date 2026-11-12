@@ -13,7 +13,7 @@ export default function ProductCard({ category, item }: { category: MenuCategory
   const customizeMode = customizeModeFor(category, item);
   const { cart, addToCart } = useCart();
   const { openDetails, openInstructions, openCustomize } = useMenuModals();
-  const { t, dict } = useLocale();
+  const { t, dict, locale } = useLocale();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -160,7 +160,7 @@ export default function ProductCard({ category, item }: { category: MenuCategory
       }}
     >
       <div className="menu-img">
-        <img src={image} alt={displayName} loading="lazy" />
+        <img src={image} alt={locale === "en" && details?.imageAlt ? details.imageAlt : displayName} loading="lazy" />
       </div>
       <div className="menu-card-info">
         <div className="product-summary">

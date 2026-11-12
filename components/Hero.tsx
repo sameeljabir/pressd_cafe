@@ -7,15 +7,18 @@ import { useBooking } from "@/components/booking/BookingContext";
 import { prefersReducedMotion } from "@/lib/utils";
 import PetPawTrail from "@/components/PetPawTrail";
 import PetInteractiveIcon from "@/components/PetInteractiveIcon";
-
-const RAIL_LINKS = [
-  { href: "#menu", label: "Menu", img: "/assets/home-menu-superfood-bowl.webp", imgKey: "hero.rail.menu", kind: "a" as const },
-  { href: "#book", label: "Reservation", img: "/assets/reservation-cover.webp", imgKey: "hero.rail.reservation", kind: "book" as const },
-  { href: "#about", label: "Our café", img: "/assets/cafe-interior-cover.webp", imgKey: "hero.rail.about", kind: "a" as const },
-];
+import { useBusiness, usePage } from "@/components/SiteContentContext";
+import { HERO } from "@/lib/content/pages";
 
 export default function Hero() {
   const alt = useAlt();
+  const { t, shared } = usePage(HERO);
+  const business = useBusiness();
+  const RAIL_LINKS = [
+    { href: "#menu", label: t("cardMenu"), img: shared.cardMenuImage as string, imgKey: "hero.rail.menu", kind: "a" as const },
+    { href: "#book", label: t("cardReservation"), img: shared.cardReservationImage as string, imgKey: "hero.rail.reservation", kind: "book" as const },
+    { href: "#about", label: t("cardCafe"), img: shared.cardCafeImage as string, imgKey: "hero.rail.about", kind: "a" as const },
+  ];
   const heroMediaRef = useRef<HTMLVideoElement>(null);
   const heroRailRef = useRef<HTMLElement>(null);
   const handleLink = useSectionLinkHandler();
@@ -157,7 +160,7 @@ export default function Hero() {
         {/* Instagram Icon: positioned on top-right of video */}
         <a
           className="hero-round-link"
-          href="https://www.instagram.com/pressd.cafe"
+          href={business.instagram}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Follow PRESS'D Café on Instagram"
@@ -182,16 +185,16 @@ export default function Hero() {
 
         <div className="hero-content">
           <div className="hero-content-left">
-            <p className="eyebrow">WELLNESS CAFÉ · MEYDAN POLO RESIDENCE</p>
+            <p className="eyebrow">{t("eyebrow")}</p>
             <h1>
-              <span>GOOD FOOD.</span>
-              <span className="accent">BETTER DAYS.</span>
+              <span>{t("headline1")}</span>
+              <span className="accent">{t("headline2")}</span>
             </h1>
             <div className="hero-bottom">
               <p>
-                Clean ingredients. Bold flavour.
+                {t("subtitle1")}
                 <br />
-                Made to keep you feeling good.
+                {t("subtitle2")}
               </p>
             </div>
           </div>
@@ -206,14 +209,14 @@ export default function Hero() {
       </div>
 
       <div className="hero-rail-head" aria-hidden="true">
-        <span>Explore PRESS’D</span>
-        <b>Swipe →</b>
+        <span>{t("railHeading")}</span>
+        <b>{t("railSwipe")}</b>
       </div>
 
       <aside className="hero-rail" aria-label="Quick links" ref={heroRailRef}>
         {RAIL_LINKS.map((link) =>
           link.kind === "book" ? (
-            <button key={link.label} className="rail-card" onClick={openBooking}>
+            <button key={link.imgKey} className="rail-card" onClick={openBooking}>
               <img src={link.img} alt={alt(link.imgKey)} />
               <span>
                 {link.label} <b>→</b>
@@ -221,7 +224,7 @@ export default function Hero() {
             </button>
           ) : (
             <a
-              key={link.label}
+              key={link.imgKey}
               className="rail-card"
               href={link.href}
               onClick={handleLink(link.href)}
@@ -238,7 +241,7 @@ export default function Hero() {
       <div className="hero-carousel-dots" aria-label="Explore slide position">
         {RAIL_LINKS.map((link, index) => (
           <button
-            key={link.label}
+            key={link.imgKey}
             type="button"
             aria-label={`Show ${link.label}`}
             aria-current={carouselIndex === index}

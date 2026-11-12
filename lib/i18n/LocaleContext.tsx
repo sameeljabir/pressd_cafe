@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { DEFAULT_LOCALE, isSupportedLocale, localeMeta } from "@/lib/i18n/locales";
 import { loadDictionary, type MenuDictionary } from "@/lib/i18n/dictionary";
+import { effectiveDictionary } from "@/lib/content/dictionary";
+import { useSiteContent } from "@/components/SiteContentContext";
 
 const STORAGE_KEY = "pressd-menu-language";
 
@@ -34,7 +36,16 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState(DEFAULT_LOCALE);
-  const [dict, setDict] = useState<MenuDictionary | null>(null);
+  const [loaded, setDict] = useState<{ locale: string; dict: MenuDictionary } | null>(null);
+  // Published from SEO Studio: English menu text comes from the menu, other
+  // languages get their translation overlay. Nothing published = the file as is.
+  const site = useSiteContent();
+  const dict = useMemo(
+    () =>
+      loaded &&
+      effectiveDictionary(loaded.locale, loaded.dict, { all: site.menu, subcategoryNames: site.subcategoryNames }, site.translations[loaded.locale]),
+    [loaded, site.menu, site.subcategoryNames, site.translations]
+  );
 
   useEffect(() => {
     let stored: string | null = null;
@@ -52,9 +63,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     loadDictionary(locale)
-      .then((loaded) => {
+      .then((file) => {
         if (cancelled) return;
-        setDict(loaded);
+        setDict({ locale, dict: file });
       })
       .catch(() => {
         if (cancelled) return;

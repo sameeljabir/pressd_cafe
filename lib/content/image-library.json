@@ -1,0 +1,1532 @@
+[
+ {
+  "src": "/assets/Dicon.png",
+  "width": 1024,
+  "height": 1024,
+  "bytes": 104873,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/PressIcon.png",
+  "width": 458,
+  "height": 208,
+  "bytes": 17939,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/about-cafe-interior-lounge.webp",
+  "width": 1448,
+  "height": 1086,
+  "bytes": 230866,
+  "usedIn": [
+   "components/IntroSection.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/about-community-laptop.webp",
+  "width": 900,
+  "height": 1600,
+  "bytes": 125772,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/about-pet-friendly-guest.webp",
+  "width": 1086,
+  "height": 1448,
+  "bytes": 98216,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/about-sanctuary-candles.webp",
+  "width": 1086,
+  "height": 1448,
+  "bytes": 81694,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avacado-toast-poached-eggs-f2.webp",
+  "width": 1500,
+  "height": 1080,
+  "bytes": 125888,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/avacado-toast-poached-eggs-new.png",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 1689004,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avacado-toast-poached-eggs.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 127682,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avacado-toast-salmon-f1.webp",
+  "width": 1500,
+  "height": 1080,
+  "bytes": 161168,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/avacado-toast-salmon-new.png",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 1719624,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avacado-toast-salmon.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 147156,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avacado-toasted-poached-egg-f3.webp",
+  "width": 1500,
+  "height": 1080,
+  "bytes": 142890,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/avacado-toasted-poached-egg.png",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 1722342,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/avocado-toast.webp",
+  "width": 1402,
+  "height": 1122,
+  "bytes": 148220,
+  "usedIn": [
+   "components/GallerySection.tsx",
+   "components/HealthySection.tsx",
+   "components/InstagramSection.tsx",
+   "components/SignatureSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-2.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 142132,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-4.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 143070,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-acai-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 268420,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-acai.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 138042,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-blue-crash-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 218020,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-blue-crash.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 125784,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-detox-glow-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 288856,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-green-dream-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 328186,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-mystic-matcha-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 335614,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-original.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 165096,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-tropical-glow-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 317490,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-tropical-glow.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 148570,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/bowl-watermelon-feta-new.webp",
+  "width": 2080,
+  "height": 2080,
+  "bytes": 297894,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/bowl-watermelon-feta.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 172876,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/cafe-interior-cover.webp",
+  "width": 1024,
+  "height": 641,
+  "bytes": 195474,
+  "usedIn": [
+   "app/admin/seo/pages/page.tsx",
+   "components/Hero.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/coffee-matcha.webp",
+  "width": 1402,
+  "height": 1122,
+  "bytes": 57196,
+  "usedIn": [
+   "components/GallerySection.tsx",
+   "components/InstagramSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-blue-lagoon-mojito.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 78682,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-blueberry-mojito.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 91990,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-c4-energy-drink.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 188600,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-classic-mojito.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 71988,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-drip-coffee.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 92306,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-evian-water.webp",
+  "width": 1023,
+  "height": 1537,
+  "bytes": 50468,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-ginger-ice-tea.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 134002,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-iced-americano.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 101540,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-iced-matcha-latte.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 89102,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-iced-spanish-latte.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 82204,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-passion-fruit-ice-tea.webp",
+  "width": 1535,
+  "height": 1024,
+  "bytes": 109132,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-passion-fruit-mojito.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 83218,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-peach-ice-tea.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 106056,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-perrier-bottle.webp",
+  "width": 1023,
+  "height": 1537,
+  "bytes": 60220,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-perrier-glass.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 78494,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-raspberry-cano.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 104108,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-strawberry-mojito.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1751559,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/cold-strawberry-mojito.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 62052,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/cold-vitamin-well-upgrade.webp",
+  "width": 1023,
+  "height": 1537,
+  "bytes": 83904,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/frappe-caramel.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 117004,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/frappe-matcha.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 115876,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/frappe-mocha.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 90602,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/frappe-pressd.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 81416,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/home-menu-green-dream-bowl.webp",
+  "width": 1107,
+  "height": 1421,
+  "bytes": 177444,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/home-menu-superfood-bowl.webp",
+  "width": 1107,
+  "height": 1421,
+  "bytes": 162778,
+  "usedIn": [
+   "components/Hero.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-americano.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 107712,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-cappuccino-cortado.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 2165648,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-cappuccino-cortado.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 115958,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-cappuccino-flat-white-new.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 2165648,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-cappuccino-flat-white.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 2165648,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-cappuccino-flat-white.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 115958,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-cappuccino-latte.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 136690,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-cappuccino-macchiato.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 2165648,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-cappuccino-macchiato.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 115958,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-expresso.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 101884,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-iced-v60.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 174032,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-matcha-latte.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 124916,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-matcha-new.png",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 1498289,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/hot-matcha-new.webp",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 77080,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-mochaccino.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 160224,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-piccolo-glass.webp",
+  "width": 1409,
+  "height": 1116,
+  "bytes": 60908,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-piccolo.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 49358,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-tea-selections.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 129802,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-tisane-tea.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 151572,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/hot-v60.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 153342,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/ice-latte.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1560727,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/ice-latte.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 49944,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/instagram-icon.webp",
+  "width": 360,
+  "height": 360,
+  "bytes": 20108,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/juice-carrot.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 87774,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/juice-green-apple.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 110586,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/juice-orange.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 91770,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/juice-watermelon.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 123030,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/menu-acai-bowl-cover.webp",
+  "width": 1024,
+  "height": 1024,
+  "bytes": 124766,
+  "usedIn": [
+   "app/admin/seo/pages/page.tsx"
+  ]
+ },
+ {
+  "src": "/assets/menu-cover.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 239250,
+  "usedIn": [
+   "app/admin/seo/pages/page.tsx"
+  ]
+ },
+ {
+  "src": "/assets/menu-latte-cover.webp",
+  "width": 1024,
+  "height": 682,
+  "bytes": 190518,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/mocktail-fresh-mint-lemonade.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 125696,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/mocktail-immunity-booster.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 90958,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/mocktail-incredible-hulk.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 82024,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/mocktail-the-shield.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 77962,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/our-cafe-cover.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 83784,
+  "usedIn": [
+   "app/admin/seo/pages/page.tsx",
+   "lib/siteMetadata.ts"
+  ]
+ },
+ {
+  "src": "/assets/pancake-berries.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1822156,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pancake-berries.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 98672,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pancake-classic.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1798409,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pancake-classic.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 81312,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pancake-french-toast.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1949731,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pancake-french-toast.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 139368,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pancake-nutella.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1764537,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pancake-nutella.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 89066,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pancake-pistachio.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1669462,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pancake-pistachio.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 96976,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pastry-banana-cake.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 74334,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pastry-blueberry-muffin.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 77102,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pastry-brownies.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 72314,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pastry-chocolate-muffin.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 89458,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/pet-friendly-cafe.webp",
+  "width": 626,
+  "height": 941,
+  "bytes": 88190,
+  "usedIn": [
+   "app/globals.css",
+   "components/InstagramSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/pet-friendly-cover.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 140242,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/power-bowl.webp",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 315854,
+  "usedIn": [
+   "components/GallerySection.tsx",
+   "components/HealthySection.tsx",
+   "components/InstagramSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/pressd-footer-logo.png",
+  "width": 520,
+  "height": 160,
+  "bytes": 10060,
+  "usedIn": [
+   "components/Footer.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/pressd-logo-original.png",
+  "width": 1024,
+  "height": 1024,
+  "bytes": 47537,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/pressd-logo.webp",
+  "width": 1280,
+  "height": 420,
+  "bytes": 25760,
+  "usedIn": [
+   "components/Loader.tsx",
+   "components/Navbar.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-bar-fignuts.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 67646,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-bar-klalnana.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 69784,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-bar-nutri-tropix.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 60646,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-bar-nutty-date-delight-ball.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 54620,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-build-your-own.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1875555,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/protein-shake-build-your-own.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 82098,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-cookies-cream.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 99542,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-date-me.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 73078,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-ice-and-shake.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1610609,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/protein-shake-ice-and-shake.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 76770,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-pb-j.webp",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 88616,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-power-protein-new.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1858425,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/protein-shake-power-protein-new.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 90392,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/protein-shake-power-protein.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1610609,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/protein-shake-rumble-jungle.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 78762,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/reservation-cover.webp",
+  "width": 1024,
+  "height": 759,
+  "bytes": 134994,
+  "usedIn": [
+   "components/Hero.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-blood-sugar-level.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 141832,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-chicken-ceasar.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 175700,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-colon-cleaning.webp",
+  "width": 1535,
+  "height": 1024,
+  "bytes": 117832,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-flat-stomach.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 146560,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-tabbouloleh.webp",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 166290,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/salad-triple-berries.webp",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 174260,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-beef-pastrami-new.png",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 1611868,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-beef-pastrami-new.webp",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 72776,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-beef-pastrami.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 252048,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-chickado-new.png",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 1531855,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-chickado-new.webp",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 103332,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-chickado.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 171622,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-halloumi-avacado.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 216974,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-halloumi-avocado-new.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1592877,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-halloumi-avocado-new.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 101924,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-halloumi-pesto-new.png",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 1742652,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-halloumi-pesto-new.webp",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 103736,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-halloumi-pesto.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 183090,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-labneh-new.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1591549,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-labneh-new.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 85114,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-labneh.webp",
+  "width": 1537,
+  "height": 1023,
+  "bytes": 197070,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-melted-cheese-new.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1403259,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-melted-cheese-new.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 70364,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-melted-cheese.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 280170,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-smoked-salmon-new.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1795438,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-smoked-salmon-new.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 111804,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-smoked-salmon.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 220818,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-smoked-turkey-new.png",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 1737979,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-smoked-turkey-new.webp",
+  "width": 1478,
+  "height": 1064,
+  "bytes": 149320,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/sandwich-smoked-turkey.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 210768,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/sandwich-tuna-melt.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 224618,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-build-your-own.png",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 1875555,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/smoothie-build-your-own.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 82098,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-energy-booster.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 111126,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-green-machine.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 83010,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-mango-mania.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 76738,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-pina-colada.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 77504,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-ruby-antioxydont-blind.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 78038,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothie-srawberry-fusin.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 100418,
+  "usedIn": [
+   "data/menu.ts"
+  ]
+ },
+ {
+  "src": "/assets/smoothies.webp",
+  "width": 1024,
+  "height": 1536,
+  "bytes": 99564,
+  "usedIn": [
+   "components/GallerySection.tsx",
+   "components/HealthySection.tsx",
+   "components/InstagramSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/visit-coffee-detail.webp",
+  "width": 1024,
+  "height": 682,
+  "bytes": 174014,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/visit-coffee-serving.webp",
+  "width": 1086,
+  "height": 1448,
+  "bytes": 111442,
+  "usedIn": [
+   "app/globals.css",
+   "components/VisitSection.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/visit-guest-reading.webp",
+  "width": 1024,
+  "height": 759,
+  "bytes": 157454,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/visit-laptop-lounge.webp",
+  "width": 941,
+  "height": 1672,
+  "bytes": 127938,
+  "usedIn": [
+   "app/globals.css",
+   "components/VisitSection.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/visit-lifestyle-sofa.webp",
+  "width": 1024,
+  "height": 586,
+  "bytes": 109242,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/visit-main-interior.webp",
+  "width": 1024,
+  "height": 641,
+  "bytes": 179158,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/visit-pet-friendly-booth.webp",
+  "width": 1086,
+  "height": 1448,
+  "bytes": 103408,
+  "usedIn": [
+   "app/globals.css",
+   "components/VisitSection.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/visit-service-counter.webp",
+  "width": 1024,
+  "height": 641,
+  "bytes": 177300,
+  "usedIn": []
+ },
+ {
+  "src": "/assets/visit-table-latte.webp",
+  "width": 1086,
+  "height": 1448,
+  "bytes": 57448,
+  "usedIn": [
+   "app/globals.css",
+   "components/VisitSection.tsx",
+   "lib/content/pages.ts",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/whatsapp-transparent.webp",
+  "width": 594,
+  "height": 557,
+  "bytes": 42370,
+  "usedIn": [
+   "components/MobileDock.tsx",
+   "components/cart/CartDrawer.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/work-ambience-cafe.webp",
+  "width": 1023,
+  "height": 1537,
+  "bytes": 212378,
+  "usedIn": [
+   "components/InstagramSection.tsx",
+   "components/WorkSection.tsx",
+   "lib/siteImages.ts"
+  ]
+ },
+ {
+  "src": "/assets/work-ambience-cover.webp",
+  "width": 1536,
+  "height": 1024,
+  "bytes": 143226,
+  "usedIn": []
+ }
+]

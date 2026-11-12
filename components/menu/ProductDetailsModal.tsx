@@ -10,7 +10,7 @@ export default function ProductDetailsModal() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { detailsProduct, closeDetails, openInstructions, openCustomize } = useMenuModals();
   const { addToCart } = useCart();
-  const { t, dict, dir } = useLocale();
+  const { t, dict, locale, dir } = useLocale();
 
   useEffect(() => {
     if (detailsProduct) dialogRef.current?.showModal();
@@ -63,7 +63,7 @@ export default function ProductDetailsModal() {
         ×
       </button>
       <div className="product-modal-image">
-        <img src={image} alt={displayName} />
+        <img src={image} alt={locale === "en" && details?.imageAlt ? details.imageAlt : displayName} />
       </div>
       <div className="product-modal-copy">
         <p className="product-modal-eyebrow">{t("ui.menuEyebrowModal", "PRESS'D MENU")}</p>

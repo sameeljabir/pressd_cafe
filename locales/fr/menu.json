@@ -1063,7 +1063,7 @@
     "exploreMenu": "Explorer le menu →",
     "total": "Total",
     "orderOnWhatsapp": "Commander sur WhatsApp",
-    "orderSentTo": "La commande sera envoyée au +971 55 68 38 426",
+    "orderSentTo": "La commande sera envoyée au {phone}",
     "selectLanguage": "CHOISISSEZ VOTRE LANGUE",
     "languageButtonAria": "Changer la langue du menu",
     "changeLanguage": "Changer de langue"

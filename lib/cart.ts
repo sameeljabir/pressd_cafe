@@ -3,7 +3,9 @@
 //   pressd-cart, pressd-customizations, pressd-instructions
 // Records are keyed by stable product `id`, not by the (now translatable)
 // display name, so switching Menu language never loses or duplicates items.
-import { menuItemById, menuItemByName } from "@/data/menu";
+// Lookups use the menu as published from SEO Studio when the caller passes it
+// (CartProvider does); otherwise the code menu.
+import { menuItemById, menuItemByName, type MenuItem } from "@/data/menu";
 import {
   customizationExtra,
   customizationText,
@@ -30,19 +32,27 @@ export interface CartItem {
   qty: number;
 }
 
-export const cartMenuItem = (item: { id?: string; name: string }) =>
-  (item.id && menuItemById.get(item.id)) || menuItemByName.get(item.name);
-export const cartImageFor = (item: CartItem) => item.image || cartMenuItem(item)?.[3] || "";
-export const cartDetailsFor = (item: CartItem) => cartMenuItem(item)?.[1] || "";
+export interface MenuSource {
+  byId: ReadonlyMap<string, MenuItem>;
+  byName: ReadonlyMap<string, MenuItem>;
+}
+export const CODE_MENU_SOURCE: MenuSource = { byId: menuItemById, byName: menuItemByName };
 
-export function readCart(): CartItem[] {
+export const cartMenuItem = (item: { id?: string; name: string }, src: MenuSource = CODE_MENU_SOURCE) =>
+  (item.id && src.byId.get(item.id)) || src.byName.get(item.name);
+export const cartImageFor = (item: CartItem, src: MenuSource = CODE_MENU_SOURCE) => item.image || cartMenuItem(item, src)?.[3] || "";
+export const cartDetailsFor = (item: CartItem, src: MenuSource = CODE_MENU_SOURCE) => cartMenuItem(item, src)?.[1] || "";
+
+export { refreshCart } from "@/lib/content/cartRefresh";
+
+export function readCart(src: MenuSource = CODE_MENU_SOURCE): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEYS.cart) || "[]") as CartItem[];
     return parsed.map((item) => {
       // Carts saved before product IDs existed only have `name` — backfill
       // the stable id from the live menu so language switching works for them too.
-      const id = item.id || menuItemByName.get(item.name)?.[7] || "";
+      const id = item.id || src.byName.get(item.name)?.[7] || "";
       const customization = item.customization;
       if (!customization || !("beans" in customization) || !customization.beans) {
         return { ...item, id };
@@ -69,20 +79,20 @@ export function saveCart(cart: CartItem[]) {
 }
 
 /** Remaps any legacy name-keyed record to id-keyed, for records saved before product IDs existed. */
-function byId<T>(raw: Record<string, T>): Record<string, T> {
+function byId<T>(raw: Record<string, T>, src: MenuSource): Record<string, T> {
   const result: Record<string, T> = {};
   for (const [key, value] of Object.entries(raw)) {
-    const id = menuItemById.has(key) ? key : menuItemByName.get(key)?.[7];
+    const id = src.byId.has(key) ? key : src.byName.get(key)?.[7];
     if (id) result[id] = value;
   }
   return result;
 }
 
-export function readInstructions(): Record<string, string> {
+export function readInstructions(src: MenuSource = CODE_MENU_SOURCE): Record<string, string> {
   if (typeof window === "undefined") return {};
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.instructions) || "{}") as Record<string, string>;
-    return byId(raw);
+    return byId(raw, src);
   } catch {
     return {};
   }
@@ -93,7 +103,7 @@ export function saveInstructions(value: Record<string, string>) {
   localStorage.setItem(STORAGE_KEYS.instructions, JSON.stringify(value));
 }
 
-export function readCustomizations(): Record<string, Customization> {
+export function readCustomizations(src: MenuSource = CODE_MENU_SOURCE): Record<string, Customization> {
   if (typeof window === "undefined") return {};
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.customizations) || "{}") as Record<
@@ -101,7 +111,7 @@ export function readCustomizations(): Record<string, Customization> {
       Customization
     >;
     return Object.fromEntries(
-      Object.entries(byId(raw)).map(([product, customization]) => [
+      Object.entries(byId(raw, src)).map(([product, customization]) => [
         product,
         sanitizeCustomization(customization),
       ])
@@ -123,23 +133,24 @@ export const escapeCartText = (value: string) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] || char
   );
 
-export function publicImageUrl(item: CartItem, origin: string) {
-  const image = cartImageFor(item);
+export function publicImageUrl(item: CartItem, origin: string, src: MenuSource = CODE_MENU_SOURCE) {
+  const image = cartImageFor(item, src);
   return image ? new URL(image, origin).href : "";
 }
 
+/** Code default; the live number comes from Business info (WhatsApp). */
 export const WHATSAPP_NUMBER = "971556838426";
 
-export function buildWhatsappMessage(cart: CartItem[], total: number, origin: string) {
+export function buildWhatsappMessage(cart: CartItem[], total: number, origin: string, src: MenuSource = CODE_MENU_SOURCE) {
   const lines = cart.map((item) => {
-    const details = cartDetailsFor(item);
+    const details = cartDetailsFor(item, src);
     const customizationLine = item.customization
       ? `\n  Customized: ${customizationText(item.customization)}`
       : "";
     const instructionsLine = item.instructions
       ? `\n  Special instructions: ${item.instructions}`
       : "";
-    return `• ${item.name} x${item.qty} — AED ${item.price * item.qty}\n  Details: ${details}${customizationLine}${instructionsLine}\n  Image: ${publicImageUrl(item, origin)}`;
+    return `• ${item.name} x${item.qty} — AED ${item.price * item.qty}\n  Details: ${details}${customizationLine}${instructionsLine}\n  Image: ${publicImageUrl(item, origin, src)}`;
   });
   return `Hello PRESS'D! I'd like to order:\n\n${lines.join(
     "\n\n"

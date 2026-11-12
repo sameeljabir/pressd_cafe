@@ -3,37 +3,16 @@
 import { useAlt } from "@/components/AltTextContext";
 import { useBooking } from "@/components/booking/BookingContext";
 import SectionHomeButton from "@/components/SectionHomeButton";
+import { useBusiness, usePage } from "@/components/SiteContentContext";
+import { VISIT } from "@/lib/content/pages";
+import { phoneDigits, socialHandle, visibleHours } from "@/lib/content/hours";
 
-const MAPS_URL =
-  "https://www.google.com/maps/place/PRESS%E2%80%99D+Wellness+Caf%C3%A9/@25.1497789,55.2944217,17z/data=!4m6!3m5!1s0x3e5f69b12bacfaa1:0xf705edb34aadfb3c!8m2!3d25.1497789!4d55.2944217!16s%2Fg%2F11svlbgvyk";
-
-const SCHEDULE = [
-  { day: "MON", hours: "7:00 AM – 9:00 PM" },
-  { day: "TUE", hours: "7:00 AM – 9:00 PM" },
-  { day: "WED", hours: "7:00 AM – 9:00 PM" },
-  { day: "THU", hours: "7:00 AM – 9:00 PM" },
-  { day: "FRI", hours: "7:00 AM – 9:00 PM" },
-  { day: "SAT & SUN", hours: "7:00 AM – 9:00 PM" },
-];
-
-const GALLERY_IMAGES = [
-  {
-    key: "visit.sofa",
-    src: "/assets/visit-table-latte.webp",
-  },
-  {
-    key: "visit.dish",
-    src: "/assets/visit-pet-friendly-booth.webp",
-  },
-  {
-    key: "visit.counter",
-    src: "/assets/visit-laptop-lounge.webp",
-  },
-  {
-    key: "visit.pour",
-    src: "/assets/visit-coffee-serving.webp",
-  },
-];
+const GALLERY_KEYS = [
+  ["visit.sofa", "gallery1"],
+  ["visit.dish", "gallery2"],
+  ["visit.counter", "gallery3"],
+  ["visit.pour", "gallery4"],
+] as const;
 
 /** Minimal continuous-line sketch of a cat and dog cuddling — understated warm-gold linework */
 function PetLoveArt() {
@@ -102,6 +81,10 @@ function PetLoveArt() {
 export default function VisitSection() {
   const alt = useAlt();
   const { openBooking } = useBooking();
+  const { t, shared } = usePage(VISIT);
+  const business = useBusiness();
+  const MAPS_URL = business.mapsUrl;
+  const SCHEDULE = visibleHours(business.openingHours);
 
   return (
     <section className="visit section" id="visit" aria-label="Visit PRESS'D Wellness Café">
@@ -111,10 +94,10 @@ export default function VisitSection() {
           <div className="visit-panel-header">
             <span className="visit-line-dec" aria-hidden="true" />
             <div className="visit-heading-wrap">
-              <span className="visit-micro-eyebrow">EDITORIAL TIMETABLE</span>
+              <span className="visit-micro-eyebrow">{t("hoursEyebrow")}</span>
               <h2 className="visit-panel-serif-title">
-                <span>OPENING</span>
-                <span>HOURS</span>
+                <span>{t("hoursTitle1")}</span>
+                <span>{t("hoursTitle2")}</span>
               </h2>
             </div>
             <span className="visit-line-dec" aria-hidden="true" />
@@ -131,12 +114,8 @@ export default function VisitSection() {
           </div>
 
           <div className="visit-hours-footer">
-            <p className="visit-hours-service-note">Dine-in &amp; Takeaway · All week</p>
-            <p className="visit-hours-narrative">
-              Clean ingredients, mindful rituals, and an open sunlit sanctuary.
-              Whether you are stopping by for your morning brew or lingering over wholesome fare,
-              our doors are always open at Muscat St, Nad Al Sheba 1, Dubai.
-            </p>
+            <p className="visit-hours-service-note">{t("serviceNote")}</p>
+            <p className="visit-hours-narrative">{t("narrative")}</p>
 
             <div className="visit-action-group">
               <button
@@ -145,7 +124,7 @@ export default function VisitSection() {
                 onClick={openBooking}
                 aria-label="Book a table at PRESS'D"
               >
-                BOOK A TABLE <span>↗</span>
+                {t("bookLabel")} <span>↗</span>
               </button>
               <a
                 href={MAPS_URL}
@@ -154,7 +133,7 @@ export default function VisitSection() {
                 className="visit-link-directions"
                 aria-label="Get directions to PRESS'D on Google Maps"
               >
-                GET DIRECTIONS <span>→</span>
+                {t("directionsLabel")} <span>→</span>
               </a>
             </div>
           </div>
@@ -162,9 +141,9 @@ export default function VisitSection() {
 
         {/* 2. UPPER RIGHT: 2x2 IMAGE GALLERY */}
         <div className="visit-gallery-grid" aria-label="Café gallery">
-          {GALLERY_IMAGES.map((img, i) => (
+          {GALLERY_KEYS.map(([key, field], i) => (
             <figure key={i} className="visit-gallery-tile">
-              <img src={img.src} alt={alt(img.key)} loading="lazy" />
+              <img src={shared[field] as string} alt={alt(key)} loading="lazy" />
             </figure>
           ))}
         </div>
@@ -173,11 +152,9 @@ export default function VisitSection() {
         <div className="visit-panel visit-map-panel">
           <div className="visit-map-header">
             <div>
-              <span className="visit-micro-eyebrow">LOCATION</span>
-              <h3 className="visit-location-title">PRESS’D Wellness Café</h3>
-              <p className="visit-location-text">
-                47XV+XQ2 · Muscat St · Nad Al Sheba 1, Dubai · UAE
-              </p>
+              <span className="visit-micro-eyebrow">{t("locationEyebrow")}</span>
+              <h3 className="visit-location-title">{t("locationTitle")}</h3>
+              <p className="visit-location-text">{t("locationLine")}</p>
             </div>
             <a
               href={MAPS_URL}
@@ -186,7 +163,7 @@ export default function VisitSection() {
               className="visit-map-route-cta"
               aria-label="Show route to PRESS'D on Google Maps"
             >
-              SHOW ROUTE <span>→</span>
+              {t("routeLabel")} <span>→</span>
             </a>
           </div>
 
@@ -205,7 +182,7 @@ export default function VisitSection() {
               className="visit-map-badge"
               aria-label="Open in Google Maps"
             >
-              OPEN IN MAPS ↗
+              {t("openMapsLabel")} ↗
             </a>
           </div>
         </div>
@@ -213,48 +190,51 @@ export default function VisitSection() {
         {/* 4. LOWER RIGHT: GET IN TOUCH PANEL */}
         <div className="visit-panel visit-touch-panel">
           <div className="visit-touch-head">
-            <span className="visit-micro-eyebrow">CONNECT WITH US</span>
+            <span className="visit-micro-eyebrow">{t("touchEyebrow")}</span>
             <h2 className="visit-panel-serif-title">
-              <span>GET IN</span>
-              <span>TOUCH</span>
+              <span>{t("touchTitle1")}</span>
+              <span>{t("touchTitle2")}</span>
             </h2>
             <div className="visit-title-divider" aria-hidden="true" />
           </div>
 
           <div className="visit-contact-entries">
             <div className="visit-contact-entry">
-              <span className="visit-entry-label">ADDRESS</span>
+              <span className="visit-entry-label">{t("addressLabel")}</span>
               <a
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="visit-entry-val visit-entry-address-link"
-                title="View 47XV+XQ2 Muscat St on Google Maps"
+                title={`View ${(business.addressLines[0] ?? "").replace(",", "")} on Google Maps`}
               >
-                47XV+XQ2, Muscat St<br />
-                Nad Al Sheba 1, Nad Al Sheba<br />
-                Dubai, United Arab Emirates
+                {business.addressLines.map((line, i) => (
+                  <span key={i}>
+                    {i > 0 && <br />}
+                    {line}
+                  </span>
+                ))}
               </a>
             </div>
 
             <div className="visit-contact-entry">
-              <span className="visit-entry-label">PHONE</span>
-              <a href="tel:+971556838426" className="visit-entry-link">
-                +971 55 68 38 426
+              <span className="visit-entry-label">{t("phoneLabel")}</span>
+              <a href={`tel:+${phoneDigits(business.telephone)}`} className="visit-entry-link">
+                {business.telephone}
               </a>
             </div>
 
             <div className="visit-contact-entry">
-              <span className="visit-entry-label">EMAIL</span>
-              <a href="mailto:pressd.dxb@gmail.com" className="visit-entry-link">
-                pressd.dxb@gmail.com
+              <span className="visit-entry-label">{t("emailLabel")}</span>
+              <a href={`mailto:${business.email}`} className="visit-entry-link">
+                {business.email}
               </a>
             </div>
 
             <div className="visit-contact-entry">
-              <span className="visit-entry-label">FOLLOW</span>
+              <span className="visit-entry-label">{t("followLabel")}</span>
               <a
-                href="https://www.instagram.com/pressd.cafe"
+                href={business.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="visit-entry-link visit-entry-instagram"
@@ -275,15 +255,13 @@ export default function VisitSection() {
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                 </svg>
-                <span>@pressd.cafe</span>
+                <span>{socialHandle(business.instagram)}</span>
               </a>
             </div>
           </div>
 
           <div className="visit-touch-signature">
-            <p className="visit-touch-note">
-              Have a question or collaboration in mind? Get in touch with our team.
-            </p>
+            {shared.showNote ? <p className="visit-touch-note">{t("note")}</p> : null}
             <div className="visit-pet-sig-wrap" title="Pet friendly café with love">
               <PetLoveArt />
             </div>
@@ -292,9 +270,9 @@ export default function VisitSection() {
 
         {/* 5. BOTTOM ROW: BRAND COLOPHON */}
         <div className="visit-colophon-bar">
-          <span className="visit-colophon-tag">WELLNESS CAFÉ &amp; SPECIALTY ROASTS</span>
+          <span className="visit-colophon-tag">{t("colophonTag")}</span>
           <span className="visit-colophon-sep" aria-hidden="true">◇</span>
-          <span className="visit-colophon-copy">© PRESS’D · ALL RIGHTS RESERVED</span>
+          <span className="visit-colophon-copy">{t("colophonCopy")}</span>
         </div>
       </div>
 

@@ -14,10 +14,14 @@ import {
   cartImageFor,
   publicImageUrl,
   readCart,
+  refreshCart,
   saveCart,
-  WHATSAPP_NUMBER,
   type CartItem,
+  type MenuSource,
 } from "@/lib/cart";
+import { useBusiness, useMenuData } from "@/components/SiteContentContext";
+import type { MenuItem } from "@/data/menu";
+import { phoneDigits } from "@/lib/content/hours";
 import { customizationExtra, type Customization } from "@/lib/customization";
 import { readCustomizations, readInstructions } from "@/lib/cart";
 
@@ -39,8 +43,10 @@ interface CartContextValue {
   changeQty: (index: number, delta: 1 | -1) => void;
   applyCustomization: (id: string, customization: Customization, instructions: string) => void;
   whatsappHref: string;
-  cartImageFor: typeof cartImageFor;
-  cartDetailsFor: typeof cartDetailsFor;
+  cartImageFor: (item: CartItem) => string;
+  cartDetailsFor: (item: CartItem) => string;
+  /** The published menu the cart prices from. */
+  menuSource: MenuSource;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -49,16 +55,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const { byId: liveById, isHidden } = useMenuData();
+  const business = useBusiness();
+  const src = useMemo<MenuSource>(() => {
+    const byName = new Map<string, MenuItem>();
+    for (const it of liveById.values()) byName.set(it[0], it);
+    return { byId: liveById, byName };
+  }, [liveById]);
 
   useEffect(() => {
     // Intentional one-time hydration from localStorage (unavailable during
     // SSR): starting from [] on the server and syncing here avoids a
     // server/client markup mismatch, which a lazy useState initializer would
     // reintroduce.
+    // Saved lines are re-priced from the published menu (hidden products removed).
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCart(readCart());
+    setCart(refreshCart(readCart(src), src, isHidden));
     setHydrated(true);
-  }, []);
+  }, [src, isHidden]);
 
   useEffect(() => {
     if (hydrated) saveCart(cart);
@@ -68,8 +82,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const total = useMemo(() => cart.reduce((sum, item) => sum + item.price * item.qty, 0), [cart]);
 
   const addToCart = useCallback(({ id, name, basePrice, image }: AddToCartInput) => {
-    const instructions = readInstructions()[id] || "";
-    const customization = readCustomizations()[id];
+    const instructions = readInstructions(src)[id] || "";
+    const customization = readCustomizations(src)[id];
     const price = basePrice + customizationExtra(customization);
     setCart((prev) => {
       const existing = prev.find((item) => item.id === id);
@@ -82,7 +96,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { id, name, basePrice, price, image, instructions, customization, qty: 1 }];
     });
-  }, []);
+  }, [src]);
 
   const changeQty = useCallback((index: number, delta: 1 | -1) => {
     setCart((prev) =>
@@ -113,9 +127,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const whatsappHref = useMemo(() => {
     if (!cart.length || typeof window === "undefined") return "#";
-    const message = buildWhatsappMessage(cart, total, window.location.href);
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  }, [cart, total]);
+    const message = buildWhatsappMessage(cart, total, window.location.href, src);
+    return `https://wa.me/${phoneDigits(business.whatsapp)}?text=${encodeURIComponent(message)}`;
+  }, [cart, total, src, business.whatsapp]);
 
   const value: CartContextValue = {
     cart,
@@ -128,8 +142,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     changeQty,
     applyCustomization,
     whatsappHref,
-    cartImageFor,
-    cartDetailsFor,
+    cartImageFor: (item) => cartImageFor(item, src),
+    cartDetailsFor: (item) => cartDetailsFor(item, src),
+    menuSource: src,
   };
 
   useEffect(() => {

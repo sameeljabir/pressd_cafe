@@ -38,10 +38,38 @@ export async function getDraft(db: Db, key: string, session?: ClientSession): Pr
   return row ? { fields: row.fields as MetaOverride, savedBy: row.savedBy, savedAt: row.savedAt } : null;
 }
 
-/** Saves edits without touching the published values (the public site never reads drafts). */
-export async function saveDraft(db: Db, key: string, fields: object, actor: string): Promise<Draft> {
+/** Someone else saved this document after the editor opened it; nothing was saved. */
+export class DraftConflictError extends Error {
+  constructor(key: string) {
+    super(`Someone else saved changes to "${key}" after you opened it. Nothing was saved — reload to see their changes, then make yours again.`);
+    this.name = "DraftConflictError";
+  }
+}
+
+/**
+ * Saves edits without touching the published values (the public site never reads drafts).
+ * `baseSavedAt` is the draft the editor started from (null = there was none):
+ * if the stored draft has changed since, nothing is saved (DraftConflictError).
+ * Omit it to overwrite unconditionally (the original behaviour).
+ */
+export async function saveDraft(db: Db, key: string, fields: object, actor: string, baseSavedAt?: string | null): Promise<Draft> {
   const savedAt = new Date();
-  await db.drafts.replaceOne({ _id: key }, { fields, savedBy: actor, savedAt }, { upsert: true });
+  const doc = { fields, savedBy: actor, savedAt };
+  if (baseSavedAt === undefined) {
+    await db.drafts.replaceOne({ _id: key }, doc, { upsert: true });
+  } else if (baseSavedAt === null) {
+    try {
+      await db.drafts.insertOne({ _id: key, ...doc });
+    } catch (e) {
+      if (isDuplicateKey(e)) throw new DraftConflictError(key);
+      throw e;
+    }
+  } else {
+    const since = new Date(baseSavedAt);
+    if (Number.isNaN(since.getTime())) throw new DraftConflictError(key);
+    const r = await db.drafts.replaceOne({ _id: key, savedAt: since }, doc);
+    if (r.matchedCount !== 1) throw new DraftConflictError(key);
+  }
   return { fields: fields as MetaOverride, savedBy: actor, savedAt };
 }
 

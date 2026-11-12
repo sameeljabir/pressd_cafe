@@ -1,4 +1,5 @@
 import { SiteImg } from "@/components/AltTextContext";
+import BusinessLink from "@/components/BusinessLink";
 
 const IMAGES = [
   { key: "instagram.coffee", src: "/assets/coffee-matcha.webp" },
@@ -28,14 +29,14 @@ export default function InstagramSection() {
           <SiteImg key={image.src} k={image.key} src={image.src} />
         ))}
       </div>
-      <a
+      <BusinessLink
+        field="instagram"
         className="instagram-follow"
-        href="https://www.instagram.com/pressd.cafe"
         target="_blank"
         rel="noopener noreferrer"
       >
         Follow on Instagram →
-      </a>
+      </BusinessLink>
     </section>
   );
 }

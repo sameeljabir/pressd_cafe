@@ -25,6 +25,16 @@ export interface BusinessInfo {
   latitude: string;
   longitude: string;
   openingHours: OpeningRow[];
+  // Visible contact details: the single source for the Visit page, footer,
+  // phone dock, cart and booking (not emitted as structured data).
+  whatsapp: string;
+  instagram: string;
+  facebook: string;
+  tiktok: string;
+  threads: string;
+  mapsUrl: string;
+  /** The address as shown on the Visit contact card, one entry per line. */
+  addressLines: string[];
 }
 
 /**
@@ -32,11 +42,12 @@ export interface BusinessInfo {
  * Triangle, open until 23:00 / midnight, which contradicted the site. These
  * match the Visit page (address, 7:00–21:00 daily), the contact details and the
  * coordinates of the site's Google Maps link. Price range is unchanged (no source).
+ * The phone is written the way the site displays it; links use its digits.
  */
 export const BUSINESS_DEFAULTS: BusinessInfo = {
   name: "PRESS'D Wellness Café",
   url: "https://www.pressdcafe.ae",
-  telephone: "+971 55 683 8426",
+  telephone: "+971 55 68 38 426",
   email: "pressd.dxb@gmail.com",
   servesCuisine: ["Healthy", "Breakfast", "Coffee"],
   priceRange: "AED 18-65",
@@ -48,6 +59,23 @@ export const BUSINESS_DEFAULTS: BusinessInfo = {
   latitude: "25.1497789",
   longitude: "55.2944217",
   openingHours: [{ days: "Mo-Su", opens: "07:00", closes: "21:00" }],
+  whatsapp: "+971 55 68 38 426",
+  instagram: "https://www.instagram.com/pressd.cafe",
+  facebook: "https://www.facebook.com/profile.php?id=61594102325840",
+  tiktok: "https://www.tiktok.com/@pressd.cafe",
+  threads: "https://www.threads.com/@pressd.cafe",
+  mapsUrl:
+    "https://www.google.com/maps/place/PRESS%E2%80%99D+Wellness+Caf%C3%A9/@25.1497789,55.2944217,17z/data=!4m6!3m5!1s0x3e5f69b12bacfaa1:0xf705edb34aadfb3c!8m2!3d25.1497789!4d55.2944217!16s%2Fg%2F11svlbgvyk",
+  addressLines: ["47XV+XQ2, Muscat St", "Nad Al Sheba 1, Nad Al Sheba", "Dubai, United Arab Emirates"],
+};
+
+/** Allowed hosts for each profile link (https only). */
+const LINK_HOSTS: Record<"instagram" | "facebook" | "tiktok" | "threads" | "mapsUrl", RegExp> = {
+  instagram: /^(www\.)?instagram\.com$/,
+  facebook: /^(www\.|m\.)?facebook\.com$/,
+  tiktok: /^(www\.)?tiktok\.com$/,
+  threads: /^(www\.)?threads\.(com|net)$/,
+  mapsUrl: /^((www|maps)\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl)$/,
 };
 
 const DAY = "(Mo|Tu|We|Th|Fr|Sa|Su)";
@@ -89,6 +117,13 @@ export function validateBusiness(raw: Record<string, unknown>): Partial<Business
     latitude: text(input.latitude, "latitude", 20),
     longitude: text(input.longitude, "longitude", 20),
     openingHours: [],
+    whatsapp: text(input.whatsapp, "whatsapp", 30),
+    instagram: text(input.instagram, "instagram", 200),
+    facebook: text(input.facebook, "facebook", 200),
+    tiktok: text(input.tiktok, "tiktok", 200),
+    threads: text(input.threads, "threads", 200),
+    mapsUrl: text(input.mapsUrl, "mapsUrl", 600),
+    addressLines: [],
   };
   if (v.url) {
     let u: URL;
@@ -100,6 +135,20 @@ export function validateBusiness(raw: Record<string, unknown>): Partial<Business
     if (u.protocol !== "https:") throw new MetadataValidationError("url", "Must start with https://");
   }
   if (v.telephone && !/^\+?[0-9 ()-]{6,24}$/.test(v.telephone)) throw new MetadataValidationError("telephone", "Use digits, spaces, + ( ) - only, e.g. +971 4 123 4567");
+  if (v.whatsapp && !/^\+?[0-9 ()-]{6,24}$/.test(v.whatsapp)) throw new MetadataValidationError("whatsapp", "Use digits, spaces, + ( ) - only, e.g. +971 55 68 38 426");
+  for (const f of Object.keys(LINK_HOSTS) as (keyof typeof LINK_HOSTS)[]) {
+    if (!v[f]) continue;
+    let u: URL;
+    try {
+      u = new URL(v[f]);
+    } catch {
+      throw new MetadataValidationError(f, "Not a valid URL");
+    }
+    if (u.protocol !== "https:" || !LINK_HOSTS[f].test(u.hostname)) throw new MetadataValidationError(f, f === "mapsUrl" ? "Must be a Google Maps link (https)" : `Must be an https link to ${f}`);
+  }
+  const lines = input.addressLines;
+  if (!Array.isArray(lines) || lines.length > 4) throw new MetadataValidationError("addressLines", "Up to 4 address lines");
+  v.addressLines = lines.map((l, i) => text(l, `addressLines.${i}`, 60)).filter(Boolean);
   if (v.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) throw new MetadataValidationError("email", "Not a valid email address");
   if (v.addressCountry && !/^[A-Z]{2}$/.test(v.addressCountry)) throw new MetadataValidationError("addressCountry", "Two-letter country code, e.g. AE");
   for (const [f, lo, hi] of [["latitude", -90, 90], ["longitude", -180, 180]] as const) {

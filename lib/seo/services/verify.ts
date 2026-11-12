@@ -1,4 +1,6 @@
 import "server-only";
+import { buildSiteContent, expectedContent, SITE_DOC_KEYS } from "../../content/site.ts";
+import { menu as BASE_MENU } from "../../../data/menu.ts";
 // After a publish or restore: refresh the public page (and sitemap) and work
 // out exactly what it should now render, so the editor can verify the live HTML.
 
@@ -28,9 +30,14 @@ export function refreshPublicPage(path: string) {
 /** Everything the public page should render right now (all published documents). */
 export async function expectedLive(db: Db) {
   const [meta, images, business] = await Promise.all([getOverride(db, "/"), getOverride(db, "@images"), getOverride(db, "@business")]);
+  const docs: Record<string, unknown> = {};
+  for (const row of await db.overrides.find({ _id: { $in: [...SITE_DOC_KEYS] } }, { projection: { fields: 1 } }).toArray()) docs[row._id] = row.fields;
+  const site = buildSiteContent(docs, BASE_MENU, false);
+  const altOverrides = (images?.fields as Record<string, string> | undefined) ?? null;
   return {
     meta: expectedFor((meta?.fields as MetaOverride | undefined) ?? null),
-    alts: effectiveAlts((images?.fields as Record<string, string> | undefined) ?? null),
+    alts: effectiveAlts(altOverrides),
     jsonLd: buildJsonLd((business?.fields as Partial<BusinessInfo> | undefined) ?? null),
+    content: expectedContent(site.pages, altOverrides, site.menu ?? BASE_MENU),
   };
 }

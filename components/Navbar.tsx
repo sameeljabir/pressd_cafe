@@ -7,15 +7,17 @@ import { useBooking } from "@/components/booking/BookingContext";
 import { useSectionLinkHandler, useSectionNav } from "@/components/navigation/SectionNavContext";
 import LanguageSelector from "@/components/menu/LanguageSelector";
 import { ArrowUpRightIcon } from "@/components/icons";
-
-const NAV_LINKS = [
-  { href: "#menu", label: "Menu" },
-  { href: "#visit", label: "Visit" },
-  { href: "#about", label: "About" },
-];
+import { usePage } from "@/components/SiteContentContext";
+import { NAVIGATION } from "@/lib/content/pages";
 
 export default function Navbar() {
   const alt = useAlt();
+  const { t } = usePage(NAVIGATION);
+  const NAV_LINKS = [
+    { href: "#menu", label: t("linkMenu") },
+    { href: "#visit", label: t("linkVisit") },
+    { href: "#about", label: t("linkAbout") },
+  ];
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openCart } = useCart();
@@ -89,7 +91,7 @@ export default function Navbar() {
             </svg>
           </button>
           <button className="book-btn" onClick={openBooking}>
-            Book a table <span className="book-btn-icon"><ArrowUpRightIcon /></span>
+            {t("bookLabel")} <span className="book-btn-icon"><ArrowUpRightIcon /></span>
           </button>
         </div>
         <button
@@ -150,11 +152,11 @@ export default function Navbar() {
                 openBooking();
               }}
             >
-              Book a table <span className="book-btn-icon"><ArrowUpRightIcon /></span>
+              {t("bookLabel")} <span className="book-btn-icon"><ArrowUpRightIcon /></span>
             </button>
           </div>
         </nav>
-        <p>Meydan Polo Residence, Dubai · Open daily from 7AM</p>
+        <p>{t("mobileTagline")}</p>
       </div>
     </>
   );

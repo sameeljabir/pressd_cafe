@@ -19,12 +19,14 @@ export type Permission =
   | "performance:run" // trigger PageSpeed Insights tests
   | "metadata:draft" // save metadata drafts (not live)
   | "metadata:publish" // publish or roll back page metadata
+  | "content:draft" // save drafts of page content, menu and translations (not live)
+  | "content:publish" // publish or roll back page content, menu and translations
   | "settings:manage" // audit thresholds and dashboard settings
   | "google:connect"; // connect / disconnect Search Console
 
 const GRANTS: Record<Role, readonly Permission[]> = {
   viewer: ["reports:read", "reports:export"],
-  editor: ["reports:read", "reports:export", "audit:run", "issues:update", "tasks:write", "performance:run", "metadata:draft"],
+  editor: ["reports:read", "reports:export", "audit:run", "issues:update", "tasks:write", "performance:run", "metadata:draft", "content:draft"],
   publisher: [
     "reports:read",
     "reports:export",
@@ -34,6 +36,8 @@ const GRANTS: Record<Role, readonly Permission[]> = {
     "performance:run",
     "metadata:draft",
     "metadata:publish",
+    "content:draft",
+    "content:publish",
   ],
   admin: [
     "reports:read",
@@ -44,6 +48,8 @@ const GRANTS: Record<Role, readonly Permission[]> = {
     "performance:run",
     "metadata:draft",
     "metadata:publish",
+    "content:draft",
+    "content:publish",
     "settings:manage",
     "google:connect",
   ],
