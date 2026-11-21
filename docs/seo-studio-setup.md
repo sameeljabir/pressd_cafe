@@ -106,3 +106,13 @@ Never reuse Production credentials in Preview. Deploy a preview, open `/admin/se
 ## Previous dashboard modules
 
 Earlier versions included a crawler, Search Console, PageSpeed and task modules. They have been removed from the dashboard and its API. Their library code and tests remain in `lib/seo/` and `tests/seo/` on their original Postgres (Drizzle) schema — `lib/seo/db/client.ts`, `lib/seo/db/schema.ts`, `drizzle/`, `lib/seo/page-data.ts` and `lib/seo/services/{audits,gsc,gsc-report,performance,tasks}.ts` — which is why `drizzle-orm` and `@electric-sql/pglite` remain as **dev** dependencies (used only by those modules' tests). Nothing at runtime imports them. They can be deleted, with those two packages, in a later reviewed change.
+
+## Blogs & Articles (/admin/seo/blogs → public /blog)
+
+- **Storage:** each article is one SEO Studio document keyed `@blog:<id>` in the same drafts / published / history collections, so it shares Save → Confirm & Publish → History → Restore. Categories live in `seo_settings` (`_id: "blog-categories"`). Uploaded images are stored in MongoDB GridFS (bucket `seo_media`) and served at `/media/<id>.<ext>`. No migration is needed: collections are created on first use.
+- **Body:** edited with TipTap and stored as structured JSON, validated against an allow-list (`lib/blog/content.ts`) and rendered by `components/blog/ArticleView.tsx`. Raw HTML is never stored or output.
+- **Workflow:** *Save draft* is private. A post appears on `/blog` only after **Confirm & Publish** (top bar, publishes all saved changes) or the article's own *Confirm & Publish* button (publisher role). Edits to a published article stay private until published. *Unpublish* / *Archive* take effect immediately and are recorded in history.
+- **Previews:** the editor's live preview is an iframe of `/blog-preview`, which holds no data and renders only what the editor sends it. *Preview saved draft* opens `/blog/<slug>` in Draft Mode for signed-in users only (noindex).
+- **Scheduling:** a future publication date makes a published article "Scheduled". Article pages and the sitemap revalidate every 5 minutes, so it appears within 5 minutes of its time (no cron job).
+- **SEO:** per-article title, description, canonical, robots, Open Graph / X tags, BlogPosting + BreadcrumbList JSON-LD. The sitemap lists `/blog` and every public, indexable article.
+- **Limits:** images up to 5 MB (JPEG, PNG, WebP, GIF — no SVG). On the free Atlas tier (512 MB) keep an eye on GridFS size.

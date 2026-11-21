@@ -9,7 +9,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/api/",
+      // /blog-preview is the dashboard's empty live-preview frame (also noindex).
+      disallow: ["/api/", "/blog-preview"],
     },
     sitemap: `${SITE_ORIGIN}/sitemap.xml`,
   };

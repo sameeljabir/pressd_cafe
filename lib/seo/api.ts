@@ -11,6 +11,7 @@ import { ConcurrentPublishError, DraftConflictError } from "./services/metadata.
 import { SettingsValidationError } from "./services/settings.ts";
 import { NothingToPublishError } from "./services/docs.ts";
 import { KeywordConflictError, KeywordNotFoundError } from "./services/keywords.ts";
+import { PostNotFoundError } from "../blog/service.ts";
 
 export function ok(data: unknown, status = 200) {
   return NextResponse.json(data, { status, headers: { "cache-control": "no-store" } });
@@ -50,6 +51,7 @@ export function handle<C = unknown>(permission: Permission, fn: (req: Request, v
       if (e instanceof ForbiddenAction) return jsonError(403, "forbidden", e.message);
       if (e instanceof KeywordConflictError) return jsonError(409, "conflict", e.message);
       if (e instanceof KeywordNotFoundError) return jsonError(404, "not_found", e.message);
+      if (e instanceof PostNotFoundError) return jsonError(404, "not_found", e.message);
       if (e instanceof DatabaseUnavailableError) return jsonError(503, "database_unavailable", "The dashboard database is not configured (MONGODB_URI).");
       // Name only: driver messages can include host names; the client gets a generic message.
       console.error("[seo] unhandled API error", req.method, new URL(req.url).pathname, e instanceof Error ? e.name : typeof e);

@@ -1,10 +1,18 @@
 // Draft → Confirm & Publish across all SEO Studio documents.
 
 import { withTransaction, type Db } from "../db/mongo.ts";
-import { DOC_KEYS, DOC_LABELS, MENU_KEY, TRANSLATIONS_KEY, diffRows, validateDoc, type DiffRow, type DocContext, type DocKey } from "../core/docs.ts";
+import { DOC_KEYS, docLabel, MENU_KEY, TRANSLATIONS_KEY, diffRows, validateDoc, type DiffRow, type DocContext, type DocKey } from "../core/docs.ts";
 import { overrideWarnings, effectiveMeta, type EffectiveMeta, type MetaOverride, type Thresholds } from "../core/metadata.ts";
 import type { MenuOverrides } from "../../content/menu.ts";
 import { changeHistory, getDraft, getOverride, publishOverride } from "./metadata.ts";
+import { finalizeForPublish, isBlogKey, type BlogPost } from "../../blog/post.ts";
+import { assertPublishableSlugs } from "../../blog/service.ts";
+
+/** Static documents plus every blog post that has a saved draft. */
+async function draftKeys(db: Db): Promise<DocKey[]> {
+  const blog = await db.drafts.find({ _id: { $regex: /^@blog:[0-9a-f]{24}$/ } }, { projection: { _id: 1 }, sort: { savedAt: 1 } }).toArray();
+  return [...DOC_KEYS, ...blog.map((b) => b._id as DocKey)];
+}
 
 export interface Pending {
   key: DocKey;
@@ -25,13 +33,13 @@ export async function menuContext(db: Db, preferDraft = true): Promise<DocContex
 export async function pendingChanges(db: Db, metaDefaults: EffectiveMeta, thresholds: Thresholds, site: URL): Promise<Pending[]> {
   const out: Pending[] = [];
   const ctx = await menuContext(db);
-  for (const key of DOC_KEYS) {
+  for (const key of await draftKeys(db)) {
     const [draft, live] = await Promise.all([getDraft(db, key), getOverride(db, key)]);
     if (!draft) continue;
     const rows = diffRows(key, live?.fields ?? null, draft.fields, metaDefaults, ctx);
     if (!rows.length) continue;
     const warnings = key === "/" ? overrideWarnings(draft.fields as MetaOverride, effectiveMeta(metaDefaults, draft.fields as MetaOverride), thresholds, site, "/") : [];
-    out.push({ key, label: DOC_LABELS[key], savedBy: draft.savedBy, savedAt: draft.savedAt, rows, warnings });
+    out.push({ key, label: docLabel(key, draft.fields), savedBy: draft.savedBy, savedAt: draft.savedAt, rows, warnings });
   }
   return out;
 }
@@ -59,11 +67,13 @@ export async function publishAll(db: Db, actor: string, metaDefaults: EffectiveM
   for (const p of pending) {
     const draft = await getDraft(db, p.key);
     if (!draft) continue; // discarded meanwhile
-    const fields = validateDoc(p.key, draft.fields as Record<string, unknown>, site, ctx);
+    let fields = validateDoc(p.key, draft.fields as Record<string, unknown>, site, ctx);
+    if (isBlogKey(p.key)) fields = finalizeForPublish(fields as BlogPost);
     if (p.key === MENU_KEY) ctx.menu = fields as MenuOverrides;
     validated.push({ key: p.key, fields, savedAt: draft.savedAt });
   }
   if (!validated.length) throw new NothingToPublishError("Nothing to publish — there are no saved changes.");
+  await assertPublishableSlugs(db, validated.filter((v) => isBlogKey(v.key)));
   return withTransaction(db, async (session) => {
     const changes: { key: DocKey; id: string; version: number }[] = [];
     for (const v of validated) {

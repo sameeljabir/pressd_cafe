@@ -21,15 +21,18 @@ import { buildEffectiveMenu, menuDiff, validateMenu, type EffectiveMenu, type Me
 import { validateTranslations, type Translations } from "../../content/translations.ts";
 import { ENGLISH } from "../../content/dictionaries.ts";
 import { menu as BASE_MENU } from "../../../data/menu.ts";
+import { blogId, isBlogKey, postDiff, validatePost, type BlogPost } from "../../blog/post.ts";
 
 export const SEO_DOC_KEYS = ["/", "@images", "@business"] as const;
 export const MENU_KEY = "@content:menu";
 export const TRANSLATIONS_KEY = "@content:translations";
 /** Publishing order matters: the menu goes before its translations. */
 export const DOC_KEYS = [...SEO_DOC_KEYS, ...PAGE_KEYS, MENU_KEY, TRANSLATIONS_KEY] as const;
-export type DocKey = (typeof SEO_DOC_KEYS)[number] | PageKey | typeof MENU_KEY | typeof TRANSLATIONS_KEY;
+/** Static documents, plus one "@blog:<id>" document per blog post. */
+export type StaticDocKey = (typeof SEO_DOC_KEYS)[number] | PageKey | typeof MENU_KEY | typeof TRANSLATIONS_KEY;
+export type DocKey = StaticDocKey | `@blog:${string}`;
 
-export const DOC_LABELS: Record<DocKey, string> = {
+export const DOC_LABELS: Record<StaticDocKey, string> = {
   "/": "Home — Google & sharing",
   "@images": "Images & alt text",
   "@business": "Business info",
@@ -39,18 +42,27 @@ export const DOC_LABELS: Record<DocKey, string> = {
 };
 
 export function isDocKey(k: unknown): k is DocKey {
-  return typeof k === "string" && (DOC_KEYS as readonly string[]).includes(k);
+  return typeof k === "string" && ((DOC_KEYS as readonly string[]).includes(k) || isBlogKey(k));
+}
+
+/** Readable name of a document (blog posts by their title when known). */
+export function docLabel(key: DocKey, fields?: object | null): string {
+  if (isBlogKey(key)) {
+    const title = (fields as Partial<BlogPost> | null | undefined)?.title;
+    return `Blog — ${title ? `“${title}”` : `post ${blogId(key).slice(-6)}`}`;
+  }
+  return DOC_LABELS[key as StaticDocKey];
 }
 
 export const isContentKey = (k: string) => k.startsWith("@content:");
 
 /** Which permission saving (draft) or publishing a document needs. */
 export function docPermission(key: DocKey, action: "draft" | "publish"): Permission {
-  return isContentKey(key) ? (action === "draft" ? "content:draft" : "content:publish") : action === "draft" ? "metadata:draft" : "metadata:publish";
+  return isContentKey(key) || isBlogKey(key) ? (action === "draft" ? "content:draft" : "content:publish") : action === "draft" ? "metadata:draft" : "metadata:publish";
 }
 
 /** Largest accepted draft body per document (bytes). */
-export const docBodyLimit = (key: DocKey) => (key === MENU_KEY || key === TRANSLATIONS_KEY ? 1_000_000 : 64_000);
+export const docBodyLimit = (key: DocKey) => (key === MENU_KEY || key === TRANSLATIONS_KEY ? 1_000_000 : isBlogKey(key) ? 800_000 : 64_000);
 
 export interface DocContext {
   /** Menu overrides the translations are checked against (the menu being saved/published, else the live one). */
@@ -62,6 +74,7 @@ export function effectiveMenuFor(menu: MenuOverrides | null | undefined): Effect
 }
 
 export function validateDoc(key: DocKey, input: Record<string, unknown>, site: URL, ctx: DocContext = {}): object {
+  if (isBlogKey(key)) return validatePost(input, { site, library: LIBRARY_SRCS });
   if (key === "/") return validateOverride(input, site);
   if (key === "@images") return validateAltOverrides(input);
   if (key === "@business") return validateBusiness(input);
@@ -120,7 +133,9 @@ function flattenTranslations(t: Translations | null, menu: EffectiveMenu): Map<s
 /** What visibly changes between two stored versions of a document. */
 export function diffRows(key: DocKey, before: object | null, after: object | null, metaDefaults: EffectiveMeta, ctx: DocContext = {}): DiffRow[] {
   const rows: DiffRow[] = [];
-  if (key === "/") {
+  if (isBlogKey(key)) {
+    rows.push(...postDiff(before as Partial<BlogPost> | null, after as Partial<BlogPost> | null));
+  } else if (key === "/") {
     const a = effectiveMeta(metaDefaults, before as MetaOverride | null);
     const b = effectiveMeta(metaDefaults, after as MetaOverride | null);
     for (const [k, label] of META_LABELS) if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) rows.push({ label, before: show(a[k]), after: show(b[k]) });

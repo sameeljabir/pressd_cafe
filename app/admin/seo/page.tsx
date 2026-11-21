@@ -8,7 +8,7 @@ import { requirePage } from "@/lib/seo/auth/guard";
 import { businessWarnings, effectiveBusiness, type BusinessInfo } from "@/lib/seo/core/business";
 import { altStatus, altSummary, effectiveAlts } from "@/lib/seo/core/images";
 import { effectiveMeta, lengthStatus, overrideWarnings, type MetaOverride } from "@/lib/seo/core/metadata";
-import { DOC_LABELS, isDocKey } from "@/lib/seo/core/docs";
+import { docLabel, isDocKey } from "@/lib/seo/core/docs";
 import { AREA_LABEL, STATUS_LABEL, countByStatus, type Area, type Check, type CheckStatus } from "@/lib/seo/core/siteAudit";
 import { siteUrl } from "@/lib/seo/env";
 import { dbOrNull } from "@/lib/seo/db/mongo";
@@ -53,7 +53,7 @@ export default async function Overview() {
   const [meta, images, business, settings, liveAudit, appAudit, recent] = await Promise.all([
     getOverride(db, "/"), getOverride(db, "@images"), getOverride(db, "@business"), getSettings(db),
     latestAudit(db, "live"), latestAudit(db, "app"),
-    db.changes.find({ applied: { $ne: false } }, { sort: { at: -1 }, limit: 8, projection: { key: 1, actor: 1, action: 1, at: 1, version: 1, verified: 1 } }).toArray(),
+    db.changes.find({ applied: { $ne: false } }, { sort: { at: -1 }, limit: 8, projection: { key: 1, actor: 1, action: 1, at: 1, version: 1, verified: 1, "after.title": 1 } }).toArray(),
   ]);
   const pending = await pendingChanges(db, defaults, settings.thresholds, site);
   const t = settings.thresholds;
@@ -193,7 +193,7 @@ export default async function Overview() {
             <ul className="recent-list small">
               {recent.map((r) => (
                 <li key={r._id.toHexString()}>
-                  <b>{isDocKey(r.key) ? DOC_LABELS[r.key] : r.key}</b> <span className="faint">v{r.version} · {r.action}</span>
+                  <b>{isDocKey(r.key) ? docLabel(r.key, r.after) : r.key}</b> <span className="faint">v{r.version} · {r.action}</span>
                   <span className="muted block">{fmtDateServer(r.at)} · {r.actor}{r.verified === true ? " · live check passed" : r.verified === false ? " · live check failed" : ""}</span>
                 </li>
               ))}

@@ -1,13 +1,15 @@
 import { BadRequest, ForbiddenAction, handle, ok, readJson } from "@/lib/seo/api";
 import { can } from "@/lib/seo/core/permissions";
-import { DOC_LABELS, docBodyLimit, docPermission, isDocKey, validateDoc, type DocKey } from "@/lib/seo/core/docs";
+import { docBodyLimit, docLabel, docPermission, isDocKey, validateDoc, type DocKey } from "@/lib/seo/core/docs";
 import { getDb, siteUrl } from "@/lib/seo/server";
 import { menuContext } from "@/lib/seo/services/docs";
 import { discardDraft, saveDraft } from "@/lib/seo/services/metadata";
 import type { Viewer } from "@/lib/seo/auth/guard";
+import { blogId, isBlogKey, type BlogPost } from "@/lib/blog/post";
+import { assertSlugFree } from "@/lib/blog/service";
 
 function requireDocPermission(viewer: Viewer, key: DocKey) {
-  if (!can(viewer.role, docPermission(key, "draft"))) throw new ForbiddenAction(`Your role (${viewer.role}) cannot edit ${DOC_LABELS[key]}`);
+  if (!can(viewer.role, docPermission(key, "draft"))) throw new ForbiddenAction(`Your role (${viewer.role}) cannot edit ${docLabel(key)}`);
 }
 
 // Save a draft of one document (see lib/seo/core/docs.ts). Drafts never reach the public site.
@@ -22,6 +24,8 @@ export const POST = handle("reports:read", async (req, viewer) => {
   if (body.baseSavedAt !== undefined && body.baseSavedAt !== null && typeof body.baseSavedAt !== "string") throw new BadRequest("baseSavedAt must be a date or null");
   const db = await getDb();
   const fields = validateDoc(body.key, body.fields as Record<string, unknown>, siteUrl(), await menuContext(db));
+  // A blog URL must not clash with another post's draft or published version.
+  if (isBlogKey(body.key)) await assertSlugFree(db, (fields as BlogPost).slug, blogId(body.key));
   const draft = await saveDraft(db, body.key, fields, viewer.email, body.baseSavedAt as string | null | undefined);
   return ok({ draft: { fields: draft.fields, savedBy: draft.savedBy, savedAt: draft.savedAt } });
 });

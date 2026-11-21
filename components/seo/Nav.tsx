@@ -29,6 +29,7 @@ export default function Nav({ pages }: { pages: { path: string; label: string }[
         </Link>
       ))}
       <Link href="/admin/seo/keywords" aria-current={here("/admin/seo/keywords")}>Keywords</Link>
+      <Link href="/admin/seo/blogs" aria-current={here("/admin/seo/blogs")}>Blogs &amp; Articles</Link>
       <Link href="/admin/seo/images" aria-current={here("/admin/seo/images")}>Images &amp; alt text</Link>
       <Link href="/admin/seo/business" aria-current={here("/admin/seo/business")}>Local SEO &amp; business</Link>
       <Link href="/admin/seo/analytics" aria-current={here("/admin/seo/analytics")}>Analytics</Link>

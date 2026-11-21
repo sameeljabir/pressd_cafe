@@ -25,6 +25,9 @@ export function expectedFor(fields: MetaOverride | null): EffectiveMeta {
 export function refreshPublicPage(path: string) {
   revalidatePath(path);
   revalidatePath("/sitemap.xml"); // noindex pages are left out of the sitemap
+  // The journal list and every article, including cached 404s of articles that just went live.
+  revalidatePath("/blog");
+  revalidatePath("/(blog)/blog/[slug]", "page");
 }
 
 /** Everything the public page should render right now (all published documents). */
