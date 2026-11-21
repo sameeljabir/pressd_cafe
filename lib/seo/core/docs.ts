@@ -87,6 +87,11 @@ const BUSINESS_LABELS: [keyof BusinessInfo, string][] = [
   ["instagram", "Instagram"], ["facebook", "Facebook"], ["tiktok", "TikTok"], ["threads", "Threads"], ["mapsUrl", "Google Maps link"],
 ];
 
+/** Keywords as stored, whether or not the keywords tag is switched on. */
+export function storedKeywords(o: MetaOverride | null | undefined): string {
+  return o?.keywords ?? "";
+}
+
 function show(v: unknown): string {
   if (v === null || v === undefined || v === "") return "—";
   if (Array.isArray(v)) {
@@ -119,6 +124,12 @@ export function diffRows(key: DocKey, before: object | null, after: object | nul
     const a = effectiveMeta(metaDefaults, before as MetaOverride | null);
     const b = effectiveMeta(metaDefaults, after as MetaOverride | null);
     for (const [k, label] of META_LABELS) if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) rows.push({ label, before: show(a[k]), after: show(b[k]) });
+    // Keywords saved while the keywords tag is off are stored but not rendered. They are still a
+    // change: without this row such a draft looked identical to the live page, was skipped by
+    // Confirm & Publish and the saved keywords seemed to disappear.
+    const kb = storedKeywords(before as MetaOverride | null);
+    const ka = storedKeywords(after as MetaOverride | null);
+    if (kb !== ka && !rows.some((r) => r.label === "Meta keywords")) rows.push({ label: "Saved keywords (tag off — not on the page)", before: kb || "—", after: ka || "—" });
   } else if (key === "@images") {
     const a = effectiveAlts(before as Record<string, string> | null);
     const b = effectiveAlts(after as Record<string, string> | null);

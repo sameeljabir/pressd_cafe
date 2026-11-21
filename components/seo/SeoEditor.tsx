@@ -3,8 +3,15 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, fmtDate } from "./client";
+import TagInput from "./TagInput";
+import SearchPreview from "./SearchPreview";
+import SocialPreview from "./SocialPreview";
 import {
   effectiveMeta,
+  MAX_META_KEYWORDS,
+  parseMetaSnippet,
+  splitKeywordText,
+  stableJson,
   lengthStatus,
   MAX_EXTRA_META,
   OG_TYPES,
@@ -28,6 +35,8 @@ interface Props {
   thresholds: Thresholds;
   canDraft: boolean;
   imageSuggestions: { url: string; label: string }[];
+  /** Keywords assigned to this page in Keywords (internal planning data — never rendered). */
+  targetKeywords?: { keyword: string; type: "primary" | "secondary" | "label" }[];
 }
 
 interface Form {
@@ -143,6 +152,8 @@ const ERROR_LABELS: Record<string, string> = {
   ogDescription: "Share description", ogImage: "Share image", ogType: "og:type", twitterCard: "X card", extraMeta: "Additional meta tags",
 };
 
+const keywordList = (s: string) => splitKeywordText(s).map((k) => k.trim()).filter(Boolean);
+
 const show = (v: unknown) => (v === null || v === undefined || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map((t: ExtraMeta) => `${t.name}=${t.content}`).join(", ") : "—") : String(v));
 
 function Meter({ len, min, max }: { len: number; min: number; max: number }) {
@@ -195,7 +206,13 @@ function EditorForm(p: Props & Notices) {
   const live = useMemo(() => effectiveMeta(p.defaults, p.published?.fields ?? null), [p.defaults, p.published]);
   const dirty = !same(toInput(form), toInput(baseline));
   const canSave = p.canDraft && dirty && !hasErrors && !busy;
-  const draftPending = !!p.draft && !same(effectiveMeta(p.defaults, p.draft.fields), live);
+  // Compares the stored documents, so a change that is saved but not rendered (keywords with the tag off) still counts.
+  const draftPending = !!p.draft && stableJson(p.draft.fields) !== stableJson(p.published?.fields ?? {});
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [pasteText, setPasteText] = useState("");
+  const [pasteNote, setPasteNote] = useState<string | null>(null);
+  const kwPrimary = (p.targetKeywords ?? []).filter((k) => k.type === "primary");
+  const inText = (k: string, t: string) => t.toLocaleLowerCase("en").includes(k.toLocaleLowerCase("en"));
   const warnings = valid ? overrideWarnings(valid, effectiveMeta(p.defaults, valid), p.thresholds, site, p.page.path) : [];
   const snippet = snippetPreview(preview.title, preview.description);
   // Share images are published as absolute ${site.host} URLs (what social apps need). Until this app
@@ -224,9 +241,11 @@ function EditorForm(p: Props & Notices) {
 
   async function saveDraft() {
     setBusy("draft");
-    const r = await api<{ draft: unknown }>("POST", "/api/admin/seo/drafts", { key: "/", fields: toInput(form) });
+    // baseSavedAt: refuse to overwrite a draft someone else saved after this editor opened.
+    const r = await api<{ draft: { savedAt: string } }>("POST", "/api/admin/seo/drafts", { key: "/", fields: toInput(form), baseSavedAt: p.draft?.savedAt ?? null });
     setBusy(null);
-    setMsg(r.ok ? { text: "Saved. The website changes when you use Confirm & Publish in the top bar.", kind: "good" } : { text: r.error ?? "Could not save the draft", kind: "error" });
+    // Only reported as saved once the server confirms the stored draft.
+    setMsg(r.ok && r.data?.draft?.savedAt ? { text: "Saved as a draft. The website changes only when you use Confirm & Publish in the top bar.", kind: "good" } : { text: r.error ?? "Could not save the draft", kind: "error" });
     if (r.ok) router.refresh();
   }
 
@@ -243,6 +262,21 @@ function EditorForm(p: Props & Notices) {
       return;
     }
     if (window.confirm("Discard your unsaved changes?")) setForm(baseline);
+  }
+
+  function addPasted() {
+    const { tags, skipped } = parseMetaSnippet(pasteText);
+    if (!tags.length) return setPasteNote("No <meta name=… content=…> tag found in the pasted text.");
+    const existing = new Set(form.extraMeta.map((t) => t.name.trim().toLowerCase()));
+    const fresh = tags.filter((t) => !existing.has(t.name.toLowerCase()));
+    const room = MAX_EXTRA_META - form.extraMeta.length;
+    set("extraMeta", [...form.extraMeta.filter((t) => t.name.trim() || t.content.trim()), ...fresh.slice(0, room)]);
+    const notes = [`Added ${Math.min(fresh.length, room)} tag(s).`];
+    if (tags.length - fresh.length) notes.push(`${tags.length - fresh.length} already in the list.`);
+    if (fresh.length > room) notes.push(`${fresh.length - room} over the limit of ${MAX_EXTRA_META}.`);
+    if (skipped) notes.push(`${skipped} non-meta or incomplete tag(s) ignored.`);
+    setPasteNote(notes.join(" "));
+    setPasteText("");
   }
 
   const robotsTag = (r: string) => (r === "index, follow" ? 'none (default: index, follow)' : `<meta name="robots" content="${r}">`);
@@ -346,11 +380,17 @@ function EditorForm(p: Props & Notices) {
                 <input type="checkbox" checked={form.keywordsEnabled} onChange={(e) => set("keywordsEnabled", e.target.checked)} />
                 <span><b>Add the keywords tag to the page</b></span>
               </label>
-              <div className="field">
-                <label htmlFor="f-keywords">Keywords (comma-separated)</label>
-                <input id="f-keywords" className="input" maxLength={300} value={form.keywords} onChange={text("keywords")} {...err("keywords")} />
-                {errorText("keywords")}
-              </div>
+              <TagInput
+                id="f-keywords"
+                label="Keywords"
+                hint="Type and press Enter, or paste a comma-separated list. Saved even while the tag is off (shown as “saved, not on the page”)."
+                value={keywordList(form.keywords)}
+                onChange={(list) => set("keywords", list.join(", "))}
+                max={MAX_META_KEYWORDS}
+                disabled={!p.canDraft}
+                error={errors.keywords ?? null}
+              />
+              {!form.keywordsEnabled && form.keywords ? <span className="field-warn">The tag is off: these keywords are saved but not added to the page.</span> : null}
             </fieldset>
           </details>
 
@@ -366,7 +406,19 @@ function EditorForm(p: Props & Notices) {
                 </div>
               ))}
               {Object.entries(errors).filter(([k]) => k.startsWith("extraMeta")).map(([k, v]) => <span key={k} className="field-error" role="alert">Tag {Number(k.split(".")[1] ?? 0) + 1}: {v}</span>)}
-              {form.extraMeta.length < MAX_EXTRA_META ? <button type="button" className="btn btn-sm" onClick={() => set("extraMeta", [...form.extraMeta, { name: "", content: "" }])}>Add tag</button> : null}
+              <div className="btn-row">
+                {form.extraMeta.length < MAX_EXTRA_META ? <button type="button" className="btn btn-sm" onClick={() => set("extraMeta", [...form.extraMeta, { name: "", content: "" }])}>Add tag</button> : null}
+                <button type="button" className="btn btn-sm" aria-expanded={pasteOpen} onClick={() => { setPasteOpen((o) => !o); setPasteNote(null); }}>Paste tag HTML</button>
+              </div>
+              {pasteOpen ? (
+                <div className="field">
+                  <label htmlFor="f-paste">Paste one or more tags</label>
+                  <span className="hint" id="h-paste">e.g. <code>&lt;meta name=&quot;google-site-verification&quot; content=&quot;…&quot; /&gt;</code> — the name and content are read out; the HTML itself is never stored.</span>
+                  <textarea id="f-paste" className="input mono" rows={3} value={pasteText} onChange={(e) => setPasteText(e.target.value)} aria-describedby="h-paste" />
+                  <div className="btn-row"><button type="button" className="btn btn-sm" disabled={!pasteText.trim()} onClick={addPasted}>Add from HTML</button></div>
+                </div>
+              ) : null}
+              {pasteNote ? <span className="field-warn" role="status">{pasteNote}</span> : null}
             </fieldset>
           </details>
 
@@ -381,37 +433,43 @@ function EditorForm(p: Props & Notices) {
         </form>
 
         <aside className="editor-previews" aria-label="Previews">
-          <section className="card">
-            <h2 className="section">Google preview</h2>
-            <div className="snippet" aria-label="Search result preview">
-              <div className="s-site"><span className="s-fav" aria-hidden="true">P</span><span><b>PRESS&apos;D</b><br /><span className="s-url">{p.page.url}</span></span></div>
-              <div className="s-title">{snippet.title}</div>
-              <div className="s-desc">{snippet.description}</div>
-            </div>
-            <p className="small faint">Illustrative only: Google may rewrite titles and descriptions, and truncation depends on screen width.</p>
-          </section>
-          <section className="card">
-            <h2 className="section">WhatsApp / Facebook / X preview</h2>
-            <div className="social-card">
-              {preview.ogImage ? (
-                // eslint-disable-next-line @next/next/no-img-element -- previewing an arbitrary site image as-is
-                <img src={previewSrc(preview.ogImage)} alt="" onError={() => setImgError(true)} onLoad={() => setImgError(false)} className={preview.twitterCard === "summary" ? "social-thumb" : ""} />
-              ) : <div className="social-noimg">No share image</div>}
-              <div className="social-text">
-                <span className="social-domain">{site.host.toUpperCase()}</span>
-                <b>{preview.ogTitle}</b>
-                <span>{preview.ogDescription}</span>
-              </div>
-            </div>
-            <p className="small faint">Each app crops and caches previews differently; this is an approximation. The published image URL is on {site.host}.</p>
-          </section>
+          <SearchPreview url={p.page.url} siteName="PRESS'D" title={preview.title} description={preview.description} snippet={snippet} />
+          <SocialPreview
+            host={site.host}
+            title={preview.ogTitle}
+            description={preview.ogDescription}
+            image={preview.ogImage ? previewSrc(preview.ogImage) : null}
+            card={preview.twitterCard}
+            onImageError={() => setImgError(true)}
+            onImageLoad={() => setImgError(false)}
+          />
+          {p.targetKeywords ? (
+            <section className="card">
+              <h2 className="section">Target keywords</h2>
+              {p.targetKeywords.length ? (
+                <>
+                  <ul className="kw-check">
+                    {kwPrimary.map((k) => (
+                      <li key={k.keyword}>
+                        <b>{k.keyword}</b> <span className="tag">primary</span>
+                        <span className={`tag ${inText(k.keyword, preview.title) ? "tag-good" : "tag-amber"}`}>{inText(k.keyword, preview.title) ? "in title" : "not in title"}</span>
+                        <span className={`tag ${inText(k.keyword, preview.description) ? "tag-good" : "tag-amber"}`}>{inText(k.keyword, preview.description) ? "in description" : "not in description"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {p.targetKeywords.some((k) => k.type !== "primary") ? <p className="small muted">Also targeting: {p.targetKeywords.filter((k) => k.type !== "primary").map((k) => k.keyword).join(", ")}</p> : null}
+                </>
+              ) : <p className="small muted">No keywords assigned to this page yet.</p>}
+              <p className="small faint">Internal planning data from <a href="/admin/seo/keywords">Keywords</a> — never added to the page HTML.</p>
+            </section>
+          ) : null}
           <section className="card">
             <h2 className="section">Currently live</h2>
             <dl className="kv small">
               {FIELD_LABELS.map(([k, label]) => (
                 <Fragment key={k}>
                   <dt>{label}</dt>
-                  <dd className="wrap-anywhere">{show(live[k])}</dd>
+                  <dd className="wrap-anywhere">{k === "keywords" && !live.keywords && p.published?.fields.keywords ? <>— <span className="faint">(saved, tag off: {p.published.fields.keywords})</span></> : show(live[k])}</dd>
                 </Fragment>
               ))}
             </dl>

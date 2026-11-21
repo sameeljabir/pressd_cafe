@@ -21,7 +21,7 @@ try {
   console.log(`database    ${db.db.databaseName}`);
   console.log(`server      MongoDB ${info.version}`);
   console.log(`transactions ${db.transactions ? "yes (publishing is all-or-nothing)" : "no (each document is published atomically)"}`);
-  for (const [name, c] of Object.entries({ drafts: db.drafts, published: db.overrides, history: db.changes, "admin log": db.log, settings: db.settings })) {
+  for (const [name, c] of Object.entries({ drafts: db.drafts, published: db.overrides, history: db.changes, "admin log": db.log, settings: db.settings, keywords: db.keywords, audits: db.audits })) {
     console.log(`${name.padEnd(12)} ${await c.estimatedDocumentCount()} document(s)`);
   }
   await db.client.close();

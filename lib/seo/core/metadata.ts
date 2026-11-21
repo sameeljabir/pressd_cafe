@@ -33,6 +33,67 @@ export interface MetaOverride {
 const TEXT_FIELDS = { title: 120, description: 320, keywords: 300, ogTitle: 120, ogDescription: 320 } as const;
 const KNOWN = new Set(["title", "description", "keywords", "keywordsEnabled", "canonical", "robots", "ogTitle", "ogDescription", "ogImage", "ogType", "twitterCard", "extraMeta"]);
 export const MAX_EXTRA_META = 20;
+export const MAX_META_KEYWORDS = 20;
+
+/**
+ * Trims, collapses whitespace and drops empty and repeated entries
+ * (case-insensitive: "Coffee" and "coffee " are the same keyword; the first spelling is kept).
+ */
+export function dedupeKeywords(items: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of items) {
+    const k = raw.replace(/\s+/g, " ").trim();
+    if (!k) continue;
+    const norm = k.toLocaleLowerCase("en");
+    if (seen.has(norm)) continue;
+    seen.add(norm);
+    out.push(k);
+  }
+  return out;
+}
+
+/** Splits pasted text into keywords: commas, semicolons and new lines separate entries. */
+export function splitKeywordText(text: string): string[] {
+  return text.split(/[,;\n\r\t]+/);
+}
+
+/**
+ * Reads name/content pairs out of pasted tag HTML such as
+ * `<meta name="google-site-verification" content="abc" />` (several tags may be pasted at once).
+ * Only plain <meta name|property=… content=…> tags are recognised; anything else is ignored and
+ * returned in `skipped`. Nothing is rendered — the pairs still go through validateExtraMeta.
+ */
+export function parseMetaSnippet(html: string): { tags: ExtraMeta[]; skipped: number } {
+  const tags: ExtraMeta[] = [];
+  let skipped = 0;
+  const tagRe = /<\s*([a-zA-Z]+)\b([^>]*)>/g;
+  const attrRe = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>/]+))/g;
+  const decode = (v: string) =>
+    v.replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+  for (const m of html.slice(0, 20_000).matchAll(tagRe)) {
+    if (m[1].toLowerCase() !== "meta") {
+      skipped++;
+      continue;
+    }
+    const attrs: Record<string, string> = {};
+    for (const a of m[2].matchAll(attrRe)) attrs[a[1].toLowerCase()] = decode(a[2] ?? a[3] ?? a[4] ?? "");
+    const name = attrs.name ?? attrs.property;
+    if (!name || attrs.content === undefined) {
+      skipped++;
+      continue;
+    }
+    tags.push({ name: name.trim(), content: attrs.content.trim() });
+  }
+  return { tags, skipped };
+}
+
+/** JSON with sorted object keys, for comparing stored documents regardless of key order. */
+export function stableJson(v: unknown): string {
+  const norm = (x: unknown): unknown =>
+    Array.isArray(x) ? x.map(norm) : x && typeof x === "object" ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, norm((x as Record<string, unknown>)[k])])) : x;
+  return JSON.stringify(norm(v ?? {}));
+}
 
 /** Names that would duplicate or conflict with tags the editor already manages (or that are unsafe). */
 const RESERVED_META = new Set([
@@ -120,9 +181,11 @@ export function validateOverride(input: Record<string, unknown>, site: URL): Met
     if (s) out[f] = s;
   }
   if (out.keywords) {
-    const list = out.keywords.split(",").map((k) => k.trim()).filter(Boolean);
-    if (list.length > 20) throw new MetadataValidationError("keywords", "At most 20 keywords");
-    out.keywords = [...new Set(list)].join(", ");
+    const list = dedupeKeywords(out.keywords.split(","));
+    if (list.length > MAX_META_KEYWORDS) throw new MetadataValidationError("keywords", `At most ${MAX_META_KEYWORDS} keywords`);
+    if (list.some((k) => k.length > 60)) throw new MetadataValidationError("keywords", "Each keyword: at most 60 characters");
+    if (list.length) out.keywords = list.join(", ");
+    else delete out.keywords;
   }
   if (input.keywordsEnabled !== undefined && typeof input.keywordsEnabled !== "boolean") throw new MetadataValidationError("keywordsEnabled", "Must be true or false");
   if (input.keywordsEnabled === true) {

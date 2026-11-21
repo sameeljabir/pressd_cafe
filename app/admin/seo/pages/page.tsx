@@ -13,6 +13,7 @@ import { dbOrNull } from "@/lib/seo/db/mongo";
 import { historyRows } from "@/lib/seo/services/docs";
 import { getDraft, getOverride, PUBLIC_PAGES } from "@/lib/seo/services/metadata";
 import { getSettings } from "@/lib/seo/services/settings";
+import { keywordsForTarget } from "@/lib/seo/services/keywords";
 import { codeDefaults } from "@/lib/seo/services/verify";
 import { SITE_IMAGES, SITE_SECTIONS } from "@/lib/siteImages";
 
@@ -42,7 +43,7 @@ export default async function PagesEditor({ searchParams }: PageProps<"/admin/se
 
   let body: React.ReactNode;
   if (tab.id === "seo") {
-    const [published, draft, history, settings] = await Promise.all([getOverride(db, "/"), getDraft(db, "/"), historyRows(db, "/", codeDefaults()), getSettings(db)]);
+    const [published, draft, history, settings, kws] = await Promise.all([getOverride(db, "/"), getDraft(db, "/"), historyRows(db, "/", codeDefaults()), getSettings(db), keywordsForTarget(db, ["/"])]);
     body = (
       <>
         <SeoEditor
@@ -54,6 +55,7 @@ export default async function PagesEditor({ searchParams }: PageProps<"/admin/se
           thresholds={settings.thresholds}
           canDraft={canDraft}
           imageSuggestions={IMAGE_SUGGESTIONS}
+          targetKeywords={kws.map((k) => ({ keyword: k.keyword, type: k.type }))}
         />
         <HistoryPanel rows={history} canPublish={canPublish} title="Google & sharing — publish history" />
       </>

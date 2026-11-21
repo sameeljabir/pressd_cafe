@@ -8,13 +8,16 @@ SEO Studio (`/admin/seo`) edits what Google and social apps read from the websit
 | **Home → Google & sharing** | Title, meta description, optional meta keywords, canonical URL, robots (index/follow), Open Graph / X card tags, validated custom `<meta name>` tags |
 | **Home → section tabs** (Top section, About, Visit…) | Alt text of that section's photos, beside a live phone/desktop preview of the section |
 | **Images & alt text** | All site photos in one list, filterable to "Missing or too short" |
+| **Technical audit** | Run on demand against the live domain or this deployment: fetches the home page, robots.txt, sitemap, internal links/images and host redirects, and reports Critical / Warning / Suggestion / Passed checks with a health score (100 × passed weight ÷ total weight; weights 10 / 4 / 1). Things that need Google data (Core Web Vitals, index coverage, search performance) are listed as "not checked here". Last 20 runs per target kept in `seo_audits`. |
+| **Keywords** | Internal keyword planning: primary / secondary / label keywords per page section, groups, status, notes, overlap (cannibalisation) warnings. Saved immediately to `seo_keywords`; never rendered on the site. No search volume or rankings are shown or estimated. |
+| **Analytics** | Connection status for Search Console and GA4 (currently not connected — no data is shown). |
 | **Business info** | The café's structured data (JSON-LD): name, website, phone, email, cuisine, price range, address, map coordinates, opening hours |
 
 Every screen saves a **draft** (Save). Nothing changes on the website until a publisher clicks **Confirm & Publish** in the top bar, which lists every saved change (live value → new value) and publishes them together. Each publish is recorded per screen and can be **restored**.
 
-Keyword research, Search Console, rankings and content strategy are handled separately by the SEO specialist — the studio does not include them and needs no Google accounts or API keys.
+Keyword *planning* lives in Keywords; keyword research data, Search Console, rankings and GA4 are not connected — the studio needs no Google accounts or API keys, and shows no metrics it does not have.
 
-> **Before deploying:** www.pressdcafe.ae is currently served by a different repository — the static site `pressd-newwww` — not by this Next.js app. Changes published here appear on whichever domain serves **this** app (e.g. pressd-nextjs.vercel.app or a preview). Replacing the static site is a separate decision.
+> www.pressdcafe.ae is served by this Next.js app (Vercel). The older static repository `pressd-newwww` still contains outdated structured data (Jumeirah Village Triangle, 23:00/midnight hours) and should not be redeployed to the domain.
 
 ## How it works
 

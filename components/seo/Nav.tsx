@@ -21,6 +21,17 @@ export default function Nav({ pages }: { pages: { path: string; label: string }[
   return (
     <nav className="seo-nav" aria-label="SEO Studio">
       <Link href="/admin/seo" aria-current={pathname === "/admin/seo" ? "page" : undefined}>Overview</Link>
+      <Link href="/admin/seo/audit" aria-current={here("/admin/seo/audit")}>Technical audit</Link>
+      <span className="nav-group">SEO</span>
+      {pages.map((p) => (
+        <Link key={p.path} href={`/admin/seo/pages?path=${encodeURIComponent(p.path)}`} aria-current={editing === p.path ? "page" : undefined}>
+          Meta tags &amp; social
+        </Link>
+      ))}
+      <Link href="/admin/seo/keywords" aria-current={here("/admin/seo/keywords")}>Keywords</Link>
+      <Link href="/admin/seo/images" aria-current={here("/admin/seo/images")}>Images &amp; alt text</Link>
+      <Link href="/admin/seo/business" aria-current={here("/admin/seo/business")}>Local SEO &amp; business</Link>
+      <Link href="/admin/seo/analytics" aria-current={here("/admin/seo/analytics")}>Analytics</Link>
       <span className="nav-group">Pages</span>
       {CONTENT_PAGES.map((p) => (
         <Link key={p.href} href={p.href} aria-current={pathname.startsWith(p.href) ? "page" : undefined}>{p.label}</Link>
@@ -28,16 +39,8 @@ export default function Nav({ pages }: { pages: { path: string; label: string }[
       <span className="nav-group">Menu</span>
       <Link href="/admin/seo/menu" aria-current={here("/admin/seo/menu")}>Products &amp; categories</Link>
       <Link href="/admin/seo/translations" aria-current={here("/admin/seo/translations")}>Translations</Link>
-      <span className="nav-group">SEO</span>
-      {pages.map((p) => (
-        <Link key={p.path} href={`/admin/seo/pages?path=${encodeURIComponent(p.path)}`} aria-current={editing === p.path ? "page" : undefined}>
-          Google &amp; sharing
-        </Link>
-      ))}
-      <Link href="/admin/seo/images" aria-current={here("/admin/seo/images")}>Images &amp; alt text</Link>
       <span className="nav-group">Site</span>
       <Link href="/admin/seo/library" aria-current={here("/admin/seo/library")}>Image library</Link>
-      <Link href="/admin/seo/business" aria-current={here("/admin/seo/business")}>Business info</Link>
       <Link href="/admin/seo/settings" aria-current={here("/admin/seo/settings")}>Settings</Link>
       <a href="/" target="_blank" rel="noreferrer">View website ↗</a>
     </nav>

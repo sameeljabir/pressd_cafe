@@ -64,6 +64,37 @@ export interface SettingsDoc {
   updatedAt: Date | null;
 }
 
+/** One target keyword (internal planning data — never rendered on the public site). */
+export interface KeywordDoc {
+  _id: ObjectId;
+  keyword: string;
+  /** lower-cased, whitespace-collapsed keyword: used for duplicate and overlap checks */
+  normalized: string;
+  type: "primary" | "secondary" | "label";
+  /** page or section the keyword is assigned to, e.g. "/" or "/#about" */
+  target: string;
+  group: string;
+  status: "not-started" | "in-progress" | "optimized";
+  notes: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedBy: string;
+  updatedAt: Date;
+}
+
+/** One run of the technical SEO audit (results as checked at that moment). */
+export interface AuditDoc {
+  _id: ObjectId;
+  target: "live" | "app";
+  url: string;
+  ranBy: string;
+  ranAt: Date;
+  durationMs: number;
+  score: number | null;
+  checks: object[];
+  notChecked: object[];
+}
+
 export interface Db {
   client: MongoClient;
   db: MongoDb;
@@ -72,6 +103,8 @@ export interface Db {
   changes: Collection<ChangeDoc>;
   log: Collection<LogDoc>;
   settings: Collection<SettingsDoc>;
+  keywords: Collection<KeywordDoc>;
+  audits: Collection<AuditDoc>;
   /** Multi-document transactions are available (any replica set, including every Atlas cluster). */
   transactions: boolean;
 }
@@ -109,6 +142,8 @@ export async function openMongo(uri: string, dbName?: string): Promise<Db> {
       changes: db.collection<ChangeDoc>("seo_metadata_changes"),
       log: db.collection<LogDoc>("seo_admin_log"),
       settings: db.collection<SettingsDoc>("seo_settings"),
+      keywords: db.collection<KeywordDoc>("seo_keywords"),
+      audits: db.collection<AuditDoc>("seo_audits"),
       transactions: !!(hello.setName || hello.msg === "isdbgrid"),
     };
     await Promise.all([
@@ -117,6 +152,12 @@ export async function openMongo(uri: string, dbName?: string): Promise<Db> {
         { key: { key: 1, at: -1 }, name: "key_at" },
         { key: { at: -1 }, name: "at" },
       ]),
+      out.keywords.createIndexes([
+        // the same keyword may target several pages (that overlap is reported), but only once per page
+        { key: { normalized: 1, target: 1 }, name: "normalized_target_unique", unique: true },
+        { key: { updatedAt: -1 }, name: "updated_at" },
+      ]),
+      out.audits.createIndexes([{ key: { target: 1, ranAt: -1 }, name: "target_ran_at" }]),
       out.log.createIndexes([
         { key: { action: 1, target: 1, at: -1 }, name: "action_target_at" },
         { key: { action: 1, "details.ip": 1, at: -1 }, name: "action_ip_at" },

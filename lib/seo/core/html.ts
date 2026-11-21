@@ -35,6 +35,10 @@ export interface PageFacts {
   twitter: Record<string, string>;
   viewport: string | null;
   jsonLd: JsonLdFact[];
+  /** heading levels (1–6) in document order */
+  headings: number[];
+  /** parsed JSON-LD documents (at most 10), for checking their values */
+  jsonLdData: unknown[];
   textHash: string; // hash of visible text, for duplicate-content detection
   wordCount: number;
 }
@@ -96,6 +100,8 @@ export function extractPageFacts(html: string): PageFacts {
     twitter: {},
     viewport: null,
     jsonLd: [],
+    headings: [],
+    jsonLdData: [],
     textHash: "",
     wordCount: 0,
   };
@@ -138,7 +144,15 @@ export function extractPageFacts(html: string): PageFacts {
             if (rel.includes("canonical")) facts.canonicals.push((attrs.href ?? "").trim());
             break;
           }
+          case "h2":
+          case "h3":
+          case "h4":
+          case "h5":
+          case "h6":
+            if (facts.headings.length < 500) facts.headings.push(Number(name[1]));
+            break;
           case "h1":
+            if (facts.headings.length < 500) facts.headings.push(1);
             h1Depth++;
             if (h1Depth === 1) h1Buf = "";
             break;
@@ -192,7 +206,9 @@ export function extractPageFacts(html: string): PageFacts {
           }
           case "script":
             if (jsonLdBuf !== null) {
-              facts.jsonLd.push(parseJsonLd(jsonLdBuf));
+              const fact = parseJsonLd(jsonLdBuf);
+              facts.jsonLd.push(fact);
+              if (fact.ok && facts.jsonLdData.length < 10) facts.jsonLdData.push(JSON.parse(jsonLdBuf));
               jsonLdBuf = null;
             }
             skipDepth = Math.max(0, skipDepth - 1);

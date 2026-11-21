@@ -2,10 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Mode = "mobile" | "desktop" | "hidden";
-const SIZES = { mobile: { w: 390, h: 760 }, desktop: { w: 1280, h: 800 } };
+type Mode = "mobile" | "tablet" | "desktop" | "hidden";
+const SIZES = { mobile: { w: 390, h: 760 }, tablet: { w: 820, h: 1000 }, desktop: { w: 1280, h: 800 } };
+const MODE_LABEL: Record<Mode, string> = { mobile: "Phone", tablet: "Tablet", desktop: "Desktop", hidden: "Hide" };
 
-/** The published website in an iframe, scaled to fit, with phone/desktop/hide and Reload. */
+/**
+ * The published website in an iframe, scaled to fit, with phone/tablet/desktop/hide,
+ * Reload, Fullscreen and Open. Sandboxed: scripts run (the site needs them) but
+ * the frame cannot submit forms, open pop-ups (WhatsApp/booking links) or
+ * navigate this dashboard. It is same-origin (/), so the site's CSP and
+ * X-Frame-Options are untouched — admin pages stay unframeable.
+ */
 export default function LivePreview({ anchor = "" }: { anchor?: string }) {
   const [mode, setMode] = useState<Mode>("mobile");
   const [reload, setReload] = useState(0);
@@ -61,13 +68,15 @@ export default function LivePreview({ anchor = "" }: { anchor?: string }) {
       <div className="live-head">
         <span className="small faint">LIVE WEBSITE (PUBLISHED)</span>
         <span className="seg" role="group" aria-label="Preview size">
-          {(["mobile", "desktop", "hidden"] as const).map((m) => (
+          {(["mobile", "tablet", "desktop", "hidden"] as const).map((m) => (
             <button key={m} type="button" className={mode === m ? "on" : ""} aria-pressed={mode === m} onClick={() => setMode(m)}>
-              {m === "mobile" ? "Phone" : m === "desktop" ? "Desktop" : "Hide"}
+              {MODE_LABEL[m]}
             </button>
           ))}
         </span>
         {size ? <button type="button" className="btn btn-sm" onClick={() => setReload((n) => n + 1)}>Reload</button> : null}
+        {size ? <button type="button" className="btn btn-sm" onClick={() => void boxRef.current?.requestFullscreen?.().catch(() => {})}>Fullscreen</button> : null}
+        <a className="btn btn-sm" href={`/${anchor}`} target="_blank" rel="noreferrer">Open ↗</a>
       </div>
       {size ? (
         <div ref={boxRef} className="live-box-wrap">
@@ -77,6 +86,8 @@ export default function LivePreview({ anchor = "" }: { anchor?: string }) {
               ref={frameRef}
               title="Published website preview"
               src="/"
+              sandbox="allow-scripts allow-same-origin"
+              referrerPolicy="same-origin"
               onLoad={onLoad}
               style={{ width: size.w, height: size.h, transform: `scale(${scale})` }}
             />
