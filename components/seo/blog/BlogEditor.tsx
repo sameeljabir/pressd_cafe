@@ -217,8 +217,8 @@ export default function BlogEditor(p: Props) {
             <div className="field">
               <label htmlFor="b-excerpt">Excerpt</label>
               <span className="hint">Shown on article cards and used as the meta description when that is empty.</span>
-              <textarea id="b-excerpt" className="input" rows={2} maxLength={320} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} {...errCls("excerpt")} />
-              <span className="small faint">{form.excerpt.length} / 320</span>
+              <textarea id="b-excerpt" className="input" rows={2} maxLength={2000} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} {...errCls("excerpt")} />
+              <span className="small faint">{form.excerpt.length} / 2000</span>
             </div>
           </fieldset>
 

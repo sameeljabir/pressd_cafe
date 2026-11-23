@@ -186,7 +186,7 @@ export function validatePost(input: Record<string, unknown>, ctx: PostContext): 
   return {
     title,
     slug: rawSlug,
-    excerpt: text(input.excerpt, "excerpt", 320),
+    excerpt: text(input.excerpt, "excerpt", 2000),
     category: text(input.category, "category", 60),
     tags: list(input.tags, "tags", 15, 40),
     author: text(input.author, "author", 80) || "PRESS'D",
