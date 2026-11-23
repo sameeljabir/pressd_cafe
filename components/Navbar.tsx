@@ -2,6 +2,7 @@
 
 import { useAlt } from "@/components/AltTextContext";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useCart } from "@/components/cart/CartContext";
 import { useBooking } from "@/components/booking/BookingContext";
 import { useSectionLinkHandler, useSectionNav } from "@/components/navigation/SectionNavContext";
@@ -68,6 +69,8 @@ export default function Navbar() {
               </a>
             );
           })}
+          {/* A separate page, not a home section: normal navigation, no prefetch of the dynamic /blog. */}
+          <Link href="/blog" prefetch={false}>{t("linkJournal")}</Link>
         </nav>
         <div className="nav-actions">
           {activeSection === "menu" && <LanguageSelector />}
@@ -118,6 +121,9 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
+          <Link href="/blog" prefetch={false} onClick={closeMobile}>
+            {t("linkJournal")}
+          </Link>
           <div className="mobile-menu-actions">
             <button
               className="cart-toggle"

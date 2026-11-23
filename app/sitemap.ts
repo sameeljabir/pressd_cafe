@@ -8,9 +8,11 @@ import { isIndexable } from "@/lib/blog/post";
 // and every public, indexable article (not drafts, unpublished, archived,
 // scheduled-for-later, noindex or canonicalised elsewhere).
 // About, Menu, Visit etc. are #sections of the home page, not pages.
-// Publishing revalidates this file; the 5-minute revalidation also picks up
-// scheduled articles once their time has passed.
-export const revalidate = 300;
+// Generated per request so a newly published article appears at once and a
+// scheduled one as soon as its time passes. On Vercel this metadata route was
+// served as a build-time file: neither `revalidate = 300` nor
+// revalidatePath("/sitemap.xml") refreshed it. It is small and fetched rarely.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const site = new URL(SITE_ORIGIN);

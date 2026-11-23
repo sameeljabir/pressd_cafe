@@ -1,6 +1,7 @@
 "use client";
 
 import { useAlt } from "@/components/AltTextContext";
+import Link from "next/link";
 import { useSectionLinkHandler } from "@/components/navigation/SectionNavContext";
 import {
   ChatIcon,
@@ -48,6 +49,9 @@ export default function Footer() {
           <a href="#visit" onClick={handleLink("#visit")}>
             {t("linkVisit")}
           </a>
+          <Link href="/blog" prefetch={false}>
+            {t("linkJournal")}
+          </Link>
         </div>
         <div className="footer-contact" aria-label="Contact PRESS’D">
           <a href={MAILTO}>
